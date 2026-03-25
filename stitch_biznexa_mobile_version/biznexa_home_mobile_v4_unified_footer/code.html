@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BIZNEXA | Digital Solutions Studio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-fixed-dim": "#bdbeff",
+                        "error-container": "#9f0519",
+                        "on-background": "#b0b8c8",
+                        "outline-variant": "#40485d",
+                        "surface-tint": "#00FF00",
+                        "on-tertiary": "#006443",
+                        "surface-container": "#0f1930",
+                        "on-secondary-fixed": "#160bae",
+                        "inverse-primary": "#006a71",
+                        "inverse-on-surface": "#4d556b",
+                        "background": "#060e20",
+                        "error-dim": "#d7383b",
+                        "tertiary-fixed-dim": "#58e7ab",
+                        "secondary-container": "#2f2ebe",
+                        "tertiary": "#9bffce",
+                        "surface-container-lowest": "#000000",
+                        "on-surface-variant": "#b0b8c8",
+                        "on-tertiary-fixed": "#00452d",
+                        "primary-dim": "#00FF00",
+                        "primary": "#00FF00",
+                        "on-primary-fixed-variant": "#005e64",
+                        "on-error": "#490006",
+                        "on-surface": "#b0b8c8",
+                        "on-primary": "#00330d",
+                        "on-tertiary-fixed-variant": "#006544",
+                        "surface-variant": "#192540",
+                        "on-tertiary-container": "#005a3c",
+                        "surface": "#060e20",
+                        "primary-container": "#00FF00",
+                        "on-secondary-container": "#ccccff",
+                        "inverse-surface": "#faf8ff",
+                        "tertiary-dim": "#58e7ab",
+                        "secondary-dim": "#6063ee",
+                        "surface-container-highest": "#192540",
+                        "on-secondary-fixed-variant": "#3a3ac8",
+                        "secondary-fixed": "#cdcdff",
+                        "secondary": "#9093ff",
+                        "on-secondary": "#080079",
+                        "surface-container-low": "#091328",
+                        "surface-container-high": "#141f38",
+                        "surface-bright": "#1f2b49",
+                        "on-primary-fixed": "#00330d",
+                        "primary-fixed": "#00FF00",
+                        "outline": "#6d758c",
+                        "surface-dim": "#060e20",
+                        "on-primary-container": "#004010",
+                        "tertiary-container": "#69f6b8",
+                        "tertiary-fixed": "#69f6b8",
+                        "on-error-container": "#ffa8a3",
+                        "primary-fixed-dim": "#00FF00",
+                        "error": "#ff716c"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Manrope"],
+                        "label": ["Space Grotesk"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .glass-card {
+            background: rgba(25, 37, 64, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
+        }
+        #mobile-menu:target {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary selection:text-on-primary">
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#060e20]/60 backdrop-blur-xl flex justify-between items-center px-6 py-4 border-b border-white/5">
+<div class="flex items-center gap-3">
+<a class="flex items-center" href="#mobile-menu">
+<span class="material-symbols-outlined text-primary" data-icon="menu">menu</span>
+</a>
+<img alt="Biznexa Logo" class="h-6 w-auto object-contain brightness-0 invert" src="https://lh3.googleusercontent.com/aida/ADBb0ujvZvidqd0m5g5vdmrAjskhsTRlXLGd0I7OP2OuZYo8f4E6q8dIDFQRIPF0mtwRTqg2rwi71z8stJDGOxP4KJ8Jl5sNqAbYLgw7QZSSuJAAnKCg7HvAnXbjCLbbOOtCJIofa2S2fwUoThRl3ooCG8wWHoFOgL5hGhpyeQMqyfevEYBE716-JtxAM3BVBEZ51UWe30Uxp2xwX0ioi1lMoroAukCnAJEF__PZOeR4RKPJvqbxuRrG84nK8s8jQ_UVZFrilePcEKUGWr4"/>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border border-outline-variant/30">
+<img alt="Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3tloGHWQNMH8mieoFjA3qGGjBJTNeF5vLslTvB5I59P5YL2ELOPoLCFTVb9-2sffDjaG9chWXqj62EVXYav2l7-rS15_FGFE9mV0Onw1JtJfyTUKTq1-xIZpsRr0QFKWPmnh-Hvm1qapXjBgZL2hop3lsQ3cFGUT569CTSQvIf2xwyDarlzDqvgAGsLKQONmpfabTkupBj4MgQJdr7LF_70PMbG2kYAFHt1Nv680Y56OCZ4wJagLVGai6LdGdJ2ks3ONwyIjIsBfl"/>
+</div>
+</nav>
+<!-- Fullscreen Mobile Menu -->
+<div class="hidden fixed inset-0 z-[100] bg-background flex-col p-6 animate-in fade-in duration-200" id="mobile-menu">
+<div class="flex justify-between items-center mb-12">
+<img alt="Biznexa Logo" class="h-8 w-auto object-contain brightness-0 invert" src="https://lh3.googleusercontent.com/aida/ADBb0ujvZvidqd0m5g5vdmrAjskhsTRlXLGd0I7OP2OuZYo8f4E6q8dIDFQRIPF0mtwRTqg2rwi71z8stJDGOxP4KJ8Jl5sNqAbYLgw7QZSSuJAAnKCg7HvAnXbjCLbbOOtCJIofa2S2fwUoThRl3ooCG8wWHoFOgL5hGhpyeQMqyfevEYBE716-JtxAM3BVBEZ51UWe30Uxp2xwX0ioi1lMoroAukCnAJEF__PZOeR4RKPJvqbxuRrG84nK8s8jQ_UVZFrilePcEKUGWr4"/>
+<a class="p-2" href="#">
+<span class="material-symbols-outlined text-white text-3xl" data-icon="close">close</span>
+</a>
+</div>
+<div class="flex flex-col gap-2">
+<a class="min-h-[48px] flex items-center text-xl font-headline font-bold text-white border-b border-white/10 py-4" href="#">HOME</a>
+<a class="min-h-[48px] flex items-center text-xl font-headline font-bold text-on-surface-variant border-b border-white/10 py-4" href="#services">SERVICES</a>
+<a class="min-h-[48px] flex items-center text-xl font-headline font-bold text-on-surface-variant border-b border-white/10 py-4" href="#">OUR WORK</a>
+<a class="min-h-[48px] flex items-center text-xl font-headline font-bold text-on-surface-variant border-b border-white/10 py-4" href="#">STUDIO</a>
+<a class="min-h-[48px] flex items-center text-xl font-headline font-bold text-on-surface-variant py-4" href="#">CONTACT</a>
+</div>
+<div class="mt-auto pt-12">
+<button class="w-full bg-primary text-on-primary font-headline font-bold py-5 rounded-xl text-center">START YOUR PROJECT</button>
+</div>
+</div>
+<main class="pt-20 pb-24 overflow-x-hidden">
+<!-- Hero Section -->
+<section class="px-6 py-20 flex flex-col items-center text-center">
+<div class="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full bg-surface-container border border-primary/10">
+<span class="material-symbols-outlined text-primary text-[10px]" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant">Your Digital Solutions Studio</span>
+</div>
+<h1 class="font-headline text-4xl font-bold tracking-tight text-white leading-[1.1] mb-6 text-glow">
+                WE ENGINEER <span class="text-primary">DIGITAL SYSTEMS</span> THAT SCALE
+            </h1>
+<p class="text-on-surface-variant text-base mb-8 max-w-xs mx-auto">
+                We build high-performance websites and AI-driven automation that transform your operations.
+            </p>
+<div class="flex flex-col w-full gap-4"><button class="bg-primary text-on-primary font-headline font-bold py-4 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all duration-200 shadow-[0_0_20px_rgba(0,255,102,0.3)] uppercase tracking-widest text-sm">
+                        BOOK A CALL
+                    </button>
+<button class="glass-card border-white/10 text-white font-headline font-bold py-4 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all duration-200 uppercase tracking-widest text-sm">
+                        VIEW PORTFOLIO
+                    </button></div>
+</section>
+<!-- Stats Section -->
+<section class="px-6 py-12">
+<div class="grid grid-cols-2 gap-4">
+<div class="glass-card p-6 rounded-2xl border border-outline-variant/10 text-center">
+<div class="text-3xl font-headline font-bold text-primary mb-1">50+</div>
+<div class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Projects Delivered</div>
+</div>
+<div class="glass-card p-6 rounded-2xl border border-outline-variant/10 text-center">
+<div class="text-3xl font-headline font-bold text-primary mb-1">100%</div>
+<div class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Growth Rate</div>
+</div>
+<div class="glass-card p-6 rounded-2xl border border-outline-variant/10 text-center">
+<div class="text-3xl font-headline font-bold text-primary mb-1">24/7</div>
+<div class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">AI Monitoring</div>
+</div>
+<div class="glass-card p-6 rounded-2xl border border-outline-variant/10 text-center">
+<div class="text-3xl font-headline font-bold text-primary mb-1">15+</div>
+<div class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Global Clients</div>
+</div>
+</div>
+</section>
+<!-- Services Carousel -->
+<section class="py-20" id="services">
+<div class="px-6 mb-8 flex justify-between items-end">
+<div>
+<h2 class="font-headline text-2xl font-bold text-primary uppercase">Core Services</h2>
+<div class="h-1 w-12 bg-primary mt-2"></div>
+</div>
+</div>
+<div class="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory px-6 gap-6">
+<!-- Card 1 -->
+<div class="snap-center shrink-0 w-[85vw] glass-card p-8 rounded-3xl border border-outline-variant/20 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4">
+<span class="material-symbols-outlined text-primary text-4xl opacity-50" data-icon="code">code</span>
+</div>
+<span class="font-label text-[10px] text-secondary tracking-widest uppercase mb-2 block">01 / Engineering</span>
+<h3 class="font-headline text-xl font-bold mb-4 text-white">Custom Web Development</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">
+                        Scalable, lightning-fast web applications built with the latest frameworks to give your business a competitive edge.
+                    </p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-highest rounded-full text-[10px] text-primary font-label uppercase">React</span>
+<span class="px-3 py-1 bg-surface-container-highest rounded-full text-[10px] text-primary font-label uppercase">Next.js</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="snap-center shrink-0 w-[85vw] glass-card p-8 rounded-3xl border border-outline-variant/20 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4">
+<span class="material-symbols-outlined text-primary text-4xl opacity-50" data-icon="smart_toy">smart_toy</span>
+</div>
+<span class="font-label text-[10px] text-secondary tracking-widest uppercase mb-2 block">02 / Automation</span>
+<h3 class="font-headline text-xl font-bold mb-4 text-white">AI &amp; Workflow Automation</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">
+                        Automate repetitive tasks and integrate AI agents that work 24/7 to boost your team's productivity.
+                    </p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-highest rounded-full text-[10px] text-primary font-label uppercase">OpenAI</span>
+<span class="px-3 py-1 bg-surface-container-highest rounded-full text-[10px] text-primary font-label uppercase">Python</span>
+</div>
+</div>
+</div>
+<div class="flex justify-center gap-2 mt-8">
+<div class="w-8 h-1 rounded-full bg-primary"></div>
+<div class="w-2 h-1 rounded-full bg-outline-variant/40"></div>
+</div>
+</section>
+<!-- India & Beyond Section -->
+<section class="px-6 py-20 relative">
+<div class="max-w-7xl mx-auto rounded-3xl overflow-hidden h-[350px] relative border border-outline-variant/10 shadow-[0_0_30px_rgba(0,255,0,0.1)] group">
+<img alt="Global connectivity map" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7v72RwlUG4-gPEjoCcbKG84e-pU6IYdjPRyzNxBGplKogCgwd0OEJk806x8WUbsnGu8ikYYSWn-P8YLQKyJPjPC5sUvKZVZehvTRKdATMIqbsFSzGnIgdGn0fefGxvhmome4FM2jkk0H0lJY8KDMUZ15EgUfv2FPk3ovD9t4WCfBsfQzMf5rnt2H8MBscud1XwMTFPbfKW_I2i5zp8eLt8AbFmo4STAIPipEvI2ixSdH9bHHTMkz8tyZnjGsIH5M83w-N3a-Gjhck"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+<div class="absolute inset-0 flex items-center justify-center text-center p-6">
+<div>
+<h2 class="font-headline text-2xl font-bold text-white mb-6">SERVING BUSINESSES ACROSS INDIA &amp; BEYOND</h2>
+<div class="flex justify-center gap-6">
+<div class="flex flex-col items-center">
+<span class="material-symbols-outlined text-primary text-2xl mb-1">location_on</span>
+<span class="font-label text-[8px] uppercase tracking-widest text-white">Kolkata HQ</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="material-symbols-outlined text-primary text-2xl mb-1">public</span>
+<span class="font-label text-[8px] uppercase tracking-widest text-white">Global Nodes</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Success Stories -->
+<section class="py-20 bg-surface-container-low/50">
+<div class="px-6 mb-8">
+<h2 class="font-headline text-3xl font-bold text-primary uppercase">Client Success Stories</h2>
+<p class="text-on-surface-variant text-sm mt-2">What our engineering partners say</p>
+</div>
+<div class="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory px-6 gap-6">
+<!-- Testimonial 1 -->
+<div class="snap-center shrink-0 w-[85vw] glass-card p-10 rounded-2xl border border-white/5 relative">
+<span class="absolute top-4 left-4 text-primary text-4xl font-headline opacity-30">"</span>
+<p class="text-white text-lg italic mb-10 leading-relaxed">
+                        "Biznexa transformed our manual sales process into a fully automated lead-gen machine. Our ROI tripled in just 3 months."
+                    </p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center font-bold text-primary">AK</div>
+<div>
+<div class="text-white font-bold text-base">Amit Kumar</div>
+<div class="text-[10px] uppercase tracking-widest text-secondary font-label">Founder, TECHSPRINT (SAAS)</div>
+</div>
+</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="snap-center shrink-0 w-[85vw] glass-card p-10 rounded-2xl border border-white/5 relative">
+<span class="absolute top-4 left-4 text-primary text-4xl font-headline opacity-30">"</span>
+<p class="text-white text-lg italic mb-10 leading-relaxed">
+                        "The website they built for us isn't just a site; it's a high-performance engine. The UI design is years ahead of our competitors."
+                    </p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center font-bold text-primary">SR</div>
+<div>
+<div class="text-white font-bold text-base">Sonia Roy</div>
+<div class="text-[10px] uppercase tracking-widest text-secondary font-label">Director, LUXMEDIA (E-COMMERCE)</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- FAQ Section -->
+<section class="px-6 py-20 max-w-lg mx-auto">
+<h2 class="font-headline text-3xl font-bold mb-10 text-center text-primary uppercase">Frequently Asked Questions</h2>
+<div class="space-y-2">
+<div class="group border-b border-outline-variant/20 py-6">
+<div class="flex justify-between items-center cursor-pointer">
+<h4 class="text-base font-medium text-white group-hover:text-primary transition-colors">How long does a website take to build?</h4>
+<span class="material-symbols-outlined text-primary" data-icon="add">add</span>
+</div>
+</div>
+<div class="group border-b border-outline-variant/20 py-6">
+<div class="flex justify-between items-center cursor-pointer">
+<h4 class="text-base font-medium text-white group-hover:text-primary transition-colors">Do you provide ongoing support?</h4>
+<span class="material-symbols-outlined text-primary" data-icon="add">add</span>
+</div>
+</div>
+<div class="group border-b border-outline-variant/20 py-6">
+<div class="flex justify-between items-center cursor-pointer">
+<h4 class="text-base font-medium text-white group-hover:text-primary transition-colors">What does AI automation cost?</h4>
+<span class="material-symbols-outlined text-primary" data-icon="add">add</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="px-6 py-20 text-center">
+<div class="bg-gradient-to-br from-surface-container-high to-background p-10 rounded-[2.5rem] border border-white/5 shadow-2xl relative overflow-hidden">
+<div class="absolute -bottom-10 -left-10 w-48 h-48 bg-primary/5 rounded-full blur-3xl"></div>
+<h2 class="font-headline text-3xl font-bold mb-8 tracking-tighter text-white leading-tight">READY TO SCALE YOUR BUSINESS?</h2>
+<p class="text-on-surface-variant text-sm mb-12 leading-relaxed">
+                    Schedule a free audit session with our engineers today. No fluff, just technical clarity.
+                </p>
+<div class="flex flex-col gap-4"><button class="bg-primary text-on-primary font-headline font-bold py-4 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all duration-200 shadow-[0_0_20px_rgba(0,255,102,0.3)] uppercase tracking-widest text-sm">
+                        BOOK A CALL
+                    </button>
+<button class="glass-card border-white/10 text-white font-headline font-bold py-4 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all duration-200 uppercase tracking-widest text-sm">
+                        VIEW PORTFOLIO
+                    </button></div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="w-full px-8 py-12 flex flex-col gap-10 bg-[#091328] border-t border-white/10">
+<div class="flex flex-col gap-6">
+<div class="text-2xl font-bold text-primary font-headline">BIZNEXA</div>
+<p class="text-[#b0b8c8] text-sm font-body leading-relaxed">
+            Biznexa is a Digital Solutions Studio architecting high-performance environments. We combine professional engineering with atmospheric creative vision to scale global agencies.
+        </p>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="flex flex-col gap-4">
+<h5 class="font-headline font-bold text-white uppercase tracking-widest text-[10px]">Navigation</h5>
+<a class="text-[#b0b8c8] text-xs" href="#">Home</a>
+<a class="text-[#b0b8c8] text-xs" href="#">Services</a>
+<a class="text-primary text-xs font-bold" href="#">About</a>
+<a class="text-[#b0b8c8] text-xs" href="#">Case Studies</a>
+</div>
+<div class="flex flex-col gap-4">
+<h5 class="font-headline font-bold text-white uppercase tracking-widest text-[10px]">Capabilities</h5>
+<a class="text-[#b0b8c8] text-xs" href="#">Web Development</a>
+<a class="text-[#b0b8c8] text-xs" href="#">AI Automation</a>
+<a class="text-[#b0b8c8] text-xs" href="#">UI/UX Design</a>
+<a class="text-[#b0b8c8] text-xs" href="#">Marketing</a>
+</div>
+</div>
+<div class="pt-8 border-t border-white/5 flex flex-col gap-6">
+<div class="flex gap-4">
+<a class="text-white hover:text-primary transition-colors text-[10px] font-label uppercase tracking-widest" href="#">Privacy</a>
+<a class="text-white hover:text-primary transition-colors text-[10px] font-label uppercase tracking-widest" href="#">Terms</a>
+</div>
+<p class="text-[#b0b8c8] text-[10px] font-body uppercase tracking-tighter opacity-60">© 2024 BIZNEXA DIGITAL SOLUTIONS STUDIO.</p>
+</div>
+</footer>
+</main>
+<!-- Sticky Contact Button -->
+<nav class="fixed bottom-24 right-6 flex flex-col gap-4 z-[60]">
+<a class="bg-primary text-on-primary-fixed p-4 rounded-full shadow-[0_0_20px_rgba(0,255,102,0.4)] hover:scale-110 active:scale-95 transition-all duration-300" href="#">
+<span class="material-symbols-outlined flex" data-icon="chat">chat</span>
+</a>
+<button class="bg-[#192540]/80 backdrop-blur-md text-primary rounded-full p-4 hover:scale-110 active:scale-95 transition-all duration-300" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+<span class="material-symbols-outlined flex" data-icon="expand_less">expand_less</span>
+</button>
+</nav>
+<!-- BottomNavBar -->
+</body></html>

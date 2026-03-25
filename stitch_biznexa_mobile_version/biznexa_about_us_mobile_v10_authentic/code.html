@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>About Us | BIZNEXA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary-container": "#ccccff",
+              "on-error-container": "#ffa8a3",
+              "surface-tint": "#00FF66",
+              "on-background": "#dee5ff",
+              "secondary-fixed-dim": "#bdbeff",
+              "surface-container-highest": "#192540",
+              "surface-container": "#0f1930",
+              "secondary": "#9093ff",
+              "primary-fixed": "#00FF66",
+              "on-primary-fixed-variant": "#00551a",
+              "secondary-fixed": "#cdcdff",
+              "primary-container": "#00FF66",
+              "on-secondary-fixed-variant": "#3a3ac8",
+              "on-secondary": "#080079",
+              "on-tertiary-container": "#005a3c",
+              "on-error": "#490006",
+              "tertiary-fixed": "#69f6b8",
+              "tertiary-dim": "#58e7ab",
+              "surface": "#060e20",
+              "error-dim": "#d7383b",
+              "surface-bright": "#1f2b49",
+              "tertiary-container": "#69f6b8",
+              "primary-dim": "#00FF66",
+              "on-primary-fixed": "#00330d",
+              "outline-variant": "#40485d",
+              "outline": "#6d758c",
+              "on-primary-container": "#004010",
+              "error-container": "#9f0519",
+              "tertiary-fixed-dim": "#58e7ab",
+              "error": "#ff716c",
+              "on-primary": "#00330d",
+              "background": "#060e20",
+              "inverse-surface": "#faf8ff",
+              "surface-container-low": "#091328",
+              "on-surface": "#dee5ff",
+              "on-tertiary-fixed-variant": "#006544",
+              "on-tertiary-fixed": "#00452d",
+              "primary": "#00FF66",
+              "secondary-container": "#2f2ebe",
+              "inverse-on-surface": "#4d556b",
+              "surface-container-lowest": "#000000",
+              "on-surface-variant": "#a3aac4",
+              "surface-variant": "#192540",
+              "primary-fixed-dim": "#00e63a",
+              "surface-dim": "#060e20",
+              "surface-container-high": "#141f38",
+              "on-tertiary": "#006443",
+              "on-secondary-fixed": "#160bae",
+              "inverse-primary": "#006a21",
+              "secondary-dim": "#6063ee",
+              "tertiary": "#9bffce"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(25, 37, 64, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .primary-glow {
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary selection:text-on-primary">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#060e20]/80 backdrop-blur-xl flex justify-between items-center px-6 h-16">
+<div class="text-2xl font-bold tracking-tighter text-primary font-headline">BIZNEXA</div>
+<button class="text-primary p-2 active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</header>
+<main class="pt-16 pb-12">
+<!-- Hero Section -->
+<section class="relative px-6 pt-10 pb-12 overflow-hidden">
+<div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
+<div class="relative z-10">
+<span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-4 block font-bold">Our Philosophy</span>
+<h1 class="font-headline text-[3.5rem] leading-[1.1] font-bold -ml-1 tracking-tight text-on-surface mb-6">
+                Architecting <br/> the <span class="text-primary">Future</span>.
+            </h1>
+<p class="text-[#b0b8c8] text-lg leading-relaxed max-w-[95%]">
+                Biznexa is not just a digital agency. We are a collective of architects, engineers, and visionaries building the high-performance infrastructures of tomorrow's digital economy.
+            </p>
+</div>
+</section>
+<!-- CEO & Founder Section -->
+<section class="px-6 py-4">
+<div class="glass-card rounded-2xl p-6 border border-white/5 relative overflow-hidden">
+<div class="flex items-center gap-5 mb-6">
+<div class="relative w-24 h-24 shrink-0">
+<img alt="Sukanta Saha" class="w-full h-full object-cover rounded-xl grayscale hover:grayscale-0 transition-all duration-500 border border-primary/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDacnlKmd5_xNSQsj0-pxjr00Bw5gFJhIKOw2mTFzsjuAfdOiZL-REzCyKsTAMGpSr8s4bAko1Aezt8VFCwiSWErN2AC4wyGo6rUprDt2HK2bmhBHZwWDh1zgrDdEQOZQb-Bih-Yp4k3zZVeHDPx_ScV0D8iLOzAKMR-3XU5hACnvwkEEk3lp8bRaiKwVzuVvrydZS-9Do6IYZAcfEDX6SaNTj9Q36owhlxU7igrCGMypFLTCKTMiAbCByaiP3c4zI36JgQy95S6Ft_"/>
+</div>
+<div>
+<h3 class="font-headline font-bold text-xl text-on-surface uppercase tracking-tight">Sukanta Saha</h3>
+<p class="font-label text-[10px] uppercase tracking-widest text-primary font-bold">CEO &amp; Founder</p>
+</div>
+</div>
+<div class="space-y-6">
+<div class="relative">
+<p class="text-white italic text-sm leading-relaxed pl-4 border-l-2 border-primary/40">
+                        "We started BizNexa because we kept seeing businesses pay for websites and systems that broke within a year. We build things that last."
+                    </p>
+</div>
+<p class="text-[#b0b8c8] text-sm leading-relaxed">
+                    Sukanta Saha founded BizNexa to bring enterprise-grade digital solutions to small and mid-sized businesses. With hands-on experience in web development, AI workflow automation, and digital marketing, he leads a team focused on delivering real results.
+                </p>
+<div class="grid grid-cols-2 gap-4 py-6 border-t border-white/5">
+<div>
+<div class="text-3xl font-headline font-bold text-primary tracking-tighter">15+</div>
+<div class="text-[9px] font-label uppercase tracking-widest text-[#b0b8c8] mt-1 font-bold">Projects Completed</div>
+</div>
+<div>
+<div class="text-3xl font-headline font-bold text-primary tracking-tighter">10+</div>
+<div class="text-[9px] font-label uppercase tracking-widest text-[#b0b8c8] mt-1 font-bold">Happy Clients</div>
+</div>
+</div>
+<button class="flex items-center gap-2 text-white font-label uppercase text-[10px] font-bold tracking-[0.2em] group">
+                    Full Biography
+                    <span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform" data-icon="east">east</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Strategic Pillars Carousel -->
+<section class="py-10">
+<div class="px-6 mb-8 flex justify-between items-end">
+<div>
+<h2 class="font-headline text-3xl font-bold text-primary uppercase tracking-tight">Strategic Pillars</h2>
+</div>
+<div class="flex gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined opacity-50" data-icon="swipe_left">swipe_left</span>
+</div>
+</div>
+<div class="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory px-6 gap-4">
+<!-- Card 1 -->
+<div class="min-w-[85vw] snap-center glass-card rounded-2xl p-8 border border-white/5 flex flex-col h-[340px] relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl text-primary" data-icon="architecture">architecture</span>
+</div>
+<div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="architecture">architecture</span>
+</div>
+<span class="font-label text-[10px] uppercase tracking-widest text-secondary mb-2 font-bold">01 / Engineering</span>
+<h4 class="font-headline text-2xl font-bold mb-4">Scalable Web Development</h4>
+<p class="text-[#b0b8c8] text-sm leading-relaxed mb-auto">
+                    We build high-performance, future-ready digital infrastructures using modern frameworks that scale infinitely.
+                </p>
+</div>
+<!-- Card 2 -->
+<div class="min-w-[85vw] snap-center glass-card rounded-2xl p-8 border border-white/5 flex flex-col h-[340px]">
+<div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="smart_toy">smart_toy</span>
+</div>
+<span class="font-label text-[10px] uppercase tracking-widest text-secondary mb-2 font-bold">02 / Automation</span>
+<h4 class="font-headline text-2xl font-bold mb-4">AI-Driven Automation</h4>
+<p class="text-[#b0b8c8] text-sm leading-relaxed mb-auto">
+                    Streamlining complex workflows with bespoke AI solutions to maximize operational efficiency.
+                </p>
+</div>
+<!-- Card 3 -->
+<div class="min-w-[85vw] snap-center glass-card rounded-2xl p-8 border border-white/5 flex flex-col h-[340px]">
+<div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="trending_up">trending_up</span>
+</div>
+<span class="font-label text-[10px] uppercase tracking-widest text-secondary mb-2 font-bold">03 / Growth</span>
+<h4 class="font-headline text-2xl font-bold mb-4">Digital Marketing &amp; SEO</h4>
+<p class="text-[#b0b8c8] text-sm leading-relaxed mb-auto">
+                    Data-driven strategies to dominate search results and social feeds, ensuring your brand stays top-of-mind.
+                </p>
+</div>
+<!-- Card 4 -->
+<div class="min-w-[85vw] snap-center glass-card rounded-2xl p-8 border border-white/5 flex flex-col h-[340px]">
+<div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="hub">hub</span>
+</div>
+<h4 class="font-headline text-2xl font-bold mb-4">Seamless API Integration</h4>
+<p class="text-[#b0b8c8] text-sm leading-relaxed mb-auto">
+                    Connecting your digital ecosystem with robust, secure, and high-speed integration layers for maximum data velocity.
+                </p>
+<div class="pt-4 border-t border-white/5">
+<span class="font-label text-[9px] uppercase tracking-[0.2em] text-primary/40 font-bold">V 4.0 Standard</span>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="px-6 py-12">
+<div class="glass-card p-10 rounded-3xl text-center relative overflow-hidden border border-primary/20">
+<div class="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-primary/5"></div>
+<div class="relative z-10">
+<h2 class="font-headline text-4xl font-bold mb-10 leading-tight tracking-tight text-white uppercase">READY TO START YOUR PROJECT?</h2>
+<div class="flex flex-col gap-4">
+<button class="bg-primary text-on-primary-fixed font-headline font-bold py-4 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all duration-200 primary-glow uppercase tracking-widest text-sm">
+                        BOOK A CALL
+                    </button>
+<button class="glass-card border-white/10 text-white font-headline font-bold py-4 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all duration-200 uppercase tracking-widest text-sm">
+                        VIEW PORTFOLIO
+                    </button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Nav Actions -->
+<nav class="fixed bottom-6 right-6 flex flex-col gap-4 z-40">
+<a class="bg-primary text-on-primary-fixed p-4 rounded-full shadow-[0_0_20px_rgba(0,255,102,0.4)] hover:scale-110 active:scale-95 transition-all duration-300" href="#">
+<span class="material-symbols-outlined flex" data-icon="chat">chat</span>
+</a>
+<button class="bg-[#192540]/80 backdrop-blur-md text-primary rounded-full p-4 hover:scale-110 active:scale-95 transition-all duration-300">
+<span class="material-symbols-outlined flex" data-icon="expand_less">expand_less</span>
+</button>
+</nav>
+<!-- Footer -->
+<footer class="w-full px-8 py-12 flex flex-col gap-10 bg-[#091328] border-t border-white/10">
+<div class="flex flex-col gap-6">
+<div class="text-2xl font-bold text-primary font-headline">BIZNEXA</div>
+<p class="text-[#b0b8c8] text-sm font-body leading-relaxed">
+            Biznexa is a Digital Solutions Studio architecting high-performance environments. We combine professional engineering with atmospheric creative vision to scale global agencies.
+        </p>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="flex flex-col gap-4">
+<h5 class="font-headline font-bold text-white uppercase tracking-widest text-[10px]">Navigation</h5>
+<a class="text-[#b0b8c8] text-xs" href="#">Home</a>
+<a class="text-[#b0b8c8] text-xs" href="#">Services</a>
+<a class="text-primary text-xs font-bold" href="#">About</a>
+<a class="text-[#b0b8c8] text-xs" href="#">Case Studies</a>
+</div>
+<div class="flex flex-col gap-4">
+<h5 class="font-headline font-bold text-white uppercase tracking-widest text-[10px]">Capabilities</h5>
+<a class="text-[#b0b8c8] text-xs" href="#">Web Development</a>
+<a class="text-[#b0b8c8] text-xs" href="#">AI Automation</a>
+<a class="text-[#b0b8c8] text-xs" href="#">UI/UX Design</a>
+<a class="text-[#b0b8c8] text-xs" href="#">Marketing</a>
+</div>
+</div>
+<div class="pt-8 border-t border-white/5 flex flex-col gap-6">
+<div class="flex gap-4">
+<a class="text-white hover:text-primary transition-colors text-[10px] font-label uppercase tracking-widest" href="#">Privacy</a>
+<a class="text-white hover:text-primary transition-colors text-[10px] font-label uppercase tracking-widest" href="#">Terms</a>
+</div>
+<p class="text-[#b0b8c8] text-[10px] font-body uppercase tracking-tighter opacity-60">© 2024 BIZNEXA DIGITAL SOLUTIONS STUDIO.</p>
+</div>
+</footer>
+</body></html>

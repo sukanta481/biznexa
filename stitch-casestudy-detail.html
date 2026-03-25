@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Case Study: Transforming Logistics | BIZNEXA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-tertiary-container": "#005a3c",
+            "secondary-dim": "#6063ee",
+            "surface-container-low": "#091328",
+            "surface": "#060e20",
+            "on-primary-fixed": "#003f43",
+            "on-error-container": "#ffa8a3",
+            "on-error": "#490006",
+            "surface-container-highest": "#192540",
+            "surface-bright": "#1f2b49",
+            "on-secondary-fixed-variant": "#3a3ac8",
+            "surface-dim": "#060e20",
+            "surface-container-lowest": "#000000",
+            "on-primary-fixed-variant": "#005e64",
+            "primary-dim": "#00deec",
+            "tertiary-fixed-dim": "#58e7ab",
+            "tertiary-container": "#69f6b8",
+            "on-tertiary-fixed-variant": "#006544",
+            "secondary-fixed": "#cdcdff",
+            "tertiary": "#9bffce",
+            "outline": "#6d758c",
+            "secondary-container": "#2f2ebe",
+            "primary-container": "#00eefc",
+            "error-dim": "#d7383b",
+            "on-secondary": "#080079",
+            "primary-fixed": "#00eefc",
+            "outline-variant": "#40485d",
+            "on-surface-variant": "#a3aac4",
+            "on-primary-container": "#005359",
+            "tertiary-fixed": "#69f6b8",
+            "secondary": "#9093ff",
+            "surface-container-high": "#141f38",
+            "surface-container": "#0f1930",
+            "on-background": "#dee5ff",
+            "on-secondary-container": "#ccccff",
+            "on-secondary-fixed": "#160bae",
+            "primary": "#8ff5ff",
+            "on-surface": "#dee5ff",
+            "inverse-primary": "#006a71",
+            "on-tertiary": "#006443",
+            "error-container": "#9f0519",
+            "tertiary-dim": "#58e7ab",
+            "secondary-fixed-dim": "#bdbeff",
+            "surface-variant": "#192540",
+            "on-primary": "#005d63",
+            "primary-fixed-dim": "#00deec",
+            "background": "#060e20",
+            "inverse-surface": "#faf8ff",
+            "inverse-on-surface": "#4d556b",
+            "error": "#ff716c",
+            "on-tertiary-fixed": "#00452d",
+            "surface-tint": "#8ff5ff"
+          },
+          fontFamily: {
+            "headline": ["Space Grotesk"],
+            "body": ["Manrope"],
+            "label": ["Space Grotesk"]
+          },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+        },
+      },
+    }
+  </script>
+<style>
+    .glass-card {
+      background: rgba(25, 37, 64, 0.4);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    .text-glow {
+      text-shadow: 0 0 15px rgba(143, 245, 255, 0.3);
+    }
+    .hero-mask {
+      mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body selection:bg-primary/30 selection:text-primary">
+<!-- Top Navigation (Authority: Shared Components JSON) -->
+<nav class="fixed top-0 w-full z-50 bg-[#060e20]/60 backdrop-blur-xl shadow-2xl shadow-cyan-900/20">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<img alt="BIZNEXA Logo" class="h-8 w-auto" data-alt="minimalist tech logo with geometric lines in cyber cyan color representing digital architecture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAke1i8s5W-vz5sx4j1loLhAidlN2Xod1A_kRik5JrtGdWGmtVwnJteHAEsdtky3A2bl50gPxh1j_Kg5Yv5mDAkD4vXlxesaP4SJTxkx0jCl5Us6uK0ozAzwhrXeZ22E4UyUD2KYHQLTHErUzv1ldXwkccFutuX1CJxxXcOtuT3vYtb8iFBd_0K71dQOCGw53Q8dq_xDtTny_KBu232-tgLnkSUF118swbX_D1XbeKP5e5pjHiaQyKfrV8VheD8wPc-959Nx_ll0em0"/>
+<span class="text-xl font-bold tracking-tighter text-[#8ff5ff] font-mono">BIZNEXA</span>
+</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-[#8ff5ff] border-b-2 border-[#8ff5ff] pb-1 font-label text-sm uppercase tracking-[0.05em]" href="#">Work</a>
+<a class="text-[#dee5ff]/70 hover:text-[#8ff5ff] transition-colors font-label text-sm uppercase tracking-[0.05em]" href="#">Services</a>
+<a class="text-[#dee5ff]/70 hover:text-[#8ff5ff] transition-colors font-label text-sm uppercase tracking-[0.05em]" href="#">About</a>
+<a class="text-[#dee5ff]/70 hover:text-[#8ff5ff] transition-colors font-label text-sm uppercase tracking-[0.05em]" href="#">Expertise</a>
+</div>
+<button class="bg-gradient-to-r from-primary to-primary-dim text-on-primary-fixed px-6 py-2 rounded font-label text-sm font-bold tracking-wider hover:scale-95 transition-all duration-200">
+        CONTACT
+      </button>
+</div>
+</nav>
+<main class="pt-20">
+<!-- Hero Section -->
+<section class="relative min-h-[870px] flex items-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img alt="Logistics background" class="w-full h-full object-cover hero-mask opacity-40" data-alt="futuristic logistics warehouse with automated robotic arms and glowing blue data interfaces on a dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkDV1d46c79xed9SILihkf6hBrdgjMMkCPPAjkrlIX03ZISf-DUEiOPH4DDGqdYFgO3CS8lhmcKlusvl0r4HVDdrdjXe5aD9nmI9uLYk5x0hO3G8QacrX0qHpf3-GwV3aZ86FMaGq9A732KTW4F2sF_jKsaO8azJ_aEZW3L1FkWyUpjEiLv0JTbve_u56SvpwjmsgLsjwQdc6S4Aoip8G76Kt2I6NPrf10EBCq6Bm7vwl8k1KWmcixO3ty81ILHuuVVqEK7IDIEW6v"/>
+<div class="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent"></div>
+</div>
+<div class="relative z-10 max-w-7xl mx-auto px-8 w-full grid md:grid-cols-12 gap-12 items-center">
+<div class="md:col-span-7">
+<span class="font-label text-tertiary uppercase tracking-[0.2em] text-xs mb-4 block">Case Study / Logistics &amp; AI</span>
+<h1 class="font-headline text-5xl md:text-7xl font-bold leading-tight tracking-tighter text-glow mb-8">
+            Transforming Logistics with AI-Driven <span class="text-tertiary">Workflow Automation</span>
+</h1>
+<p class="text-[#b0b8c8] text-lg max-w-xl mb-10 leading-relaxed">
+            Discover how BIZNEXA redesigned a global shipping network using predictive neural networks to eliminate manual bottlenecks and maximize efficiency.
+          </p>
+</div>
+<div class="md:col-span-5">
+<div class="glass-card p-8 rounded-xl border border-primary/10 shadow-2xl">
+<h3 class="font-label text-primary text-sm uppercase tracking-widest mb-6">Impact Summary</h3>
+<div class="space-y-8">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded bg-tertiary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">trending_down</span>
+</div>
+<div>
+<div class="text-3xl font-headline font-bold text-white">70%</div>
+<div class="text-sm text-[#b0b8c8]">Reduction in Operational Costs</div>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">verified</span>
+</div>
+<div>
+<div class="text-3xl font-headline font-bold text-white">99.9%</div>
+<div class="text-sm text-[#b0b8c8]">Inventory Accuracy Rate</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Content Sections: Bento Grid Approach -->
+<section class="max-w-7xl mx-auto px-8 py-24">
+<div class="grid md:grid-cols-3 gap-8 mb-24">
+<!-- The Challenge -->
+<div class="md:col-span-1 bg-surface-container p-8 rounded-lg">
+<span class="material-symbols-outlined text-error text-4xl mb-6">warning</span>
+<h2 class="font-headline text-2xl font-bold mb-4">The Challenge</h2>
+<p class="text-[#b0b8c8] leading-relaxed">
+            The client struggled with fragmented legacy systems that required manual data entry at every waypoint. High error rates in cargo tracking led to significant delays, increasing operational overhead by 40% year-over-year.
+          </p>
+</div>
+<!-- The Biznexa Solution -->
+<div class="md:col-span-2 bg-surface-container-high p-8 rounded-lg relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-9xl">psychology</span>
+</div>
+<div class="relative z-10">
+<h2 class="font-headline text-2xl font-bold mb-4 text-primary">The Biznexa Solution</h2>
+<div class="grid md:grid-cols-2 gap-8">
+<p class="text-[#b0b8c8] leading-relaxed">
+                We engineered a custom AI orchestration layer that integrates directly with existing sensors and ERPs. Our proprietary predictive model anticipates logistical delays before they happen, suggesting reroutes in real-time.
+              </p>
+<ul class="space-y-4">
+<li class="flex items-center gap-3 text-sm text-on-surface">
+<span class="material-symbols-outlined text-tertiary text-sm">check_circle</span>
+                  Real-time holographic dashboard
+                </li>
+<li class="flex items-center gap-3 text-sm text-on-surface">
+<span class="material-symbols-outlined text-tertiary text-sm">check_circle</span>
+                  Custom Neural Network for Route Opt.
+                </li>
+<li class="flex items-center gap-3 text-sm text-on-surface">
+<span class="material-symbols-outlined text-tertiary text-sm">check_circle</span>
+                  Automated Exception Handling
+                </li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<!-- The Result: Bold ROI -->
+<div class="mb-24">
+<h2 class="font-label text-xs tracking-[0.3em] uppercase text-center mb-12 opacity-50">Quantitative Results</h2>
+<div class="grid md:grid-cols-4 gap-8">
+<div class="text-center p-8 bg-surface-container-lowest border border-white/5 rounded-lg">
+<div class="text-5xl font-headline font-bold text-tertiary mb-2">2.4x</div>
+<div class="text-xs font-label uppercase text-[#b0b8c8]">Throughput Increase</div>
+</div>
+<div class="text-center p-8 bg-surface-container-lowest border border-white/5 rounded-lg">
+<div class="text-5xl font-headline font-bold text-primary mb-2">15ms</div>
+<div class="text-xs font-label uppercase text-[#b0b8c8]">Decision Latency</div>
+</div>
+<div class="text-center p-8 bg-surface-container-lowest border border-white/5 rounded-lg">
+<div class="text-5xl font-headline font-bold text-secondary mb-2">$12M</div>
+<div class="text-xs font-label uppercase text-[#b0b8c8]">Annual Savings</div>
+</div>
+<div class="text-center p-8 bg-surface-container-lowest border border-white/5 rounded-lg">
+<div class="text-5xl font-headline font-bold text-on-background mb-2">0%</div>
+<div class="text-xs font-label uppercase text-[#b0b8c8]">Human Error Margin</div>
+</div>
+</div>
+</div>
+<!-- Testimonial -->
+<div class="max-w-4xl mx-auto">
+<div class="relative p-12 glass-card rounded-2xl border border-tertiary/20 text-center">
+<span class="material-symbols-outlined text-6xl text-tertiary/20 absolute -top-8 left-1/2 -translate-x-1/2 bg-surface px-4">format_quote</span>
+<blockquote class="text-2xl md:text-3xl font-headline italic text-on-background mb-8 leading-snug">
+            "Biznexa didn't just provide a tool; they transformed our entire digital architecture. Their AI-driven approach has set a new benchmark for what's possible in global logistics."
+          </blockquote>
+<div class="flex flex-col items-center">
+<img alt="CEO Portrait" class="w-16 h-16 rounded-full border-2 border-primary mb-4 object-cover" data-alt="professional portrait of a middle-aged executive man with a confident expression in a sharp suit" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA39dAxR9YZVgFTIudq8UvVHpwyh4vL5FsGYdmOONfKAbAWFbmDBlgLQPZ0Ctl2q4Izf9z4uyzck6_whZbYOjBW2keOStaU9071r3jqs9K4Q8I2eO96_6iCudlne_fL6GWy282SLQ5RMxj8nKPx83DJi6cUHfL5Nkbbwj2BuNZDUD7IRSvmFIyFS_uZzYm4nHON2yAu0InYEpnmIm93vc8HnteJtx1qvAwHX7Ypf_pm_8KHvxyOEgwzQd_BIMPIYoB9JTofNsedXNwi"/>
+<cite class="not-italic font-bold text-white">David Chen</cite>
+<span class="text-sm text-[#b0b8c8]">CEO, NexaLogistics Global</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Related Case Studies -->
+<section class="bg-surface-container-low py-24">
+<div class="max-w-7xl mx-auto px-8">
+<h3 class="font-headline text-3xl font-bold mb-12">Related Case Studies</h3>
+<div class="grid md:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="group cursor-pointer">
+<div class="overflow-hidden rounded-lg mb-6 aspect-video bg-surface-container-highest">
+<img alt="Case study 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="abstract data visualization with glowing orange and blue nodes representing network traffic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxHqT2oPqWwJ6aYHsffnQ2NRB2SaV5X2rjORn7NxmtjzSpX7M_0vxVY8NgWoVmhqtwQt2zn3K6J1WcJ3gLBJYV8QMbvHajYjsWH6-UQe3X4x5-6Hvjm_rDzqR2ViexQ4eb0SE0QJ-zsC__1mk2251jYi8kChRXcE4-jRi7YFTQSNWPvDnIhJ6RQJK3nHA0GECgeehtxRDFry479COiGexfmcniP0lJP1cniZcL1zWZ1hXL_tpzev577IZ4gQbaK0QhhGkUR5eWHMKC"/>
+</div>
+<span class="font-label text-xs text-primary uppercase tracking-widest">FinTech</span>
+<h4 class="font-headline text-xl font-bold mt-2 group-hover:text-primary transition-colors">Algorithmic Risk Assessment</h4>
+</div>
+<!-- Card 2 -->
+<div class="group cursor-pointer">
+<div class="overflow-hidden rounded-lg mb-6 aspect-video bg-surface-container-highest">
+<img alt="Case study 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="macro photo of a high-performance computer processor chip with glowing electric circuit traces" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCE6EY6e-REWanzm5V86o0yysbjCXynPzrvG9XAr1M4RT-kHbB1chXHx2o4IN36sEa9I1qyA5X8YFebfLNBMTFBPDsov4sIIkC5r906iuM-rVUdkmR_Kj1LRYYPjyWn_cFkzpOMo0enDaORtb0xlrXFn_F04BiYtktGbhmOzzMBdJ1yj3izpxa63ah6AK961CEmTAeP101AYnsTDkjTbQIrB18beFIX4IIHWEV0e1Mat-aqFWrrYa9GIpgZ7Ch6a3SkCzjYQNt9LFv"/>
+</div>
+<span class="font-label text-xs text-secondary uppercase tracking-widest">Hardware</span>
+<h4 class="font-headline text-xl font-bold mt-2 group-hover:text-secondary transition-colors">IoT Edge Node Integration</h4>
+</div>
+<!-- Card 3 -->
+<div class="group cursor-pointer">
+<div class="overflow-hidden rounded-lg mb-6 aspect-video bg-surface-container-highest">
+<img alt="Case study 3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="industrial robot arm working in a precision manufacturing facility with clean clinical lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyOmAOx7_tiWDzPxfie3T4xRIZSUPKYydwaaq-T9pyeOQDozsFRWc0-GALxl1_UBKG_O3-O-2_jag7YJfkQEcsHg3q7HlGi1kMNF26rHu5-OM98kAe97aj3QYQbLYE7Bvvwkk_ZZcMluI6yzOVtVLkxGVtlPSNg6unrZbeMnXIOK-QXSacFdWOaZyWNxKEmh3s9DiWwmxHr4J6Q_aJpv_hpHExl2HhlWzH-ilxli_RSA0ARuuuVz1iKy-7kw4LXK2r8atJ_8WNRI_d"/>
+</div>
+<span class="font-label text-xs text-tertiary uppercase tracking-widest">Manufacturing</span>
+<h4 class="font-headline text-xl font-bold mt-2 group-hover:text-tertiary transition-colors">Predictive Maintenance Systems</h4>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer (Authority: Shared Components JSON) -->
+<footer class="bg-[#000000] w-full pt-20 pb-10">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-12 px-8 max-w-7xl mx-auto border-t border-[#8ff5ff]/10 pt-16">
+<div class="col-span-2 md:col-span-1">
+<div class="text-2xl font-black text-[#8ff5ff] mb-4">BIZNEXA</div>
+<p class="text-[#dee5ff]/50 text-sm max-w-xs mb-8">Architecting the digital future through relentless innovation and technical precision.</p>
+<div class="flex gap-4">
+<div class="w-8 h-8 rounded border border-white/10 flex items-center justify-center hover:bg-primary/10 transition-colors cursor-pointer"><span class="material-symbols-outlined text-sm">share</span></div>
+<div class="w-8 h-8 rounded border border-white/10 flex items-center justify-center hover:bg-primary/10 transition-colors cursor-pointer"><span class="material-symbols-outlined text-sm">terminal</span></div>
+</div>
+</div>
+<div>
+<h5 class="font-label text-white uppercase text-xs tracking-widest mb-6">Explore</h5>
+<ul class="space-y-4">
+<li><a class="text-[#dee5ff]/50 hover:text-[#8ff5ff] hover:translate-x-1 transition-all duration-200 block text-sm" href="#">Brand</a></li>
+<li><a class="text-[#dee5ff]/50 hover:text-[#8ff5ff] hover:translate-x-1 transition-all duration-200 block text-sm" href="#">Case Studies</a></li>
+<li><a class="text-[#dee5ff]/50 hover:text-[#8ff5ff] hover:translate-x-1 transition-all duration-200 block text-sm" href="#">Solutions</a></li>
+<li><a class="text-[#dee5ff]/50 hover:text-[#8ff5ff] hover:translate-x-1 transition-all duration-200 block text-sm" href="#">Resources</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-label text-white uppercase text-xs tracking-widest mb-6">Company</h5>
+<ul class="space-y-4">
+<li><a class="text-[#dee5ff]/50 hover:text-[#8ff5ff] hover:translate-x-1 transition-all duration-200 block text-sm" href="#">Connect</a></li>
+<li><a class="text-[#dee5ff]/50 hover:text-[#8ff5ff] hover:translate-x-1 transition-all duration-200 block text-sm" href="#">Location</a></li>
+<li><a class="text-[#dee5ff]/50 hover:text-[#8ff5ff] hover:translate-x-1 transition-all duration-200 block text-sm" href="#">Privacy Policy</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-label text-white uppercase text-xs tracking-widest mb-6">Headquarters</h5>
+<p class="text-[#dee5ff]/50 text-sm mb-2">Salt Lake City, Sector V</p>
+<p class="text-[#dee5ff]/50 text-sm mb-6">Kolkata, WB</p>
+<div class="p-1 border border-primary/20 rounded-sm">
+<img alt="Footer map placeholder" class="w-full grayscale brightness-50 contrast-125" data-alt="abstract architectural map of a modern tech hub in Kolkata showing grid lines and digital nodes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9a9MhdbM9HKdKqcLIU0N8S-gkjExjP0aoL64DVsXUTUtWke5ELXQdFTVuLwuDK4fLvrCCSZVWTGBbZbx6tOm8yY4cQDNWnPJt5wrIU9TitWJErjr_C2H0Tv0cXshjDL_EZIQRnznRGehW-G9XYXbHLRJtg40ft7iIAD98gAZOjAQE0wB_v-4ioA5KwPCFnET77gDFjQfHqsNUrjZOLs-GY40fEzvOT2CvmmAKDmKvhrbDRiY6Dujmk4WgYBPkBXMGD5QKqWkM2_Hr"/>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-8 mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-[#dee5ff]/30 text-xs">© 2024 BIZNEXA Digital Architecture. All rights reserved.</p>
+<div class="flex gap-8">
+<span class="text-[#dee5ff]/30 text-[10px] font-label uppercase">Designed for Scale</span>
+<span class="text-[#dee5ff]/30 text-[10px] font-label uppercase">Powered by AI</span>
+</div>
+</div>
+</footer>
+</body></html>

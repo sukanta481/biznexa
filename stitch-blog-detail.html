@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;family=Space+Mono:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-fixed-dim": "#58e7ab",
+                        "on-error-container": "#ffa8a3",
+                        "outline": "#6d758c",
+                        "surface-container-high": "#141f38",
+                        "inverse-on-surface": "#4d556b",
+                        "on-tertiary-fixed-variant": "#006544",
+                        "surface": "#060e20",
+                        "on-error": "#490006",
+                        "on-secondary-container": "#ccccff",
+                        "background": "#060e20",
+                        "primary-dim": "#58e7ab",
+                        "outline-variant": "#40485d",
+                        "inverse-primary": "#006a71",
+                        "on-primary": "#005d63",
+                        "on-primary-container": "#005359",
+                        "tertiary-dim": "#58e7ab",
+                        "primary-fixed-dim": "#58e7ab",
+                        "surface-container": "#0f1930",
+                        "on-secondary-fixed-variant": "#3a3ac8",
+                        "inverse-surface": "#faf8ff",
+                        "on-primary-fixed": "#003f43",
+                        "on-surface-variant": "#a3aac4",
+                        "error-dim": "#d7383b",
+                        "primary-fixed": "#58e7ab",
+                        "on-surface": "#dee5ff",
+                        "surface-container-low": "#091328",
+                        "surface-container-highest": "#192540",
+                        "on-tertiary": "#006443",
+                        "primary": "#58e7ab",
+                        "tertiary": "#9bffce",
+                        "tertiary-fixed": "#69f6b8",
+                        "secondary-dim": "#6063ee",
+                        "surface-tint": "#58e7ab",
+                        "primary-container": "#58e7ab",
+                        "on-background": "#dee5ff",
+                        "on-primary-fixed-variant": "#005e64",
+                        "tertiary-container": "#69f6b8",
+                        "surface-container-lowest": "#000000",
+                        "on-tertiary-container": "#005a3c",
+                        "on-tertiary-fixed": "#00452d",
+                        "secondary-fixed": "#cdcdff",
+                        "surface-variant": "#192540",
+                        "surface-bright": "#1f2b49",
+                        "secondary-fixed-dim": "#bdbeff",
+                        "on-secondary-fixed": "#160bae",
+                        "error-container": "#9f0519",
+                        "secondary": "#9093ff",
+                        "error": "#ff716c",
+                        "secondary-container": "#2f2ebe",
+                        "on-secondary": "#080079",
+                        "surface-dim": "#060e20"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Manrope"],
+                        "label": ["Space Grotesk"],
+                        "mono": ["Space Mono"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(25, 37, 64, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(88, 231, 171, 0.1);
+        }
+        .editorial-shadow {
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/30 selection:text-primary">
+<!-- Top Navigation -->
+<header class="fixed top-0 w-full z-50 bg-[#060e20]/80 backdrop-blur-xl border-b border-white/5">
+<div class="flex justify-between items-center px-8 py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[#060e20] text-xl font-bold">terminal</span>
+</div>
+<span class="text-xl font-bold tracking-tighter text-white font-mono uppercase">Biznexa</span>
+</div>
+<nav class="hidden md:flex gap-10 font-headline tracking-tight">
+<a class="text-[#b0b8c8] hover:text-primary transition-colors text-sm font-medium" href="#">Home</a>
+<a class="text-[#b0b8c8] hover:text-primary transition-colors text-sm font-medium" href="#">Services</a>
+<a class="text-[#b0b8c8] hover:text-primary transition-colors text-sm font-medium" href="#">About</a>
+<a class="text-[#b0b8c8] hover:text-primary transition-colors text-sm font-medium" href="#">Case Studies</a>
+<a class="text-primary border-b-2 border-primary pb-1 text-sm font-medium" href="#">Blogs</a>
+</nav>
+<button class="bg-primary text-[#060e20] px-6 py-2 rounded-sm font-bold font-headline hover:brightness-110 transition-all text-xs tracking-widest uppercase">
+                Contact
+            </button>
+</div>
+</header>
+<main class="pt-24 pb-20">
+<!-- Hero Section -->
+<header class="relative w-full h-[716px] flex items-end overflow-hidden mb-16">
+<div class="absolute inset-0 z-0">
+<img alt="Future of AI" class="w-full h-full object-cover opacity-40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7ffkI_HOf7ReVFogp_FYUqoHrikhdH2nmvJK2zHqKXxRf3j9czdQ2Vn21cC848Z0hFERhjl_xDaA1A189pD8m1vFVOrx7CnWJ9Zyvh5gQED0o3JrTQcGomJQGChhJqqrxI-0sDSovyenIxIsumDoLO5RgIfjoysuxx1NJO4HJ5W5AWxdi1ytyK71LmvHPu2zm-iBocZThLXQEq4YSUlwYjqCvXTRShYNEkvwlAGLkoIzSWvHtJfkio88Ob86EMFy0-l_LmMxI_xqv"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+</div>
+<div class="relative z-10 max-w-7xl mx-auto px-8 w-full pb-16">
+<div class="glass-card p-8 md:p-12 rounded-xl editorial-shadow border-l-4 border-l-primary max-w-3xl">
+<div class="flex items-center gap-4 mb-6">
+<span class="font-headline text-[10px] tracking-[0.2em] uppercase py-1 px-3 bg-primary/20 text-primary border border-primary/30 rounded-full">Innovation</span>
+<span class="font-headline text-[10px] tracking-[0.2em] uppercase text-on-surface-variant">12 Min Read</span>
+</div>
+<h1 class="font-headline text-4xl md:text-6xl font-bold tracking-tighter mb-8 leading-tight text-on-surface">
+                        The Future of <span class="text-primary">AI</span> in Indian SMBs
+                    </h1>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest border border-outline-variant overflow-hidden">
+<img alt="Author" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcAgfjfM0b9ZmUPskFcDH5B_VQkgrGwsRgZo1msG7yFDn08VQVWV2mhECd_NNc4VYb2VLqA6TNvDH7xFhxRHAa4e_vF1rSSnyiy-w2rz-1XaX5Uw5KYcSmkhUsPre8lrp_05DZ5yPaoEJSg3UJXtvLgeKbgD4dB7C_fNcc7cNAKVtrflAVNHD0ayy0P6DSU1bvwov_dP6JQUNS5GJV3UWofr8wkfILAv7OwDjIEdWjzAz1nub9DxxS8-kIMytFpX3yOdGNM7TmpGrb"/>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Sukanta Saha</p>
+<p class="text-xs text-on-surface-variant font-headline uppercase tracking-wider">Founder &amp; CEO</p>
+</div>
+</div>
+<div class="h-8 w-px bg-outline-variant"></div>
+<p class="text-sm text-on-surface-variant font-headline uppercase tracking-wider">Oct 24, 2024</p>
+</div>
+</div>
+</div>
+</header>
+<div class="max-w-7xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-12 gap-[44px]">
+<!-- Article Content -->
+<article class="lg:col-span-8 max-w-[800px] text-[#b0b8c8] text-lg leading-relaxed">
+<p class="mb-8 first-letter:text-5xl first-letter:font-headline first-letter:text-primary first-letter:mr-3 first-letter:float-left">
+                    The landscape of Small and Medium Businesses (SMBs) in India is undergoing a seismic shift. No longer confined to the fringes of technological adoption, these enterprises are now at the forefront of a digital revolution powered by artificial intelligence.
+                </p>
+<h2 class="font-headline text-3xl font-bold text-on-surface mb-6 mt-12 tracking-tight">The Democratization of Intelligence</h2>
+<p class="mb-6">
+                    Historically, advanced analytics and automation were the exclusive domain of large corporations with deep pockets. However, the rise of cloud-native AI solutions has leveled the playing field. From automated inventory management in Surat's textile hubs to AI-driven customer sentiment analysis for Bengaluru's startups, the accessibility is unprecedented.
+                </p>
+<!-- Pull Quote -->
+<div class="glass-card my-12 p-10 rounded-lg relative overflow-hidden border-r-4 border-r-tertiary">
+<span class="material-symbols-outlined absolute -top-4 -left-2 text-8xl text-primary/10 select-none">format_quote</span>
+<blockquote class="relative z-10 font-headline text-2xl md:text-3xl font-medium text-on-surface leading-snug">
+                        AI is not about replacing human ingenuity in Indian SMBs; it's about amplifying the cultural resilience that has always defined our entrepreneurs.
+                    </blockquote>
+</div>
+<p class="mb-6">
+                    In the next five years, we expect to see a 40% increase in productivity across traditional sectors. This isn't just theory—it's already happening in the micro-factories of Pune and the service centers of Kolkata.
+                </p>
+<h3 class="font-headline text-2xl font-bold text-on-surface mb-4 mt-[56px]">Key Takeaways for Business Owners</h3>
+<div class="grid md:grid-cols-2 gap-6 my-10">
+<div class="p-6 bg-surface-container-low rounded-lg border border-outline-variant/30">
+<span class="material-symbols-outlined text-tertiary mb-3" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<h4 class="font-headline text-on-surface font-bold mb-2 uppercase text-xs tracking-widest">Efficiency First</h4>
+<p class="text-sm">Start with mundane task automation to free up creative human capital.</p>
+</div>
+<div class="p-6 bg-surface-container-low rounded-lg border border-outline-variant/30">
+<span class="material-symbols-outlined text-primary mb-3" style="font-variation-settings: 'FILL' 1;">database</span>
+<h4 class="font-headline text-on-surface font-bold mb-2 uppercase text-xs tracking-widest">Data Readiness</h4>
+<p class="text-sm">Structure your existing customer data today to train the models of tomorrow.</p>
+</div>
+</div>
+<p class="mb-12">
+                    While the transition poses challenges—particularly regarding data privacy and the upskilling of labor—the cost of inaction is far greater. As Biznexa helps bridge the gap between complex algorithms and practical business utility, the path forward becomes clearer for every local visionary.
+                </p>
+<!-- Author Bio Box -->
+<div class="mt-16 p-8 glass-card rounded-xl flex flex-col md:flex-row items-center gap-8 border border-white/5">
+<div class="w-24 h-24 rounded-full overflow-hidden flex-shrink-0 border-2 border-primary/20">
+<img alt="Sukanta Saha" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCR_6bd8GuWfs49lxyJtS9lnDuJGS4cLn9ft40MTuL7Eil1YIF1obwdhD6z_j61Pi_-bM64gDEKQjXnKVSMSGaHDCjEiqUQFUivmSjAXaXDokUg9GUyl0FbWf995neLwKOaejahPn-L5WW6vXGALuYOeUnQJeZxpoWDVPmSWDX_CFKJDElmO0185wALTgxgYdUq3DBveiA027ZDT-JMCd8z2GSduXG8uEo-seG3dMXvBlz-iQ4pZwT3qQFvkOCCVnzzpKSM8wzIHpsE"/>
+</div>
+<div class="flex-grow text-center md:text-left">
+<h4 class="font-headline text-xl font-bold text-on-surface mb-2">Sukanta Saha</h4>
+<p class="text-[#b0b8c8] text-sm mb-4 leading-relaxed">Pioneering digital excellence through innovative web solutions and intelligent automation for growing enterprises.</p>
+<div class="flex justify-center md:justify-start gap-4">
+<a class="text-primary hover:text-tertiary transition-colors" href="#"><span class="material-symbols-outlined text-xl">link</span></a>
+<a class="text-primary hover:text-tertiary transition-colors" href="#"><span class="material-symbols-outlined text-xl">alternate_email</span></a>
+<a class="text-primary hover:text-tertiary transition-colors" href="#"><span class="material-symbols-outlined text-xl">terminal</span></a>
+</div>
+</div>
+</div>
+</article>
+<!-- Sidebar -->
+<aside class="lg:col-span-4 pl-10 border-l border-white/5 space-y-10">
+<!-- Book a Call CTA -->
+<div class="p-8 rounded-xl border border-primary/40 bg-surface-container-high/60">
+<h3 class="font-headline text-xl font-bold text-on-surface mb-4">Transform Your Business</h3>
+<p class="text-sm text-on-surface-variant mb-6">Need a custom AI roadmap for your enterprise? Our experts are ready to build with you.</p>
+<button class="w-full py-4 bg-primary text-on-primary-fixed font-headline font-bold uppercase tracking-widest text-xs rounded shadow-[0_0_20px_rgba(88,231,171,0.2)] hover:scale-[1.02] transition-transform">
+                        Book a Discovery Call
+                    </button>
+</div>
+<!-- Categories -->
+<div>
+<h4 class="font-headline text-xs font-bold uppercase tracking-[0.3em] text-on-surface-variant mb-6 flex items-center gap-3">
+                        Categories <div class="h-px flex-1 bg-outline-variant/30"></div>
+</h4>
+<ul class="space-y-4">
+<li><a class="flex justify-between items-center group text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="font-headline text-sm uppercase">Cloud Solutions</span>
+<span class="text-[11px] font-bold py-1 px-3 bg-primary text-[#060e20] rounded-full">12</span>
+</a></li>
+<li><a class="flex justify-between items-center group text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="font-headline text-sm uppercase">Digital Strategy</span>
+<span class="text-[11px] font-bold py-1 px-3 bg-primary text-[#060e20] rounded-full">08</span>
+</a></li>
+<li><a class="flex justify-between items-center group text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="font-headline text-sm uppercase">Cyber Security</span>
+<span class="text-[11px] font-bold py-1 px-3 bg-primary text-[#060e20] rounded-full">15</span>
+</a></li>
+</ul>
+</div>
+<!-- Newsletter -->
+<div class="relative group">
+<div class="absolute -inset-1 bg-primary/10 rounded-3xl blur opacity-25"></div>
+<div class="relative glass-card p-8 rounded-xl border-t border-primary/20 space-y-6">
+<div>
+<h4 class="font-headline text-lg font-bold text-on-surface mb-2">Stay Ahead of the Curve</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">Weekly insights on technology, growth, and digital transformation.</p>
+</div>
+<div class="space-y-4">
+<input class="w-full bg-surface-container-highest/50 border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/30 text-on-surface placeholder:text-outline" placeholder="Enter your email address" type="email"/>
+<button class="w-full py-3 bg-primary text-[#060e20] font-headline font-bold uppercase tracking-widest text-xs rounded-lg hover:brightness-110 transition-all">Subscribe Now</button>
+</div>
+</div>
+</div>
+</aside>
+</div>
+<!-- Related Insights -->
+<section class="mt-24 pt-24 border-t border-outline-variant/10">
+<div class="max-w-7xl mx-auto px-8">
+<h2 class="font-headline text-4xl font-bold tracking-tighter text-on-surface mb-12">Related <span class="text-secondary">Insights</span></h2>
+<div class="grid md:grid-cols-3 gap-8 items-stretch">
+<!-- Post 1 -->
+<div class="glass-card group cursor-pointer overflow-hidden rounded-xl flex flex-col h-full">
+<div class="aspect-video overflow-hidden">
+<img alt="Security" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnG37EZ0BPfXw_gbA1Ew-mZpKMFnOVQRwXU0QTaTP7l0Gwoj_yiV7r4BAuXrjhie93ECwY3tXR_d91K0DL45IJWzRCTH-eHBAic-pAkkwZkND0lVuAaAMy3K9zy27PgMDZ7nT-VyazcsN3qFhUIVruuTbxOR0I78HLX23jmqJP_bHYsDEoz5B5JIYdW4ZqwTwDlXASlvmDvOX1sS7QlEVEHQAsgRuzCwC2a7xiHgm1-Q37yUCD0kp9KRRMJOvNgjQzWurWtGu_0_rm"/>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<span class="font-headline text-[10px] tracking-[0.2em] uppercase text-secondary mb-4 block">Security</span>
+<h3 class="font-headline text-xl font-bold text-on-surface leading-tight mb-4 group-hover:text-primary transition-colors">Securing the Edge: Future Proofing Infrastructure</h3>
+<div class="mt-auto flex items-center gap-2 text-on-surface-variant text-xs font-headline uppercase tracking-widest">
+<span>8 Min Read</span>
+<div class="w-1 h-1 bg-outline-variant rounded-full"></div>
+<span>Oct 12</span>
+</div>
+</div>
+</div>
+<!-- Post 2 -->
+<div class="glass-card group cursor-pointer overflow-hidden rounded-xl flex flex-col h-full">
+<div class="aspect-video overflow-hidden">
+<img alt="Cloud" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdtzqnsrfPwkXy8nrMSOmzAH5GHVhurIdR3pHKWWHvJe__kHkMocgzajrsu739uQnCfJ3KEAiuGwn-YEf8NGXl1SuxQvBi-4LKGtXph-yrr0cxlgsTPECO84NnCe6LMjm2LFvgGWLedS17enTSMiLHIJTlqCtVURmfKtvQHDFsro--E4OQE3Nnj5TxJHOwdlMwxkZj7VzozNfDNbWMbtdP7gOU751AIJgrTqQliW4Qh6bupjX0L7sipa_tRhBqnmjetAHsUIKDe4L5"/>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<span class="font-headline text-[10px] tracking-[0.2em] uppercase text-primary mb-4 block">Cloud</span>
+<h3 class="font-headline text-xl font-bold text-on-surface leading-tight mb-4 group-hover:text-primary transition-colors">Serverless Architecture: Scale Without Limits</h3>
+<div class="mt-auto flex items-center gap-2 text-on-surface-variant text-xs font-headline uppercase tracking-widest">
+<span>15 Min Read</span>
+<div class="w-1 h-1 bg-outline-variant rounded-full"></div>
+<span>Oct 08</span>
+</div>
+</div>
+</div>
+<!-- Post 3 -->
+<div class="glass-card group cursor-pointer overflow-hidden rounded-xl flex flex-col h-full">
+<div class="aspect-video overflow-hidden">
+<img alt="Hardware" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKqT-HVYzbgqhKZXMyR09xkSIrd9qS6BYTkvCpe80ZZ8XPg_OZ5yB2OZxug3yAVngVmq4o3YOAShS55yaJQ5koSzpI8Bt_MIsfHRUujDIicyOVKcFGTr7Tq8QDfx3nG1d-C33QjfIBsVMgV3jUbg00UILKFxSEaWGRD3xIzZ1MwSxsK2XpdoFEX1WgswZuJzjeIrbXbXtHj5qkxIKaiDwI9zMTqA0ZRxmLvaRD3c3_p1X-MyfhVaTQEP8Ogam5glqTsQr1FPVfYzWQ"/>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<span class="font-headline text-[10px] tracking-[0.2em] uppercase text-tertiary mb-4 block">Hardware</span>
+<h3 class="font-headline text-xl font-bold text-on-surface leading-tight mb-4 group-hover:text-primary transition-colors">The Silicon Shift: India's New Chip Economy</h3>
+<div class="mt-auto flex items-center gap-2 text-on-surface-variant text-xs font-headline uppercase tracking-widest">
+<span>10 Min Read</span>
+<div class="w-1 h-1 bg-outline-variant rounded-full"></div>
+<span>Sep 29</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-white/5 bg-[#030712] pt-20 pb-12">
+<div class="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
+<div class="space-y-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[#060e20] text-xl font-bold">terminal</span>
+</div>
+<span class="text-xl font-bold tracking-tighter text-white font-mono uppercase">Biznexa</span>
+</div>
+<p class="text-sm leading-relaxed text-[#b0b8c8] max-w-xs">
+                    Pioneering digital excellence through innovative web solutions and intelligent automation for businesses ready to scale.
+                </p>
+</div>
+<div class="space-y-6">
+<h5 class="text-white font-bold font-headline text-xs uppercase tracking-[0.2em]">Location</h5>
+<ul class="space-y-3 text-sm text-[#b0b8c8]">
+<li>Kolkata, West Bengal, India</li>
+<li>Salt Lake Sector V</li>
+<li>Tech Hub, Pin 700091</li>
+<li class="pt-2 text-white font-medium">+91 33 2357 0000</li>
+</ul>
+</div>
+<div class="space-y-6">
+<h5 class="text-white font-bold font-headline text-xs uppercase tracking-[0.2em]">Connect</h5>
+<ul class="space-y-3 text-sm text-[#b0b8c8]">
+<li><a class="hover:text-primary transition-colors flex items-center gap-3" href="#"><span class="material-symbols-outlined text-lg">chat</span> WhatsApp Support</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-3" href="#"><span class="material-symbols-outlined text-lg">link</span> LinkedIn</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-3" href="#"><span class="material-symbols-outlined text-lg">camera</span> Instagram</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-3" href="#"><span class="material-symbols-outlined text-lg">alternate_email</span> Twitter</a></li>
+</ul>
+</div>
+<div class="space-y-6">
+<h5 class="text-white font-bold font-headline text-xs uppercase tracking-[0.2em]">Resources</h5>
+<ul class="space-y-3 text-sm text-[#b0b8c8]">
+<li><a class="hover:text-primary transition-colors" href="#">Case Studies</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Open Source</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Documentation</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-8 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+<p class="text-xs text-[#b0b8c8] font-medium tracking-wider">© 2024 BIZNEXA. KOLKATA, INDIA.</p>
+<div class="flex gap-8">
+<span class="material-symbols-outlined text-[#b0b8c8] hover:text-primary cursor-pointer text-xl transition-colors">database</span>
+<span class="material-symbols-outlined text-[#b0b8c8] hover:text-primary cursor-pointer text-xl transition-colors">security</span>
+<span class="material-symbols-outlined text-[#b0b8c8] hover:text-primary cursor-pointer text-xl transition-colors">language</span>
+</div>
+</div>
+</footer>
+</body></html>

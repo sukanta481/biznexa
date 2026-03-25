@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Biznexa | The Future of Digital Architecture</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed-dim": "#58e7ab",
+              "on-error-container": "#ffa8a3",
+              "outline": "#6d758c",
+              "surface-container-high": "#141f38",
+              "inverse-on-surface": "#4d556b",
+              "on-tertiary-fixed-variant": "#006544",
+              "surface": "#060e20",
+              "on-error": "#490006",
+              "on-secondary-container": "#ccccff",
+              "background": "#060e20",
+              "primary-dim": "#00deec",
+              "outline-variant": "#40485d",
+              "inverse-primary": "#006a71",
+              "on-primary": "#005d63",
+              "on-primary-container": "#005359",
+              "tertiary-dim": "#58e7ab",
+              "primary-fixed-dim": "#00deec",
+              "surface-container": "#0f1930",
+              "on-secondary-fixed-variant": "#3a3ac8",
+              "inverse-surface": "#faf8ff",
+              "on-primary-fixed": "#003f43",
+              "on-surface-variant": "#a3aac4",
+              "error-dim": "#d7383b",
+              "primary-fixed": "#00eefc",
+              "on-surface": "#dee5ff",
+              "surface-container-low": "#091328",
+              "surface-container-highest": "#192540",
+              "on-tertiary": "#006443",
+              "primary": "#8ff5ff",
+              "tertiary": "#9bffce",
+              "tertiary-fixed": "#69f6b8",
+              "secondary-dim": "#6063ee",
+              "surface-tint": "#8ff5ff",
+              "primary-container": "#00eefc",
+              "on-background": "#dee5ff",
+              "on-primary-fixed-variant": "#005e64",
+              "tertiary-container": "#69f6b8",
+              "surface-container-lowest": "#000000",
+              "on-tertiary-container": "#005a3c",
+              "on-tertiary-fixed": "#00452d",
+              "secondary-fixed": "#cdcdff",
+              "surface-variant": "#192540",
+              "surface-bright": "#1f2b49",
+              "secondary-fixed-dim": "#bdbeff",
+              "on-secondary-fixed": "#160bae",
+              "error-container": "#9f0519",
+              "secondary": "#9093ff",
+              "error": "#ff716c",
+              "secondary-container": "#2f2ebe",
+              "on-secondary": "#080079",
+              "surface-dim": "#060e20"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        background-color: #060e20;
+        color: #dee5ff;
+        font-family: 'Manrope', sans-serif;
+      }
+      .glass-panel {
+        background: rgba(25, 37, 64, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+      .text-body-muted {
+        color: #b0b8c8;
+      }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary selection:text-on-primary-fixed">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-[#060e20]/80 backdrop-blur-xl border-b border-outline-variant/10">
+<div class="flex justify-between items-center px-6 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-[#00F0FF] font-headline">
+                Biznexa
+            </div>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-primary p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Desktop Links -->
+<div class="hidden md:flex gap-8 items-center">
+<a class="font-headline tracking-tight uppercase text-sm text-[#dee5ff]/70 hover:text-[#00F0FF] transition-colors" href="#">Home</a>
+<a class="font-headline tracking-tight uppercase text-sm text-[#dee5ff]/70 hover:text-[#00F0FF] transition-colors" href="#">Services</a>
+<a class="font-headline tracking-tight uppercase text-sm text-[#dee5ff]/70 hover:text-[#00F0FF] transition-colors" href="#">About</a>
+<a class="font-headline tracking-tight uppercase text-sm text-[#00F0FF] border-b-2 border-[#00F0FF] pb-1" href="#">Blogs</a>
+<a class="bg-primary text-on-primary-fixed px-6 py-2 font-headline uppercase text-sm font-bold duration-300 ease-in-out hover:scale-105 active:scale-95" href="#">Contact</a>
+</div>
+</div>
+</nav>
+<main class="pt-24">
+<!-- Hero Section -->
+<header class="px-6 mb-12">
+<div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden mb-8 group">
+<img alt="Cyber Security Technology" class="w-full h-full object-cover" data-alt="close-up of glowing circuit board with blue and cyan light traces in a dark high-tech laboratory setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGHNsOLSjQR1mH_SwuVzt_Az_NNQHKOpTrx8MkNPPPqvvqp_tLpuJy4wzltjap1tEdQmGvEejpchIzI5mxTIvEDzMGzIQHP8p9KP2x3sNUE4gPcVLpds5TZ5-3htw7PxAkBTjgErcRD4O7GUuDB9JC6AbdaxJbIR3R-5cSdfW8FI26QKOkDRd0s0rOVqKZlo2RABRN0GfiB11Pu2IAYltvewpqaoSTcSnxfWqUW4VLUh4BbOoBo0oAwKEkOYRAeRa3yVlEbdsn6OcR"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim to-transparent opacity-60"></div>
+<div class="absolute bottom-4 left-4 right-4 glass-panel p-4 rounded-lg border border-outline-variant/20">
+<div class="flex items-center gap-3 mb-2">
+<span class="text-[10px] font-headline uppercase tracking-widest text-tertiary-fixed bg-tertiary-fixed/10 px-2 py-0.5 rounded">Strategy</span>
+<span class="text-[10px] font-headline uppercase tracking-widest text-on-surface-variant">8 Min Read</span>
+</div>
+<h1 class="text-xl font-headline font-bold text-on-surface leading-tight tracking-tight">
+                        Scaling Digital Infrastructure in the Era of Quantum Computing
+                    </h1>
+</div>
+</div>
+</header>
+<!-- Article Content -->
+<article class="px-6 max-w-none">
+<div class="flex items-center gap-3 mb-10 text-on-surface-variant">
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm text-primary">person</span>
+</div>
+<div class="text-xs font-body">
+<p class="font-bold text-on-surface leading-none mb-1">Anirban Das</p>
+<p class="opacity-70 leading-none">Published Oct 24, 2024</p>
+</div>
+</div>
+<div class="space-y-6 text-body-muted font-body leading-relaxed text-base">
+<p class="first-letter:text-4xl first-letter:font-headline first-letter:font-bold first-letter:text-primary first-letter:mr-2 first-letter:float-left">
+                    As we stand on the precipice of a computational revolution, the architectural foundations of our digital world are being reimagined. The traditional binary constraints that have governed silicon-based logic for decades are no longer the ceiling; they are becoming the floor.
+                </p>
+<h2 class="text-on-surface font-headline font-semibold text-lg pt-4">The Shift to Structural Depth</h2>
+<p>
+                    Modern enterprises are moving away from monolithic deployments toward what we call "Fluid Architecture." This involves creating systems that can dynamically reconfigure based on real-time data flow requirements, minimizing latency through edge-integrated nodes.
+                </p>
+<div class="my-10 py-8 border-l-2 border-primary bg-surface-container-low px-6">
+<p class="italic text-on-surface text-lg font-headline">
+                        "The goal of the digital architect is not to build faster machines, but to design smarter ecosystems that breathe with the data they process."
+                    </p>
+</div>
+<p>
+                    In our recent case studies at Biznexa, we observed a 40% increase in operational efficiency when legacy systems were wrapped in an intelligent glass-layer—a sophisticated middleware that handles predictive scaling before the load even hits the primary servers.
+                </p>
+</div>
+<!-- Author Bio Card -->
+<div class="mt-16 p-6 rounded-xl bg-surface-container-low border border-outline-variant/10">
+<div class="flex items-start gap-4 mb-4">
+<img alt="Sukanta Saha" class="w-16 h-16 rounded-full object-cover border border-primary/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDk66_398WbZ8p6R6W9jVvM4rN2W7x3p_v4r_y4_w8r_x2r_v1r_u0r_t9r_s8r_r7r_q6r_p5r_o4r_n3r_m2r_l1r_k0"/>
+<div>
+<h4 class="font-headline font-bold text-on-surface">Sukanta Saha</h4>
+<p class="text-xs text-primary font-headline uppercase tracking-widest mb-2">Chief Digital Architect</p>
+<p class="text-sm text-body-muted leading-relaxed">
+                            Sukanta specializes in designing hyper-resilient infrastructures for Fortune 500 enterprises. With over 15 years in digital transformation, he leads the innovation lab at Biznexa.
+                        </p>
+</div>
+</div>
+<div class="flex gap-4 pt-4 border-t border-outline-variant/10">
+<a class="text-primary hover:text-primary-dim" href="#"><span class="material-symbols-outlined text-xl">hub</span></a>
+<a class="text-primary hover:text-primary-dim" href="#"><span class="material-symbols-outlined text-xl">terminal</span></a>
+</div>
+</div>
+</article>
+<!-- Newsletter Section -->
+<section class="mt-20 px-6 py-20 bg-surface-container-lowest border-y border-outline-variant/10">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-tertiary-fixed">mail</span>
+<h3 class="font-headline font-bold text-lg uppercase tracking-tight">Insights Loop</h3>
+</div>
+<p class="text-sm text-body-muted font-body mb-8 leading-relaxed">
+                Get the latest digital architecture blueprints and strategic insights delivered to your terminal weekly.
+            </p>
+<div class="flex flex-col gap-3">
+<input class="bg-surface-container border-none text-on-surface text-sm font-label tracking-wider placeholder:text-outline-variant rounded-md py-4 px-4 focus:ring-1 focus:ring-primary/30 transition-all" placeholder="ENTER TERMINAL EMAIL" type="email"/>
+<button class="bg-primary text-on-primary-fixed font-headline font-bold text-sm py-4 uppercase tracking-widest rounded-md hover:bg-primary-dim transition-colors shadow-[0_4px_12px_rgba(0,238,252,0.2)]">
+                    Subscribe
+                </button>
+</div>
+</section>
+<!-- Related Insights -->
+<section class="py-20 px-6"><h3 class="font-headline font-bold text-xl text-on-surface mb-6 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-3 h-3 bg-primary rounded-full"></span>
+        Related Insights
+    </div>
+<div class="flex items-center gap-2 text-[10px] text-tertiary-fixed-dim uppercase tracking-widest opacity-80">
+<span class="material-symbols-outlined text-sm">swipe_left</span>
+        Swipe
+    </div>
+</h3>
+<div class="relative">
+<div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-4 pb-8">
+<!-- Related Card 1 -->
+<a class="block group flex-shrink-0 w-[85vw] snap-center" href="#">
+<div class="flex flex-col h-full rounded-xl overflow-hidden bg-surface-container-low border border-outline-variant/10 transition-all hover:border-primary/30">
+<div class="aspect-video w-full overflow-hidden">
+<img alt="Global Data" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzh_vi56vZaXGMRMrmaDpttQOFYSQsv63-bKW8BmUSbUMACvHNBechYC6-QP2XQo18GufaooZSauYui9c1jC7DldJNAd3OuyX1u8jBqfe6fiBDaGWWHBAFbyJCNqYLlzUDZ6y1lbQCeigcVvokX7g8PvaxLJmp25AKTaWVmno8c-yEQpk4mSl2eaIWI_fzYjAKYHn967iL90MpZw9Xh3GXK6498xiS7NrJdLYh3DvIvwfSMVxK4xdI1h0ZqWJwXntpy1PAzgfWwesq"/>
+</div>
+<div class="p-5 glass-panel h-full">
+<span class="text-[10px] font-headline text-primary uppercase tracking-widest mb-2 block">Architecture</span>
+<h4 class="font-headline font-bold text-base leading-snug text-on-surface group-hover:text-primary transition-colors">The Rise of Distributed Ledger Systems</h4>
+<p class="text-xs text-on-surface-variant mt-4">5 Min Read • Oct 12, 2024</p>
+</div>
+</div>
+</a>
+<!-- Related Card 2 -->
+<a class="block group flex-shrink-0 w-[85vw] snap-center" href="#">
+<div class="flex flex-col h-full rounded-xl overflow-hidden bg-surface-container-low border border-outline-variant/10 transition-all hover:border-primary/30">
+<div class="aspect-video w-full overflow-hidden">
+<img alt="AI Bot" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMFB4nSdJL0GB8twdBNZ1guLnSQLt602tOu_4SeZQmLxWG-gZPnwVUyc4S9b7DwfY_20cbMm2pISfcZBCxnJ35goMNHuhEg_1RmX9IaqbN8m_T-j3NTQEXFWTzzO-AEySgC3pge8FfflEyn9EPQJKJ7qaAl7SltyEtCPerVZva_gpRpsJ3KJXZDj2J-EZD0lvD36StNDSJt_vghavTd1zYq853UIJtCoTozQ1SdO4yNZ_F76r6g_QwdAEGO1oj_X7MyM8ULuPIAcNn"/>
+</div>
+<div class="p-5 glass-panel h-full">
+<span class="text-[10px] font-headline text-primary uppercase tracking-widest mb-2 block">AI Research</span>
+<h4 class="font-headline font-bold text-base leading-snug text-on-surface group-hover:text-primary transition-colors">Neural Interface: UX of the Next Decade</h4>
+<p class="text-xs text-on-surface-variant mt-4">12 Min Read • Oct 05, 2024</p>
+</div>
+</div>
+</a>
+</div>
+<!-- Pagination Dots -->
+<div class="flex justify-center gap-2 mt-2">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
+<span class="w-2 h-2 rounded-full bg-outline-variant/30"></span>
+</div>
+</div>
+<style>
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style></section>
+</main>
+<!-- WhatsApp Floating Action Button -->
+<a class="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_8px_24px_rgba(37,211,102,0.4)] hover:scale-110 active:scale-95 transition-transform" href="https://wa.me/910000000000">
+<svg class="w-8 h-8 fill-current" viewbox="0 0 24 24">
+<path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217s.231.006.332.013c.101.007.216-.024.339.245.123.269.447 1.055.483 1.127.037.072.062.156.015.249-.047.094-.112.15-.221.241-.11.091-.212.18-.314.282-.104.104-.213.218-.093.424.12.205.533.876 1.145 1.42.788.701 1.45.918 1.652 1.02s.32.096.441-.044c.12-.14.517-.6.654-.805.137-.205.275-.171.463-.102.188.069 1.189.56 1.391.661.202.101.336.151.385.234.049.083.049.48-.095.885z"></path>
+</svg>
+</a>
+<!-- Footer -->
+<footer class="w-full pt-16 pb-8 bg-[#000000] border-t border-outline-variant/10">
+<div class="px-6 max-w-7xl mx-auto space-y-12">
+<!-- Brand -->
+<div>
+<div class="text-2xl font-bold text-[#00F0FF] font-headline mb-6">Biznexa</div>
+<p class="font-body text-sm text-[#dee5ff]/80 leading-relaxed max-w-sm">
+                    Architecting high-performance digital solutions. Building the future of enterprise technology from the heart of West Bengal.
+                </p>
+<div class="flex gap-5 mt-8">
+<span class="material-symbols-outlined text-primary text-xl">hub</span>
+<span class="material-symbols-outlined text-primary text-xl">data_object</span>
+<span class="material-symbols-outlined text-primary text-xl">terminal</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pt-4">
+<!-- HQ Contact -->
+<div>
+<h4 class="font-headline font-bold text-xs uppercase tracking-[0.2em] text-[#00F0FF] mb-6">HQ Location</h4>
+<ul class="space-y-5 font-body text-sm text-[#dee5ff]/80">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-sm mt-1 text-primary">location_on</span>
+<span class="leading-relaxed">Sector V, Salt Lake City,<br/>Kolkata, WB 700091, India</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-sm text-primary">phone</span>
+<span>+91 33 4005 8892</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-sm text-primary">mail</span>
+<span>architect@biznexa.io</span>
+</li>
+</ul>
+</div>
+<!-- Services (Added for 4-column symmetry) -->
+<div>
+<h4 class="font-headline font-bold text-xs uppercase tracking-[0.2em] text-[#00F0FF] mb-6">Services</h4>
+<div class="flex flex-col gap-4 font-body text-sm text-[#dee5ff]/60">
+<a class="hover:text-[#00F0FF] transition-colors" href="#">Digital Architecture</a>
+<a class="hover:text-[#00F0FF] transition-colors" href="#">Cloud Infrastructure</a>
+<a class="hover:text-[#00F0FF] transition-colors" href="#">AI Integration</a>
+<a class="hover:text-[#00F0FF] transition-colors" href="#">Security Audits</a>
+</div>
+</div>
+<!-- Connect -->
+<div>
+<h4 class="font-headline font-bold text-xs uppercase tracking-[0.2em] text-[#00F0FF] mb-6">Connect</h4>
+<div class="flex flex-col gap-4 font-body text-sm text-[#dee5ff]/60">
+<a class="hover:text-[#00F0FF] transition-colors duration-200" href="https://wa.me/910000000000">WhatsApp</a>
+<a class="hover:text-[#00F0FF] transition-colors duration-200" href="#">Direct Line</a>
+<a class="hover:text-[#00F0FF] transition-colors duration-200" href="#">Visit Studio</a>
+<a class="hover:text-[#00F0FF] transition-colors duration-200" href="#">LinkedIn</a>
+</div>
+</div>
+<!-- Legals -->
+<div>
+<h4 class="font-headline font-bold text-xs uppercase tracking-[0.2em] text-[#00F0FF] mb-6">Legal Terminal</h4>
+<div class="flex flex-col gap-4 font-body text-sm text-[#dee5ff]/60">
+<a class="hover:text-[#00F0FF] transition-colors duration-200" href="#">Privacy Policy</a>
+<a class="hover:text-[#00F0FF] transition-colors duration-200" href="#">Service Terms</a>
+<a class="hover:text-[#00F0FF] transition-colors duration-200" href="#">Security Protocols</a>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-16 pt-8 border-t border-outline-variant/5 text-center px-6">
+<p class="font-body text-[10px] tracking-[0.2em] uppercase text-[#dee5ff]/40">
+                © 2024 Biznexa. Kolkata, India. All Rights Reserved.
+            </p>
+</div>
+</footer>
+</body></html>

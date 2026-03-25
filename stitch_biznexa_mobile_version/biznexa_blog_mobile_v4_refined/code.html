@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Biznexa | Insights &amp; Perspectives</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;family=Space+Mono:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-dim": "#060e20",
+                        "inverse-surface": "#faf8ff",
+                        "surface-container-highest": "#192540",
+                        "primary": "#58e7ab",
+                        "on-surface-variant": "#a3aac4",
+                        "on-secondary-fixed-variant": "#3a3ac8",
+                        "secondary": "#9093ff",
+                        "tertiary-fixed-dim": "#58e7ab",
+                        "surface-bright": "#1f2b49",
+                        "error": "#ff716c",
+                        "on-secondary": "#080079",
+                        "tertiary-dim": "#58e7ab",
+                        "on-tertiary": "#006443",
+                        "on-secondary-fixed": "#160bae",
+                        "error-container": "#9f0519",
+                        "inverse-primary": "#006a71",
+                        "on-tertiary-container": "#005a3c",
+                        "on-primary-fixed": "#003f43",
+                        "error-dim": "#d7383b",
+                        "primary-dim": "#58e7ab",
+                        "on-tertiary-fixed-variant": "#006544",
+                        "outline": "#6d758c",
+                        "surface-tint": "#58e7ab",
+                        "secondary-fixed-dim": "#bdbeff",
+                        "primary-fixed": "#58e7ab",
+                        "surface-container-lowest": "#000000",
+                        "on-error-container": "#ffa8a3",
+                        "surface-container-high": "#141f38",
+                        "surface": "#060e20",
+                        "secondary-fixed": "#cdcdff",
+                        "surface-variant": "#192540",
+                        "primary-fixed-dim": "#58e7ab",
+                        "on-primary-fixed-variant": "#005e64",
+                        "on-primary-container": "#005359",
+                        "secondary-container": "#2f2ebe",
+                        "on-background": "#dee5ff",
+                        "primary-container": "#58e7ab",
+                        "inverse-on-surface": "#4d556b",
+                        "surface-container": "#0f1930",
+                        "on-secondary-container": "#ccccff",
+                        "tertiary-container": "#69f6b8",
+                        "on-primary": "#005d63",
+                        "tertiary-fixed": "#69f6b8",
+                        "outline-variant": "#40485d",
+                        "on-error": "#490006",
+                        "background": "#060e20",
+                        "tertiary": "#9bffce",
+                        "secondary-dim": "#6063ee",
+                        "on-surface": "#dee5ff",
+                        "on-tertiary-fixed": "#00452d",
+                        "surface-container-low": "#091328"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Manrope"],
+                        "label": ["Space Grotesk"],
+                        "mono": ["Space Mono"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(25, 37, 64, 0.4);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(88, 231, 171, 0.08);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        body { background-color: #060e20; color: #b0b8c8; }
+    </style>
+</head>
+<body class="font-body selection:bg-primary/30 selection:text-primary">
+<!-- Sticky Top Bar -->
+<header class="fixed top-0 w-full z-50 bg-[#060e20]/80 backdrop-blur-xl border-b border-white/5">
+<div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[#060e20] text-xl font-bold">terminal</span>
+</div>
+<span class="text-xl font-bold tracking-tighter text-white font-mono uppercase">Biznexa</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-primary text-[#060e20] px-4 py-1.5 rounded-sm font-bold font-headline hover:brightness-110 transition-all text-[10px] tracking-widest uppercase">
+                    Contact
+                </button>
+<button class="material-symbols-outlined text-on-surface">menu</button>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-20 px-4 space-y-16">
+<!-- Featured Post Section -->
+<section class="relative group">
+<div class="glass-panel rounded-xl overflow-hidden shadow-2xl">
+<div class="relative h-64 w-full">
+<img alt="Enterprise AI Visualization" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5pSHR_yb9s-d1mfJGeldWagP4xKOOcJj-OtxEiBCjRbnlga-2aaTujL2AHugk-IWh5uWp8wuYvEaGuzLD-o2bl564__DqcyCPu_uajjBGYDbQLMB-VsxWbrkdcITD1qHIxgNB4VtBTDUIuWo3pRVPcdnQf3V2paV2QmGeJarYuIs2rNODIFA3ElYjnuapCTQIm7VFgp4NKxYCj6fiyx5LM0TgulV81Uxg9he6rpZB5wRcNsbmTbkhL-WoLyVqmSYYQ2nNapn0YXW6"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim via-surface-dim/40 to-transparent"></div>
+<div class="absolute top-4 left-4">
+<span class="bg-primary/20 text-primary border border-primary/30 text-[10px] font-headline font-bold uppercase tracking-widest px-3 py-1 rounded">Featured Insight</span>
+</div>
+</div>
+<div class="p-6 space-y-4">
+<div class="flex items-center gap-2 text-on-surface-variant text-xs font-label">
+<span>MARCH 20, 2024</span>
+<span class="w-1 h-1 bg-primary rounded-full"></span>
+<span>12 MIN READ</span>
+</div>
+<h1 class="text-3xl font-headline font-bold text-on-surface leading-tight tracking-tight">
+                        The Future of <span class="text-primary">AI</span> in Indian SMBs
+                    </h1>
+<p class="text-[#b0b8c8] text-sm leading-relaxed">
+                        Explore how localized AI solutions are transforming small to medium businesses across the subcontinent, from automated logistics to vernacular customer support.
+                    </p>
+<div class="pt-2">
+<button class="text-primary font-headline text-xs font-bold uppercase tracking-widest flex items-center gap-2 group">
+                            READ FULL ARTICLE
+                            <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Category Tabs -->
+<section class="space-y-6">
+<div class="flex items-center justify-between">
+<h2 class="font-headline text-xs font-bold uppercase tracking-[0.2em] text-primary">Knowledge Hub</h2>
+</div>
+<div class="flex overflow-x-auto gap-3 no-scrollbar">
+<button class="flex-none px-6 py-2.5 rounded-full bg-primary text-[#060e20] font-headline text-xs font-bold shadow-[0_0_15px_rgba(88,231,171,0.3)]">All Posts</button>
+<button class="flex-none px-6 py-2.5 rounded-full glass-panel text-[#b0b8c8] font-headline text-xs font-medium hover:border-primary/30 transition-colors">Web Dev</button>
+<button class="flex-none px-6 py-2.5 rounded-full glass-panel text-[#b0b8c8] font-headline text-xs font-medium hover:border-primary/30 transition-colors">AI Automation</button>
+<button class="flex-none px-6 py-2.5 rounded-full glass-panel text-[#b0b8c8] font-headline text-xs font-medium hover:border-primary/30 transition-colors">Cloud Solutions</button>
+</div>
+</section>
+<!-- Blog List -->
+<section class="space-y-6">
+<!-- Card 1 -->
+<div class="glass-panel rounded-xl flex overflow-hidden shadow-lg h-40">
+<div class="w-1/3 relative h-full">
+<img alt="Web Dev Pricing" class="w-full h-full object-cover grayscale brightness-75 hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDN5HQUvD_ZmPuWbX1hQIJG7AJgKbFB3ckaV7uuGXa6e98cE1XELCccJTB5OeLvQCnVlV8_bJbcQmwgStw8pDfn52O_xvfAUtryZqlV1_OlSnU1R49NkKcacz9yfQmElXHKrFi6H7utO8CGFD08K0yKM4dXkvpv_ThaT99t-sSq7GK77UwsHMmezKWYH_uy6BjhD0uiGGcLWf59q38tOrflOZRkab-r1zGZXmkfKUPQt8uhLe4SBQUL8oH8y5TdS7sC-kME0HInJFaA"/>
+</div>
+<div class="w-2/3 p-4 flex flex-col justify-between">
+<div>
+<span class="text-primary font-headline text-[10px] font-bold uppercase tracking-widest">Web Dev</span>
+<h3 class="text-on-surface font-headline font-bold text-sm leading-snug line-clamp-2 mt-1">How much does a website cost in Kolkata?</h3>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<img alt="Sukanta Saha" class="w-5 h-5 rounded-full border border-primary/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBquAfu1jLqG9ZUKoCduKdkE-P_uvPyHWWn2Nxlh4HTbAHLLXQ_OCR-D1jDQglYWZ4Vw7Qf1ggNrkfIXiSIl1fOYXPmLw33hsT4ZsyhyIhwhggnwZsLnbFn6g1lR-k_5nx9bren5WLIH8TSlQRVzMQ7ZRSwClUeObUhSDAsSA6wculRzDVJybd9BYa0q81wwM7NbzPb3iCMms54pxN-R3YOsbPqE-Ymx79ru1EHvAwXzshxakKXsBp2l_EYACdI90Ng4f0G6b2pTeM"/>
+<span class="text-on-surface-variant text-[10px]">Sukanta Saha</span>
+</div>
+<span class="text-on-surface-variant text-[10px]">4 min</span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-panel rounded-xl flex overflow-hidden shadow-lg h-40">
+<div class="w-1/3 relative h-full">
+<img alt="Automation Concept" class="w-full h-full object-cover grayscale brightness-75 hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAs9dPA-vyrM0Ydq3ZXLrMXUz0f4cPf3M3BeFIeHoXiJeU_7HbgVkcORWXZhQxzjFf4vyDR7LGczYqXXxkwdUbrZ7-Aa4XhngNsUqLprzCuwcHdl3UYsLMlHmkSWVB77nmfEqs6GbXXXX7_cT7GTHbmJjQRjupdWU5ToAGYnCuqbC0BmR8YEyxXD9RWI9rr7Nu48B4uabyZZtHXtEjlWxcQMKyTjGIjAy5gaDYMeQdqcHFioTCj3pbYj7f9pyneW3QddEwNIgzrhPV"/>
+</div>
+<div class="w-2/3 p-4 flex flex-col justify-between">
+<div>
+<span class="text-primary font-headline text-[10px] font-bold uppercase tracking-widest">Automation</span>
+<h3 class="text-on-surface font-headline font-bold text-sm leading-snug line-clamp-2 mt-1">What is AI automation and how can it help?</h3>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<img alt="Sukanta Saha" class="w-5 h-5 rounded-full border border-primary/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBquAfu1jLqG9ZUKoCduKdkE-P_uvPyHWWn2Nxlh4HTbAHLLXQ_OCR-D1jDQglYWZ4Vw7Qf1ggNrkfIXiSIl1fOYXPmLw33hsT4ZsyhyIhwhggnwZsLnbFn6g1lR-k_5nx9bren5WLIH8TSlQRVzMQ7ZRSwClUeObUhSDAsSA6wculRzDVJybd9BYa0q81wwM7NbzPb3iCMms54pxN-R3YOsbPqE-Ymx79ru1EHvAwXzshxakKXsBp2l_EYACdI90Ng4f0G6b2pTeM"/>
+<span class="text-on-surface-variant text-[10px]">Sukanta Saha</span>
+</div>
+<span class="text-on-surface-variant text-[10px]">6 min</span>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-panel rounded-xl flex overflow-hidden shadow-lg h-40">
+<div class="w-1/3 relative h-full">
+<img alt="Strategy Board" class="w-full h-full object-cover grayscale brightness-75 hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAau2er_KfIXre48xayMLYmd8JCkIUVK27mmEkmaKcRa7jcCzOtpOT0lOEzC8BajZstcOPYhaiFUUw_HWkozRgR2smEpyhm9f8e_lKfrFdhT1CMR5F8MqyTD_ZletLKcyY5cZrrTpaIT7uKWFC_mD_oMAFiwkgFAHy6gwI7SIi-YTmQ6e-EybupglWNi1mCeF0FsBcQ-ZY9ZJ1NliACtUYPGBFlu7TPDJq3Li8Mes2ABgtIZUmYrz36Q7evQDoZV8t83MmkUMGICA2_"/>
+</div>
+<div class="w-2/3 p-4 flex flex-col justify-between">
+<div>
+<span class="text-primary font-headline text-[10px] font-bold uppercase tracking-widest">Strategy</span>
+<h3 class="text-on-surface font-headline font-bold text-sm leading-snug line-clamp-2 mt-1">5 signs your business needs a new website</h3>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<img alt="Sukanta Saha" class="w-5 h-5 rounded-full border border-primary/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBquAfu1jLqG9ZUKoCduKdkE-P_uvPyHWWn2Nxlh4HTbAHLLXQ_OCR-D1jDQglYWZ4Vw7Qf1ggNrkfIXiSIl1fOYXPmLw33hsT4ZsyhyIhwhggnwZsLnbFn6g1lR-k_5nx9bren5WLIH8TSlQRVzMQ7ZRSwClUeObUhSDAsSA6wculRzDVJybd9BYa0q81wwM7NbzPb3iCMms54pxN-R3YOsbPqE-Ymx79ru1EHvAwXzshxakKXsBp2l_EYACdI90Ng4f0G6b2pTeM"/>
+<span class="text-on-surface-variant text-[10px]">Sukanta Saha</span>
+</div>
+<span class="text-on-surface-variant text-[10px]">5 min</span>
+</div>
+</div>
+</div>
+<!-- Load More Button -->
+<div class="pt-4 flex justify-center">
+<button class="bg-primary text-[#060e20] font-headline font-bold uppercase tracking-widest px-8 py-3 rounded-lg shadow-lg shadow-primary/20 active:scale-95 transition-all text-xs">
+                    Load More Articles
+                </button>
+</div>
+</section>
+<!-- Newsletter Section -->
+<section class="py-12">
+<div class="glass-panel border-primary/20 rounded-xl p-8 space-y-6 text-center relative overflow-hidden">
+<div class="absolute -bottom-10 -right-10 w-32 h-32 bg-primary/10 blur-[60px] rounded-full"></div>
+<h3 class="text-3xl font-headline font-bold text-on-surface tracking-tight leading-tight">Stay Ahead of the Curve</h3>
+<p class="text-[#b0b8c8] text-sm leading-relaxed">Weekly insights on technology, business growth, and digital transformation delivered straight to your inbox.</p>
+<div class="space-y-4">
+<input class="w-full bg-surface-container-highest/50 border-none rounded-lg py-4 px-6 text-sm text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-outline/60" placeholder="Enter your email address" type="email"/>
+<button class="w-full bg-primary text-[#060e20] font-headline font-bold uppercase tracking-widest py-4 rounded-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform">Subscribe Now</button>
+<p class="text-[10px] text-outline italic">Subscribe for weekly insights on web development, AI automation, and digital marketing. No spam.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Sticky Action (WhatsApp) -->
+<a class="fixed bottom-6 right-6 z-40 bg-[#25D366] text-white p-4 rounded-2xl shadow-[0_8px_24px_rgba(37,211,102,0.4)] flex items-center justify-center transition-transform hover:scale-105 active:scale-95" href="#">
+<svg class="w-7 h-7 fill-current" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"></path>
+</svg>
+</a>
+<!-- Footer -->
+<footer class="w-full border-t border-white/5 bg-[#030712] pt-16 pb-8">
+<div class="max-w-7xl mx-auto px-6 mb-12 space-y-12">
+<div class="space-y-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[#060e20] text-xl font-bold">terminal</span>
+</div>
+<span class="text-xl font-bold tracking-tighter text-white font-mono uppercase">Biznexa</span>
+</div>
+<p class="text-sm leading-relaxed text-[#b0b8c8]">
+                    Pioneering digital excellence through innovative web solutions and intelligent automation for businesses ready to scale.
+                </p>
+</div>
+<div class="grid grid-cols-2 gap-y-10 gap-x-4">
+<div class="space-y-4">
+<h5 class="text-white font-bold font-headline text-xs uppercase tracking-widest">Location</h5>
+<ul class="space-y-2 text-sm text-[#b0b8c8]">
+<li>Kolkata, WB, India</li>
+<li>Salt Lake Sector V</li>
+<li>Tech Hub, 700091</li>
+</ul>
+</div>
+<div class="space-y-4">
+<h5 class="text-white font-bold font-headline text-xs uppercase tracking-widest">Connect</h5>
+<ul class="space-y-2 text-sm text-[#b0b8c8]">
+<li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#"><span class="material-symbols-outlined text-sm">chat</span> WhatsApp</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#"><span class="material-symbols-outlined text-sm">link</span> LinkedIn</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#"><span class="material-symbols-outlined text-sm">alternate_email</span> Twitter</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#"><span class="material-symbols-outlined text-sm">call</span> +91 98765 43210</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h5 class="text-white font-bold font-headline text-xs uppercase tracking-widest">Resources</h5>
+<ul class="space-y-2 text-sm text-[#b0b8c8]">
+<li><a class="hover:text-primary transition-colors" href="#">Case Studies</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Open Source</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h5 class="text-white font-bold font-headline text-xs uppercase tracking-widest">Legal</h5>
+<ul class="space-y-2 text-sm text-[#b0b8c8]">
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Terms</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-6 pt-8 border-t border-white/5 flex flex-col items-center gap-4 text-center">
+<p class="text-[10px] text-[#b0b8c8]">© 2024 Biznexa. All rights reserved. Built with precision.</p>
+<div class="flex gap-6">
+<span class="material-symbols-outlined text-[#b0b8c8] hover:text-primary cursor-pointer text-xl">database</span>
+<span class="material-symbols-outlined text-[#b0b8c8] hover:text-primary cursor-pointer text-xl">security</span>
+<span class="material-symbols-outlined text-[#b0b8c8] hover:text-primary cursor-pointer text-xl">language</span>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+@theme {
+  --color-on-primary-fixed: #00330d;
+  --color-on-secondary-container: #ccccff;
+  --color-on-secondary: #080079;
+  --color-outline-variant: #40485d;
+  --color-secondary-dim: #6063ee;
+  --color-on-primary-fixed-variant: #00551a;
+  --color-secondary: #9093ff;
+  --color-on-tertiary-fixed-variant: #006544;
+  --color-primary-fixed: #00FF66;
+  --color-secondary-fixed: #cdcdff;
+  --color-error-container: #9f0519;
+  --color-tertiary-fixed: #69f6b8;
+  --color-surface-tint: #00FF66;
+  --color-background: #060e20;
+  --color-surface-variant: #192540;
+  --color-inverse-on-surface: #4d556b;
+  --color-surface-container-high: #141f38;
+  --color-on-background: #b0b8c8;
+  --color-on-secondary-fixed-variant: #3a3ac8;
+  --color-tertiary-container: #69f6b8;
+  --color-on-tertiary-fixed: #00452d;
+  --color-primary-fixed-dim: #00e63a;
+  --color-on-tertiary: #006443;
+  --color-tertiary-dim: #58e7ab;
+  --color-on-surface: #b0b8c8;
+  --color-surface: #060e20;
+  --color-surface-container-highest: #192540;
+  --color-primary-container: #00FF66;
+  --color-primary: #00FF66;
+  --color-tertiary-fixed-dim: #58e7ab;
+  --color-surface-container-low: #091328;
+  --color-on-error: #490006;
+  --color-secondary-fixed-dim: #bdbeff;
+  --color-primary-dim: #00e63a;
+  --color-on-primary-container: #004010;
+  --color-on-surface-variant: #b0b8c8;
+  --color-surface-dim: #060e20;
+  --color-error: #ff716c;
+  --color-surface-container-lowest: #000000;
+  --color-outline: #6d758c;
+  --color-surface-bright: #1f2b49;
+  --color-tertiary: #9bffce;
+  --color-inverse-surface: #faf8ff;
+  --color-error-dim: #d7383b;
+  --color-on-tertiary-container: #005a3c;
+  --color-inverse-primary: #006a21;
+  --color-on-secondary-fixed: #160bae;
+  --color-secondary-container: #2f2ebe;
+  --color-on-error-container: #ffa8a3;
+  --color-on-primary: #00330d;
+  --color-surface-container: #0f1930;
+
+  --font-headline: var(--font-space-grotesk), sans-serif;
+  --font-body: var(--font-manrope), sans-serif;
+  --font-label: var(--font-space-grotesk), sans-serif;
+
+  --radius-DEFAULT: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.5rem;
+  --radius-full: 0.75rem;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-background font-body selection:bg-primary selection:text-on-primary-fixed antialiased;
+  }
+
+  /* Stitch Custom Utilities */
+  .glass-panel {
+    background: rgba(25, 37, 64, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .hero-glow {
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgba(0, 255, 65, 0.15) 0%,
+      transparent 70%
+    );
+  }
+  .text-glow {
+    text-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+  }
+  .cyber-border {
+    border: 1px solid rgba(0, 255, 65, 0.1);
+  }
+  .nav-scrolled {
+    background: rgba(2, 6, 23, 0.95);
+    border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+  }
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+  }
+
+  /* Specific overriding of lucide/svg for the stitch theme */
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+}

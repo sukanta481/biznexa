@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary": "#005d63",
+              "tertiary-dim": "#58e7ab",
+              "secondary-fixed-dim": "#bdbeff",
+              "surface-variant": "#192540",
+              "on-tertiary-fixed": "#00452d",
+              "surface-tint": "#8ff5ff",
+              "error": "#ff716c",
+              "primary-fixed-dim": "#00deec",
+              "background": "#060e20",
+              "inverse-surface": "#faf8ff",
+              "inverse-on-surface": "#4d556b",
+              "on-secondary-fixed": "#160bae",
+              "on-secondary-container": "#ccccff",
+              "tertiary-fixed": "#69f6b8",
+              "secondary": "#9093ff",
+              "surface-container-high": "#141f38",
+              "on-surface-variant": "#a3aac4",
+              "on-primary-container": "#005359",
+              "surface-container": "#0f1930",
+              "on-background": "#dee5ff",
+              "on-tertiary": "#006443",
+              "error-container": "#9f0519",
+              "on-surface": "#dee5ff",
+              "inverse-primary": "#006a71",
+              "primary": "#8ff5ff",
+              "secondary-container": "#2f2ebe",
+              "primary-container": "#00eefc",
+              "tertiary": "#9bffce",
+              "outline": "#6d758c",
+              "primary-dim": "#00deec",
+              "secondary-fixed": "#cdcdff",
+              "tertiary-fixed-dim": "#58e7ab",
+              "tertiary-container": "#69f6b8",
+              "on-tertiary-fixed-variant": "#006544",
+              "on-secondary": "#080079",
+              "primary-fixed": "#00eefc",
+              "outline-variant": "#40485d",
+              "error-dim": "#d7383b",
+              "surface-container-low": "#091328",
+              "secondary-dim": "#6063ee",
+              "on-tertiary-container": "#005a3c",
+              "on-secondary-fixed-variant": "#3a3ac8",
+              "on-primary-fixed-variant": "#005e64",
+              "surface-dim": "#060e20",
+              "surface-container-lowest": "#000000",
+              "on-primary-fixed": "#003f43",
+              "on-error-container": "#ffa8a3",
+              "on-error": "#490006",
+              "surface": "#060e20",
+              "surface-container-highest": "#192540",
+              "surface-bright": "#1f2b49"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(25, 37, 64, 0.4);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(143, 245, 255, 0.1);
+        }
+        .text-body-custom {
+            color: #b0b8c8;
+        }
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body selection:bg-primary/30">
+<!-- Top Navigation Shell -->
+<nav class="fixed top-0 w-full z-50 bg-[#060e20]/60 backdrop-blur-xl shadow-2xl shadow-cyan-900/20">
+<div class="flex justify-between items-center w-full px-6 py-4">
+<div class="text-xl font-bold tracking-tighter text-[#8ff5ff] font-mono">BIZNEXA</div>
+<div class="flex items-center gap-4">
+<button class="bg-[#8ff5ff]/10 text-[#8ff5ff] px-4 py-1.5 rounded-sm text-[10px] font-label tracking-widest font-bold border border-[#8ff5ff]/20 active:scale-95 transition-all">
+                    CONTACT
+                </button>
+<span class="material-symbols-outlined text-primary">menu</span>
+</div>
+</div>
+</nav>
+<main class="pt-20 pb-24">
+<!-- Hero Section -->
+<section class="px-6 py-8">
+<div class="space-y-2 mb-6">
+<span class="text-primary font-label text-[10px] tracking-[0.2em] uppercase">Case Study: FinTech Evolution</span>
+<h1 class="text-4xl font-headline font-bold leading-tight tracking-tight">AI-Driven Risk Architecture</h1>
+</div>
+<!-- Impact Summary -->
+<div class="grid grid-cols-2 gap-4">
+<div class="glass-card p-5 rounded-lg border-l-2 border-l-tertiary">
+<div class="text-3xl font-headline font-bold text-tertiary">70%</div>
+<div class="text-[10px] font-label text-on-surface-variant uppercase tracking-wider mt-1">Reduction</div>
+<div class="text-[11px] text-body-custom mt-2">Operational latency across edge nodes.</div>
+</div>
+<div class="glass-card p-5 rounded-lg border-l-2 border-l-tertiary">
+<div class="text-3xl font-headline font-bold text-tertiary">99.9%</div>
+<div class="text-[10px] font-label text-on-surface-variant uppercase tracking-wider mt-1">Accuracy</div>
+<div class="text-[11px] text-body-custom mt-2">Predictive modeling for market shifts.</div>
+</div>
+</div>
+</section>
+<!-- Main Narrative -->
+<section class="px-6 space-y-12">
+<!-- The Challenge -->
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="h-[1px] w-8 bg-primary/30"></div>
+<h2 class="text-xs font-label font-bold text-primary tracking-[0.15em] uppercase">The Challenge</h2>
+</div>
+<p class="text-body-custom leading-relaxed text-sm">
+                    Global Finance Corp faced a critical bottleneck in their real-time transaction processing. Legacy systems were failing to scale under high-frequency trading demands, resulting in a 12% revenue leakage during peak volatility windows.
+                </p>
+<div class="aspect-video w-full rounded-xl overflow-hidden bg-surface-container">
+<img alt="Data Flow" class="w-full h-full object-cover mix-blend-lighten opacity-80" data-alt="Abstract visualization of complex data streams and financial charts in glowing cyan and dark blue cyber aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAttRzum28YhChEsIatBzNve1MBAVUpCHhvG9U3ajkiJ1odthV41cqBuBDlfytVDQKDbbNQPN2lYv3r1Cg7G546hPKksBFxRUp0a2Vwb1rtyT2u9Djuehui80bb0AcPc90gpgZQucYlw_BrwT4UWUTYj4pJO7VZjdsorB8TKQQEYC3jlTSGdKi9JMt6EalBV1RGBbVf8TJjrdnTc_XNt9xORrO-h0GVvBjlZpTjLzFPvtUDgfhospP6QgaJY6w7-hT4p4boKiDdseYw"/>
+</div>
+</div>
+<!-- The Solution -->
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="h-[1px] w-8 bg-primary/30"></div>
+<h2 class="text-xs font-label font-bold text-primary tracking-[0.15em] uppercase">The Biznexa Solution</h2>
+</div>
+<p class="text-body-custom leading-relaxed text-sm">
+                    We architected a bespoke neural-mesh infrastructure that decentralized data processing. By implementing a proprietary Cyber-Glass validation layer, we ensured sub-millisecond verification without compromising security protocols.
+                </p>
+<ul class="space-y-3">
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+<span class="text-xs text-on-surface">Distributed Ledger Integration</span>
+</li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+<span class="text-xs text-on-surface">Auto-Scaling Compute Nodes</span>
+</li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+<span class="text-xs text-on-surface">Quantum-Resistant Encryption</span>
+</li>
+</ul>
+</div>
+</section>
+<!-- Quantitative Results -->
+<section class="mt-16 bg-surface-container-low py-12 px-6">
+<h2 class="text-2xl font-headline font-bold mb-8 text-center">Quantifiable Outcomes</h2>
+<div class="space-y-8">
+<div class="text-center">
+<div class="text-5xl font-headline font-bold text-primary mb-2">$4.2M</div>
+<p class="text-xs font-label text-on-surface-variant uppercase tracking-widest">Annual Savings Recovered</p>
+</div>
+<div class="h-[1px] w-12 bg-outline-variant mx-auto"></div>
+<div class="text-center">
+<div class="text-5xl font-headline font-bold text-primary mb-2">14ms</div>
+<p class="text-xs font-label text-on-surface-variant uppercase tracking-widest">Avg Transaction Latency</p>
+</div>
+<div class="h-[1px] w-12 bg-outline-variant mx-auto"></div>
+<div class="text-center">
+<div class="text-5xl font-headline font-bold text-primary mb-2">3.5x</div>
+<p class="text-xs font-label text-on-surface-variant uppercase tracking-widest">Scalability Multiplier</p>
+</div>
+</div>
+</section>
+<!-- Client Testimonial -->
+<section class="px-6 py-16">
+<div class="glass-card p-8 rounded-2xl relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl">format_quote</span>
+</div>
+<p class="text-on-surface italic leading-relaxed mb-8 relative z-10">
+                    "The Digital Architecture provided by BIZNEXA didn't just solve our tech debt; it transformed how we perceive market agility. Their precision is unmatched in the current landscape."
+                </p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-primary/30">
+<img alt="Client" class="w-full h-full object-cover" data-alt="Professional portrait of a senior tech executive in a modern office with glass walls and soft blue lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXu_AREweJkxPGczYadCLU3kVnvAEBOhea0wGlVc_4ZPQ7vLjnHdaEQtFQb4oAetzCgQsvqdbqAh4luZGJdAJjJg425wWDmESIiiNNc9FV69TlE09QOuWy_ruIDeMWjUyyT-myrrDq-LTdjSS0u92tyrBIplhvt4Q9EEiQg4r3GJNecdA3I66-I58YAHU2FCTZIiVilbg6V8GemizsCTofF1_46dPPmtTmYUniSEXn8gMv2Fm0aJOIvc66nQAf8UO1L0eQo-RBjy5y"/>
+</div>
+<div>
+<div class="text-sm font-bold font-headline">Marcus Chen</div>
+<div class="text-[10px] text-on-surface-variant uppercase tracking-wider">CTO • Global Finance Corp</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Related Case Studies -->
+<section class="py-12 border-t border-primary/10">
+<div class="px-6 flex justify-between items-end mb-6">
+<div>
+<h3 class="text-xs font-label text-primary tracking-widest uppercase mb-1">More Success</h3>
+<h2 class="text-xl font-headline font-bold">Similar Projects</h2>
+</div>
+<div class="flex gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+</div>
+</div>
+<div class="flex overflow-x-auto gap-4 px-6 snap-x no-scrollbar">
+<div class="min-w-[280px] snap-start glass-card rounded-xl overflow-hidden flex-shrink-0">
+<div class="h-40 w-full bg-surface-container">
+<img alt="Tech" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" data-alt="Microchip circuit board glowing with orange and blue lights representing advanced computing architecture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyNG3uCBG1ifOhKGpp8F5Np-GYTjQM6ZSeFvkuTd9p-hCKmqwykIU4cmTcXF3eRDPWTSurCJDkjd19OBHIAPcuSsA2pNlU5WxfQoLDk3GD4IiA8Mg8aKFimBnlOaIfXeU27ZOVNKg8aNOqw-C6IfLLzVgAlZSUa8dzszasGMzUgtv_4_WRMPKOYX0i89geznNwYrDqkVN8Dstd33yBjuECvU6juK4NFnRrYKmrDiRmkUoSJUqt1xKvkwzzfXA3dZuQTZxs-hvGiV9Z"/>
+</div>
+<div class="p-5">
+<div class="text-[10px] text-primary font-label uppercase tracking-widest mb-2">Automotive</div>
+<h4 class="font-headline font-bold mb-3">Next-Gen EV OS</h4>
+<button class="text-[10px] font-label text-primary tracking-tighter flex items-center gap-2 group">
+                            VIEW CASE <span class="material-symbols-outlined text-xs group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="min-w-[280px] snap-start glass-card rounded-xl overflow-hidden flex-shrink-0">
+<div class="h-40 w-full bg-surface-container">
+<img alt="Security" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" data-alt="Cybersecurity theme with digital lock icon and binary code patterns in deep blue and neon green" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPmvyMnlTCu-lA7cpvrLth7z09ijNXGUwsa7TyHqn4a73BxPF2W5bg0duWrqi7Zzvvow0bZGuONDqdjhKA5IZiCnYd9eDLNp30Io2k1SJXeI07KqGjwmhLh4ypKdmPfynxehgvieuam-dCepxrpZFz2GerLuNIoTYGS0jUNNY30Gl-Coe92o9Z-vPqcN3uBmsbj5z4bFVT4vxV9vakEUiFxPHh_YYKeoAkxO8KuPdsyCXSqevwwkjY5Icwdi02zl4Bq2vMN6qC0yNS"/>
+</div>
+<div class="p-5">
+<div class="text-[10px] text-primary font-label uppercase tracking-widest mb-2">Cybersecurity</div>
+<h4 class="font-headline font-bold mb-3">Zero-Trust Cloud</h4>
+<button class="text-[10px] font-label text-primary tracking-tighter flex items-center gap-2 group">
+                            VIEW CASE <span class="material-symbols-outlined text-xs group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Professional Mobile Footer -->
+<footer class="bg-surface-container-lowest pt-16 pb-10 border-t border-[#8ff5ff]/10">
+<div class="px-8 max-w-7xl mx-auto space-y-12">
+<div>
+<div class="text-2xl font-black text-[#8ff5ff] mb-4">BIZNEXA</div>
+<p class="text-body-custom text-xs max-w-[240px]">Architecting digital futures through mathematical precision and high-end design.</p>
+</div>
+<div class="grid grid-cols-2 gap-y-10 gap-x-4">
+<div class="space-y-4">
+<h5 class="text-[#8ff5ff] font-label text-xs font-bold uppercase tracking-widest">Brand</h5>
+<ul class="space-y-3">
+<li><a class="text-[#dee5ff]/50 hover:text-[#8ff5ff] text-sm transition-colors" href="#">Expertise</a></li>
+<li><a class="text-[#dee5ff]/50 hover:text-[#8ff5ff] text-sm transition-colors" href="#">Case Studies</a></li>
+<li><a class="text-[#dee5ff]/50 hover:text-[#8ff5ff] text-sm transition-colors" href="#">Solutions</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h5 class="text-[#8ff5ff] font-label text-xs font-bold uppercase tracking-widest">Connect</h5>
+<ul class="space-y-3">
+<li><a class="text-[#dee5ff]/50 hover:text-[#8ff5ff] text-sm transition-colors" href="#">Careers</a></li>
+<li><a class="text-[#dee5ff]/50 hover:text-[#8ff5ff] text-sm transition-colors" href="#">LinkedIn</a></li>
+<li><a class="text-[#dee5ff]/50 hover:text-[#8ff5ff] text-sm transition-colors" href="#">Twitter</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h5 class="text-[#8ff5ff] font-label text-xs font-bold uppercase tracking-widest">Location</h5>
+<p class="text-[#dee5ff]/50 text-sm">Kolkata, WB</p>
+<p class="text-[#dee5ff]/50 text-sm">Tech Hub, Sector V</p>
+</div>
+<div class="space-y-4">
+<h5 class="text-[#8ff5ff] font-label text-xs font-bold uppercase tracking-widest">Legal</h5>
+<ul class="space-y-3">
+<li><a class="text-[#dee5ff]/50 hover:text-[#8ff5ff] text-sm transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="text-[#dee5ff]/50 hover:text-[#8ff5ff] text-sm transition-colors" href="#">Terms of Use</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-10 border-t border-[#8ff5ff]/5 text-center">
+<p class="text-[10px] text-[#dee5ff]/30 font-label uppercase tracking-widest">© 2024 BIZNEXA Digital Architecture. All rights reserved.</p>
+</div>
+</div>
+</footer>
+<!-- WhatsApp Floating Action Button -->
+<a class="fixed bottom-6 right-6 w-14 h-14 bg-tertiary text-on-tertiary rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(155,255,206,0.4)] z-[60] active:scale-90 transition-transform" href="#">
+<svg class="w-7 h-7 fill-current" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path>
+</svg>
+</a>
+</body></html>
