@@ -36,11 +36,10 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                         <Link
                             href="/admin"
                             onClick={handleLinkClick}
-                            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-                                isActive('/admin')
-                                ? 'bg-gradient-to-r from-secondary/20 to-[#00f2ff]/10 border-r-3 border-[#00f2ff] text-[#00f2ff]'
-                                : 'text-slate-400 hover:text-white hover:bg-white/5'
-                            }`}
+                            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${isActive('/admin')
+                                    ? 'bg-gradient-to-r from-secondary/20 to-[#00f2ff]/10 border-r-3 border-[#00f2ff] text-[#00f2ff]'
+                                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                }`}
                         >
                             <span className="material-symbols-outlined text-[20px]">grid_view</span>
                             <span className="text-sm font-medium">Dashboard</span>
@@ -85,7 +84,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                             </div>
                             <span className="material-symbols-outlined text-amber-500 text-[16px] fill-1">warning</span>
                         </Link>
-                        <Link href="#" onClick={handleLinkClick} className="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all text-slate-400 hover:text-white">
+                        <Link href="/admin/inspections/masters" onClick={handleLinkClick} className={`flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all ${isActive('/admin/inspections/masters') ? 'bg-gradient-to-r from-secondary/20 to-primary/10 border-r-3 border-primary text-primary' : 'text-slate-400 hover:text-white'}`}>
                             <span className="material-symbols-outlined text-[20px]">database</span>
                             <span className="text-sm font-medium">Masters</span>
                         </Link>

@@ -35,11 +35,14 @@ interface BlogPostRow extends RowDataPacket {
   featured: number;
   views: number;
   published_at: Date | string | null;
-  created_at: Date | string;
+  created_at: Date | string | null;
 }
 
 interface CountRow extends RowDataPacket {
   total: number;
+  published_total: number;
+  draft_total: number;
+  total_views: number;
 }
 
 interface CategoryRow extends RowDataPacket {
@@ -49,6 +52,10 @@ interface CategoryRow extends RowDataPacket {
 
 interface SlugRow extends RowDataPacket {
   slug: string;
+}
+
+interface ColumnRow extends RowDataPacket {
+  Field: string;
 }
 
 export interface AdminBlogArticle {
@@ -78,6 +85,14 @@ export interface AdminBlogDashboardData {
   metrics: AdminBlogMetrics;
   recentArticles: AdminBlogArticle[];
   categoryStats: AdminBlogCategoryStat[];
+}
+
+interface BlogSchemaConfig {
+  selectSql: string;
+  publishedCondition: string;
+  sortSql: string;
+  publishedCountSql: string;
+  draftCountSql: string;
 }
 
 function isSchemaMismatchError(error: unknown) {
@@ -129,17 +144,88 @@ function fromFilePost(post: FileBlogPost): BlogPost {
   };
 }
 
+async function getBlogSchemaConfig(): Promise<BlogSchemaConfig> {
+  const rows = await query<ColumnRow[]>("SHOW COLUMNS FROM blog_posts");
+  const columns = new Set(rows.map((row) => row.Field));
+
+  const descriptionSql = columns.has("description")
+    ? "COALESCE(description, '')"
+    : columns.has("excerpt")
+      ? "COALESCE(excerpt, '')"
+      : "''";
+
+  const authorSql = columns.has("author") ? "COALESCE(author, 'Sukanta Saha')" : "'Sukanta Saha'";
+  const readTimeSql = columns.has("read_time") ? "COALESCE(read_time, '5 min read')" : "'5 min read'";
+
+  const coverImageSql = columns.has("cover_image")
+    ? "cover_image"
+    : columns.has("featured_image")
+      ? "featured_image"
+      : "NULL";
+
+  const publishedSql = columns.has("published")
+    ? "published"
+    : columns.has("status")
+      ? "CASE WHEN status = 'published' THEN 1 ELSE 0 END"
+      : "1";
+
+  const featuredSql = columns.has("featured") ? "featured" : "0";
+  const viewsSql = columns.has("views") ? "COALESCE(views, 0)" : "0";
+
+  const publishedAtSql = columns.has("published_at")
+    ? "published_at"
+    : columns.has("created_at")
+      ? "created_at"
+      : "NULL";
+
+  const createdAtSql = columns.has("created_at")
+    ? "created_at"
+    : columns.has("published_at")
+      ? "published_at"
+      : "NULL";
+
+  return {
+    selectSql: `
+      SELECT
+        id,
+        slug,
+        title,
+        ${descriptionSql} AS description,
+        content,
+        ${authorSql} AS author,
+        COALESCE(category, 'Technology') AS category,
+        ${readTimeSql} AS read_time,
+        ${coverImageSql} AS cover_image,
+        ${publishedSql} AS published,
+        ${featuredSql} AS featured,
+        ${viewsSql} AS views,
+        ${publishedAtSql} AS published_at,
+        ${createdAtSql} AS created_at
+      FROM blog_posts
+    `,
+    publishedCondition: `${publishedSql} = 1`,
+    sortSql: `${featuredSql} DESC, COALESCE(${publishedAtSql}, ${createdAtSql}) DESC`,
+    publishedCountSql: columns.has("published")
+      ? "SUM(CASE WHEN published = 1 THEN 1 ELSE 0 END)"
+      : columns.has("status")
+        ? "SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END)"
+        : "COUNT(*)",
+    draftCountSql: columns.has("published")
+      ? "SUM(CASE WHEN published = 0 THEN 1 ELSE 0 END)"
+      : columns.has("status")
+        ? "SUM(CASE WHEN status = 'draft' THEN 1 ELSE 0 END)"
+        : "0",
+  };
+}
+
 export async function getAllBlogPosts() {
   try {
-    const rows = await query<BlogPostRow[]>(
-      `
-        SELECT id, slug, title, description, content, author, category, read_time, cover_image,
-               published, featured, views, published_at, created_at
-        FROM blog_posts
-        WHERE published = 1
-        ORDER BY featured DESC, published_at DESC, created_at DESC
-      `,
-    );
+    const schema = await getBlogSchemaConfig();
+    const rows = await query<BlogPostRow[]>(`
+      ${schema.selectSql}
+      WHERE ${schema.publishedCondition}
+      ORDER BY ${schema.sortSql}
+    `);
 
     return rows.map(mapRowToPost);
   } catch (error) {
@@ -153,11 +239,10 @@ export async function getAllBlogPosts() {
 
 export async function getBlogPostBySlug(slug: string) {
   try {
+    const schema = await getBlogSchemaConfig();
     const rows = await query<BlogPostRow[]>(
       `
-        SELECT id, slug, title, description, content, author, category, read_time, cover_image,
-               published, featured, views, published_at, created_at
-        FROM blog_posts
+        ${schema.selectSql}
         WHERE slug = ?
         LIMIT 1
       `,
@@ -178,14 +263,13 @@ export async function getBlogPostBySlug(slug: string) {
 
 export async function getAllBlogSlugs() {
   try {
-    const rows = await query<SlugRow[]>(
-      `
-        SELECT slug
-        FROM blog_posts
-        WHERE published = 1
-        ORDER BY published_at DESC, created_at DESC
-      `,
-    );
+    const schema = await getBlogSchemaConfig();
+    const rows = await query<SlugRow[]>(`
+      SELECT slug
+      FROM blog_posts
+      WHERE ${schema.publishedCondition}
+      ORDER BY ${schema.sortSql}
+    `);
 
     return rows.map((row) => row.slug);
   } catch (error) {
@@ -199,41 +283,28 @@ export async function getAllBlogSlugs() {
 
 export async function getAdminBlogDashboardData(): Promise<AdminBlogDashboardData> {
   try {
+    const schema = await getBlogSchemaConfig();
     const [totalsRows, categoryRows, recentRows] = await Promise.all([
-      query<
-        (CountRow & {
-          published_total: number;
-          draft_total: number;
-          total_views: number;
-        })[]
-      >(
-        `
-          SELECT
-            COUNT(*) AS total,
-            SUM(CASE WHEN published = 1 THEN 1 ELSE 0 END) AS published_total,
-            SUM(CASE WHEN published = 0 THEN 1 ELSE 0 END) AS draft_total,
-            COALESCE(SUM(views), 0) AS total_views
-          FROM blog_posts
-        `,
-      ),
-      query<CategoryRow[]>(
-        `
-          SELECT category, COUNT(*) AS total
-          FROM blog_posts
-          GROUP BY category
-          ORDER BY total DESC, category ASC
-          LIMIT 3
-        `,
-      ),
-      query<BlogPostRow[]>(
-        `
-          SELECT id, slug, title, description, content, author, category, read_time, cover_image,
-                 published, featured, views, published_at, created_at
-          FROM blog_posts
-          ORDER BY COALESCE(published_at, created_at) DESC
-          LIMIT 5
-        `,
-      ),
+      query<CountRow[]>(`
+        SELECT
+          COUNT(*) AS total,
+          COALESCE(${schema.publishedCountSql}, 0) AS published_total,
+          COALESCE(${schema.draftCountSql}, 0) AS draft_total,
+          COALESCE(SUM(views), 0) AS total_views
+        FROM blog_posts
+      `),
+      query<CategoryRow[]>(`
+        SELECT COALESCE(category, 'Technology') AS category, COUNT(*) AS total
+        FROM blog_posts
+        GROUP BY COALESCE(category, 'Technology')
+        ORDER BY total DESC, category ASC
+        LIMIT 3
+      `),
+      query<BlogPostRow[]>(`
+        ${schema.selectSql}
+        ORDER BY ${schema.sortSql}
+        LIMIT 5
+      `),
     ]);
 
     const totals = totalsRows[0];
