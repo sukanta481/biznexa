@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllBlogPosts } from "@/lib/blog";
+
+export const dynamic = 'force-dynamic';
 import { COMPANY } from "@/lib/constants";
 import { BreadcrumbSchema } from "@/components/seo/JsonLd";
 

@@ -3,17 +3,14 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import type { ComponentPropsWithoutRef } from "react";
-import { getBlogPostBySlug, getAllBlogSlugs } from "@/lib/blog";
+import { getBlogPostBySlug } from "@/lib/blog";
 import { COMPANY } from "@/lib/constants";
 import { BreadcrumbSchema, ArticleSchema } from "@/components/seo/JsonLd";
 
+export const dynamic = 'force-dynamic';
+
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
-}
-
-export async function generateStaticParams() {
-  const slugs = await getAllBlogSlugs();
-  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
