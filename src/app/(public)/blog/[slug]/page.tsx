@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { getPostBySlug, getAllPostSlugs } from "@/lib/mdx";
+import type { ComponentPropsWithoutRef } from "react";
+import { getBlogPostBySlug, getAllBlogSlugs } from "@/lib/blog";
 import { COMPANY } from "@/lib/constants";
 import { BreadcrumbSchema, ArticleSchema } from "@/components/seo/JsonLd";
 
@@ -11,12 +12,13 @@ interface BlogPostPageProps {
 }
 
 export async function generateStaticParams() {
-  return getAllPostSlugs().map((slug) => ({ slug }));
+  const slugs = await getAllBlogSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getBlogPostBySlug(slug);
   if (!post) return {};
 
   return {
@@ -35,26 +37,39 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
 const AUTHOR_IMG = "https://lh3.googleusercontent.com/aida-public/AB6AXuBcAgfjfM0b9ZmUPskFcDH5B_VQkgrGwsRgZo1msG7yFDn08VQVWV2mhECd_NNc4VYb2VLqA6TNvDH7xFhxRHAa4e_vF1rSSnyiy-w2rz-1XaX5Uw5KYcSmkhUsPre8lrp_05DZ5yPaoEJSg3UJXtvLgeKbgD4dB7C_fNcc7cNAKVtrflAVNHD0ayy0P6DSU1bvwov_dP6JQUNS5GJV3UWofr8wkfILAv7OwDjIEdWjzAz1nub9DxxS8-kIMytFpX3yOdGNM7TmpGrb";
 
+type HeadingProps = ComponentPropsWithoutRef<"h2">;
+type SubHeadingProps = ComponentPropsWithoutRef<"h3">;
+type ParagraphProps = ComponentPropsWithoutRef<"p">;
+type ListProps = ComponentPropsWithoutRef<"ul">;
+type OrderedListProps = ComponentPropsWithoutRef<"ol">;
+type ListItemProps = ComponentPropsWithoutRef<"li">;
+type StrongProps = ComponentPropsWithoutRef<"strong">;
+type QuoteProps = ComponentPropsWithoutRef<"blockquote">;
+type LinkProps = ComponentPropsWithoutRef<"a">;
+type TableProps = ComponentPropsWithoutRef<"table">;
+type TableHeaderProps = ComponentPropsWithoutRef<"th">;
+type TableCellProps = ComponentPropsWithoutRef<"td">;
+
 // Custom MDX Components for matching the design system
 const mdxComponents = {
-  h2: (props: any) => (
+  h2: (props: HeadingProps) => (
     <h2 className="font-headline text-3xl font-bold text-white mb-6 mt-12 tracking-tight" {...props} />
   ),
-  h3: (props: any) => (
+  h3: (props: SubHeadingProps) => (
     <h3 className="font-headline text-2xl font-bold text-white mb-4 mt-8" {...props} />
   ),
-  p: (props: any) => (
+  p: (props: ParagraphProps) => (
     <p className="mb-6 first-of-type:first-letter:text-5xl first-of-type:first-letter:font-headline first-of-type:first-letter:text-primary first-of-type:first-letter:mr-3 first-of-type:first-letter:float-left text-on-surface-variant font-body leading-relaxed text-lg" {...props} />
   ),
-  ul: (props: any) => (
+  ul: (props: ListProps) => (
     <ul className="list-disc list-inside space-y-3 mb-6 text-on-surface-variant text-lg leading-relaxed marker:text-primary font-body" {...props} />
   ),
-  ol: (props: any) => (
+  ol: (props: OrderedListProps) => (
     <ol className="list-decimal list-inside space-y-3 mb-6 text-on-surface-variant text-lg leading-relaxed marker:text-primary font-body" {...props} />
   ),
-  li: (props: any) => <li className="pl-2" {...props} />,
-  strong: (props: any) => <strong className="font-bold text-white" {...props} />,
-  blockquote: (props: any) => (
+  li: (props: ListItemProps) => <li className="pl-2" {...props} />,
+  strong: (props: StrongProps) => <strong className="font-bold text-white" {...props} />,
+  blockquote: (props: QuoteProps) => (
     <div className="glass-panel my-12 p-10 rounded-lg relative overflow-hidden border-r-4 border-r-tertiary">
       <span className="material-symbols-outlined absolute -top-4 -left-2 text-8xl text-primary/10 select-none">format_quote</span>
       <blockquote className="relative z-10 font-headline text-2xl md:text-3xl font-medium text-white leading-snug" {...props}>
@@ -62,25 +77,25 @@ const mdxComponents = {
       </blockquote>
     </div>
   ),
-  a: (props: any) => (
+  a: (props: LinkProps) => (
     <a className="text-primary hover:text-tertiary transition-colors border-b border-primary/30 hover:border-tertiary" target={props.href?.startsWith("http") ? "_blank" : "_self"} {...props} />
   ),
-  table: (props: any) => (
+  table: (props: TableProps) => (
     <div className="overflow-x-auto mb-8 rounded-lg border border-outline-variant/30 bg-surface-container-low max-w-full">
       <table className="w-full text-left border-collapse" {...props} />
     </div>
   ),
-  th: (props: any) => (
+  th: (props: TableHeaderProps) => (
     <th className="p-4 text-sm font-label uppercase tracking-widest text-white border-b border-outline-variant/30" {...props} />
   ),
-  td: (props: any) => (
+  td: (props: TableCellProps) => (
     <td className="p-4 text-sm text-on-surface-variant border-b border-outline-variant/30 font-body" {...props} />
   ),
 };
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getBlogPostBySlug(slug);
 
   if (!post) {
     notFound();

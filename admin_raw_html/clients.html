@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Clients Management - Biznexa CMS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00f2ff", // Cyber Cyan
+                        "secondary": "#6366f1", // Electric Indigo
+                        "tertiary": "#10b981", // Electric Green
+                        "background": "#020617",
+                        "surface": "#0f172a",
+                        "on-surface": "#f8fafc",
+                        "body-text": "#b0b8c8",
+                        "glass-border": "rgba(255, 255, 255, 0.1)",
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk", "sans-serif"],
+                        "body": ["Manrope", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(0, 242, 255, 0.3);
+            background: rgba(30, 41, 59, 0.6);
+        }
+        .cyber-glow-cyan {
+            text-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+        }
+        .sidebar-item-active {
+            background: linear-gradient(90deg, rgba(99, 102, 241, 0.2) 0%, rgba(0, 242, 255, 0.1) 100%);
+            border-right: 3px solid #00f2ff;
+            color: #00f2ff;
+        }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.3); border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-body-text font-body selection:bg-primary/30">
+<!-- Sidebar -->
+<aside class="fixed left-0 top-0 h-full w-64 glass-panel border-r border-white/5 z-50 flex flex-col overflow-hidden">
+<div class="p-6">
+<img alt="Biznexa Logo" class="h-10 w-auto mb-2 object-contain filter brightness-0 invert opacity-90" src="https://lh3.googleusercontent.com/aida/ADBb0uid_M46BugdanBGjoBFb_jiZPEe9vafumuzOpli3sWQFx--CWUjpQQL5xopFYAp5B5KvBlHlpoq7sgDh49kDX_7BH6w3nzC57h3CUGAxTHILorp2YYI3JDcwAQqnOla9Vi5aPc_GsjIw-mGPrS9Y1qJUwqIsP1WdQ1dPeKrqpKFAO2OhFu5zzM33R0GYZoVZ5xU7MJnwj-DEKMZGql0E2p5VgrGUBubl2v_yk94V4B7x8t3dzkulWtBpJ-6Q5pIM_zPhNWeAcBvlmU"/>
+<div class="text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-primary/60">Logic Engine v2</div>
+</div>
+<nav class="flex-1 overflow-y-auto px-3 space-y-6 pb-8">
+<!-- Main -->
+<div>
+<div class="px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Main</div>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all text-slate-400 hover:text-white" href="#">
+<span class="material-symbols-outlined text-[20px]">grid_view</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+</div>
+</div>
+<!-- Billing -->
+<div>
+<div class="px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Billing</div>
+<div class="space-y-1">
+<a class="sidebar-item-active flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span>
+<span class="text-sm font-medium">Clients</span>
+</a>
+<a class="flex items-center justify-between px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all text-slate-400 hover:text-white" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+<span class="text-sm font-medium">Bills</span>
+</div>
+<span class="bg-rose-500/20 text-rose-400 text-[10px] font-bold px-2 py-0.5 rounded-full">3 Unpaid</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all text-slate-400 hover:text-white" href="#">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+<span class="text-sm font-medium">Expenses</span>
+</a>
+</div>
+</div>
+<!-- Inspection -->
+<div>
+<div class="px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Inspection</div>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all text-slate-400 hover:text-white" href="#">
+<span class="material-symbols-outlined text-[20px]">troubleshoot</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center justify-between px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all text-slate-400 hover:text-white" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">folder</span>
+<span class="text-sm font-medium">Files</span>
+</div>
+<span class="material-symbols-outlined text-amber-500 text-[16px] fill-1">warning</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all text-slate-400 hover:text-white" href="#">
+<span class="material-symbols-outlined text-[20px]">database</span>
+<span class="text-sm font-medium">Masters</span>
+</a>
+</div>
+</div>
+<!-- Content -->
+<div>
+<div class="px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Content</div>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all text-slate-400 hover:text-white" href="#">
+<span class="material-symbols-outlined text-[20px]">architecture</span>
+<span class="text-sm font-medium">Projects</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all text-slate-400 hover:text-white" href="#">
+<span class="material-symbols-outlined text-[20px]">smart_toy</span>
+<span class="text-sm font-medium">AI Agents</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all text-slate-400 hover:text-white" href="#">
+<span class="material-symbols-outlined text-[20px]">settings_suggest</span>
+<span class="text-sm font-medium">Services</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all text-slate-400 hover:text-white" href="#">
+<span class="material-symbols-outlined text-[20px]">format_quote</span>
+<span class="text-sm font-medium">Testimonials</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all text-slate-400 hover:text-white" href="#">
+<span class="material-symbols-outlined text-[20px]">article</span>
+<span class="text-sm font-medium">Blog Posts</span>
+</a>
+</div>
+</div>
+<!-- Settings -->
+<div>
+<div class="px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Settings</div>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all text-slate-400 hover:text-white" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="text-sm font-medium">Site Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all text-slate-400 hover:text-white" href="#">
+<span class="material-symbols-outlined text-[20px]">person</span>
+<span class="text-sm font-medium">My Profile</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-rose-500/10 transition-all text-rose-400" href="#">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+<span class="text-sm font-medium">Logout</span>
+</a>
+</div>
+</div>
+</nav>
+</aside>
+<!-- Top Bar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 glass-panel border-b border-white/5 z-40 px-8 flex justify-between items-center">
+<div class="flex items-center gap-2 text-sm">
+<span class="text-slate-500">Clients</span>
+<span class="material-symbols-outlined text-[16px] text-slate-700">chevron_right</span>
+<span class="text-primary font-bold">Overview</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden lg:block">
+<input class="bg-white/5 border border-white/10 rounded-full py-1.5 pl-10 pr-4 text-xs w-64 focus:ring-1 focus:ring-primary/40 focus:bg-white/10 outline-none transition-all text-on-surface" placeholder="Search architecture..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1.5 text-[18px] text-slate-500">search</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary transition-colors">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-rose-500 rounded-full border-2 border-background"></span>
+</div>
+<div class="h-9 w-9 rounded-lg overflow-hidden border border-white/10 p-0.5">
+<img alt="Profile" class="w-full h-full object-cover rounded" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaGD9VD7JIIURDxJhIwmHzh5kqbOWM5Cw4Fu-oveeD_eLH6MHAnz2aFv29doU7URTwnc-Ok-Niw3iOkDGkaxcn8MiREvYpB-N7HEL0Su7vIJ3CA8vHCslC36NJW8xI1fmOIxguP8YtPYiIll6ldVe8bYxm35UuzjZPufwnEaLvOJx95QHnr-TqR-GHnw5DBjeQBuyyV8G6wqOaj3wigtTr5xiFR38PbKgEg6elLLkl_aobkntsRqCCPuayb_g5bT-BnpK9yKGtZNvt"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 pt-24 p-8 min-h-screen">
+<!-- Header & Filters -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+<div>
+<h1 class="text-3xl font-headline font-bold text-on-surface tracking-tight cyber-glow-cyan uppercase">Client Management</h1>
+<p class="text-slate-400 text-sm mt-1">Structural partnerships and fiscal performance overview.</p>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<!-- Advanced Filters from Dashboard -->
+<div class="glass-card px-4 py-2 rounded-lg flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px] text-primary">calendar_today</span>
+<span class="text-slate-300">Last 30 Days</span>
+</div>
+<div class="glass-card px-4 py-2 rounded-lg flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px] text-primary">filter_list</span>
+<span class="text-slate-300">Service: All</span>
+</div>
+<div class="glass-card px-4 py-2 rounded-lg flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px] text-primary">public</span>
+<span class="text-slate-300">Region: EMEA</span>
+</div>
+<button class="flex items-center gap-2 bg-tertiary text-background px-5 py-2 rounded-lg font-headline font-bold uppercase tracking-widest text-[10px] hover:opacity-90 transition-all shadow-lg shadow-tertiary/20 ml-2">
+<span class="material-symbols-outlined text-[14px]">add</span>
+                    Add New Client
+                </button>
+</div>
+</div><!-- Summary Stats -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+<!-- Active Retainers -->
+<div class="glass-card p-6 rounded-xl relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl">handshake</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] font-headline font-bold text-slate-500 uppercase tracking-widest mb-1">Active Retainers</span>
+<div class="flex items-end gap-3">
+<span class="text-3xl font-headline font-bold text-on-surface">12</span>
+<span class="flex items-center text-tertiary text-[10px] font-bold mb-1.5">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+                    +2
+                </span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 h-0.5 bg-primary/30 w-full"></div>
+</div>
+<!-- Available Volume -->
+<div class="glass-card p-6 rounded-xl relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl">account_balance_wallet</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] font-headline font-bold text-slate-500 uppercase tracking-widest mb-1">Available Volume</span>
+<div class="flex items-end gap-3">
+<span class="text-3xl font-headline font-bold text-on-surface text-primary cyber-glow-cyan">$1.2M</span>
+<span class="flex items-center text-tertiary text-[10px] font-bold mb-1.5">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+                    14%
+                </span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 h-0.5 bg-primary/30 w-full"></div>
+</div>
+<!-- Average Retention -->
+<div class="glass-card p-6 rounded-xl relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl">verified_user</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] font-headline font-bold text-slate-500 uppercase tracking-widest mb-1">Average Retention</span>
+<div class="flex items-end gap-3">
+<span class="text-3xl font-headline font-bold text-on-surface">94%</span>
+<span class="flex items-center text-tertiary text-[10px] font-bold mb-1.5">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+                    0.4%
+                </span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 h-0.5 bg-primary/30 w-full"></div>
+</div>
+<!-- Monthly Growth -->
+<div class="glass-card p-6 rounded-xl relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl">monitoring</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] font-headline font-bold text-slate-500 uppercase tracking-widest mb-1">Monthly Growth</span>
+<div class="flex items-end gap-3">
+<span class="text-3xl font-headline font-bold text-on-surface">+8.2%</span>
+<span class="flex items-center text-tertiary text-[10px] font-bold mb-1.5">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+                    1.2%
+                </span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 h-0.5 bg-primary/30 w-full"></div>
+</div>
+</div>
+<!-- Client Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Client Card 1 -->
+<div class="glass-card p-8 rounded-xl relative flex flex-col group">
+<div class="flex justify-between items-start mb-8">
+<div class="w-14 h-14 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center p-2">
+<img alt="Global Finance Corp" class="w-full h-full object-contain filter grayscale group-hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIlkfegES4d69xcIauhox2PIJPcmWXSikrvA5Wzf9ydMMGt4l6hnURbtvDh4OZQr0pAy5dmNRrTUrgXTfq-SmCJkWqWQXgP9C9j8QeAret-BkzWIzKWPGgAFtOXjkZjJxp0E4PgIjfD-1Khb-5q14YYzWdU-lKlJddKbotlsO33DAPNXJYPtiI1pdIHlSdm6lDWsUtfv88AhkjL9dl5xfEVt7q29PlwZesmsf6IGlCPzuISQTSAWauFS4X6_J_NN-3Tl_VYvGp50C2"/>
+</div>
+<span class="text-[9px] font-headline font-bold text-tertiary bg-tertiary/10 px-2.5 py-1 rounded border border-tertiary/20 uppercase tracking-widest">PAID</span>
+</div>
+<h3 class="text-lg font-headline font-bold text-on-surface mb-1 uppercase tracking-tight">Global Finance Corp</h3>
+<p class="text-[10px] font-headline font-bold text-slate-500 uppercase tracking-[0.15em] mb-6">Cloud Infrastructure</p>
+<div class="mt-auto pt-6 border-t border-white/5 flex justify-between items-end">
+<div>
+<div class="text-[9px] font-bold text-slate-500 uppercase tracking-tighter mb-1">Total Billable</div>
+<div class="text-2xl font-headline font-bold text-on-surface">$245,000</div>
+</div>
+<button class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-primary hover:bg-primary/20 hover:border-primary/30 transition-all">
+<span class="material-symbols-outlined text-[18px]">arrow_outward</span>
+</button>
+</div>
+</div>
+<!-- Client Card 2 -->
+<div class="glass-card p-8 rounded-xl relative flex flex-col group border-rose-500/20">
+<div class="flex justify-between items-start mb-8">
+<div class="w-14 h-14 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center p-2">
+<img alt="Neural Link Systems" class="w-full h-full object-contain filter grayscale group-hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAy76qvsNZRA76LnXJr1bZRHuMLBptoZqWhcWFmmj9yq0ox9SbxqYElKFSx0ighm23ws550v8iSXpfPew-WyfCvkQMFq-EoJydycxJEcNT63r1BTOVQ2u3lM6j-1pbdYCTlFIE_weWuqFVylbAUTkXTreM3H8JXXvvFvwzYy1vWUG8aPsUdSjNinxbfEXVYpC2LJGUEiikly39xe5s0RpGSGJ99--2GQMsnyot1jUnNJ1aiBK7-BofIj48Tf5wlSx9VYVnYnWyH0rU6"/>
+</div>
+<span class="text-[9px] font-headline font-bold text-rose-400 bg-rose-500/10 px-2.5 py-1 rounded border border-rose-500/20 uppercase tracking-widest">OVERDUE</span>
+</div>
+<h3 class="text-lg font-headline font-bold text-on-surface mb-1 uppercase tracking-tight">Neural Link Systems</h3>
+<p class="text-[10px] font-headline font-bold text-slate-500 uppercase tracking-[0.15em] mb-6">AI Agent Deployment</p>
+<div class="mt-auto pt-6 border-t border-white/5 flex justify-between items-end">
+<div>
+<div class="text-[9px] font-bold text-slate-500 uppercase tracking-tighter mb-1">Total Billable</div>
+<div class="text-2xl font-headline font-bold text-on-surface">$89,200</div>
+</div>
+<button class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-rose-400 hover:bg-rose-500/20 hover:border-rose-500/30 transition-all">
+<span class="material-symbols-outlined text-[18px]">priority_high</span>
+</button>
+</div>
+</div>
+<!-- Client Card 3 -->
+<div class="glass-card p-8 rounded-xl relative flex flex-col group">
+<div class="flex justify-between items-start mb-8">
+<div class="w-14 h-14 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center p-2">
+<img alt="Aether Architects" class="w-full h-full object-contain filter grayscale group-hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2ebOaZALj__TzNtbxDXWoiyt2v5iwYFpDjUxSFyxhzX8ptn4DGE-rHzW7rWilnFsyEkw_yu_5ANwS2ke6wXGDOGqJO0JEiTp5iatpCheGpV7tU7bU2uq5k6Go6NOtmNwPFoGSnwOO9-u7a5zaBXE8m_56bKjbKXj7SBdcnIuyvbfce3jIBmu6Ce1J_JOA5VLZUKi3wqdWAj_BndfvTKwgo-lEWzGnmqHU4MHppEFlU2KTgokSznZJw72laBbMDbGny-CvLCmok0t3"/>
+</div>
+<span class="text-[9px] font-headline font-bold text-tertiary bg-tertiary/10 px-2.5 py-1 rounded border border-tertiary/20 uppercase tracking-widest">PAID</span>
+</div>
+<h3 class="text-lg font-headline font-bold text-on-surface mb-1 uppercase tracking-tight">Aether Architects</h3>
+<p class="text-[10px] font-headline font-bold text-slate-500 uppercase tracking-[0.15em] mb-6">Data Modeling</p>
+<div class="mt-auto pt-6 border-t border-white/5 flex justify-between items-end">
+<div>
+<div class="text-[9px] font-bold text-slate-500 uppercase tracking-tighter mb-1">Total Billable</div>
+<div class="text-2xl font-headline font-bold text-on-surface">$112,000</div>
+</div>
+<button class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-primary hover:bg-primary/20 hover:border-primary/30 transition-all">
+<span class="material-symbols-outlined text-[18px]">arrow_outward</span>
+</button>
+</div>
+</div>
+<!-- Client Card 4 -->
+<div class="glass-card p-8 rounded-xl relative flex flex-col group">
+<div class="flex justify-between items-start mb-8">
+<div class="w-14 h-14 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center p-2">
+<img alt="Velocity Logistics" class="w-full h-full object-contain filter grayscale group-hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALu2JJ6riSb2CsCEfsotBnirEyRwfBAMcMvb80MkPW7uwODoeNU3CG6J2kfjo7dUg81KaP0NWaXOHDdVUS0DSkBD_vsCLG6XPyeplAnPjwQsTEhzRy_QiahvUNtRBFK0nurP_94ky4QfqkCoHerzUGvNN2np3oD4k3lhkw3XZKETX7mvpzKr2Lyuf9jy9o2eNPxl4-VzM0wpiRCubKcnf96rm7-gtnwG0QGV66kAy6BIq-LHM6Nkaw5bW8BMimHUQCR4C4YLnX-Bce"/>
+</div>
+<span class="text-[9px] font-headline font-bold text-tertiary bg-tertiary/10 px-2.5 py-1 rounded border border-tertiary/20 uppercase tracking-widest">PAID</span>
+</div>
+<h3 class="text-lg font-headline font-bold text-on-surface mb-1 uppercase tracking-tight">Velocity Logistics</h3>
+<p class="text-[10px] font-headline font-bold text-slate-500 uppercase tracking-[0.15em] mb-6">Supply Chain Optimization</p>
+<div class="mt-auto pt-6 border-t border-white/5 flex justify-between items-end">
+<div>
+<div class="text-[9px] font-bold text-slate-500 uppercase tracking-tighter mb-1">Total Billable</div>
+<div class="text-2xl font-headline font-bold text-on-surface">$56,700</div>
+</div>
+<button class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-primary hover:bg-primary/20 hover:border-primary/30 transition-all">
+<span class="material-symbols-outlined text-[18px]">arrow_outward</span>
+</button>
+</div>
+</div>
+<!-- Client Card 5 -->
+<div class="glass-card p-8 rounded-xl relative flex flex-col group border-rose-500/20">
+<div class="flex justify-between items-start mb-8">
+<div class="w-14 h-14 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center p-2">
+<img alt="Quantum Core Labs" class="w-full h-full object-contain filter grayscale group-hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDg1OYcMNcE85jrSGxdWYWQJJ0zu-zUIq3rv3gNZxlk22VNjGiWdupd9mfxbV5VjnY0xPDeA44iw0SxiUyVADq2yPohgWwp0YgDCN45VskqWGXLwIHMRP3L828PkZoC0GlcklN8hkWehEMoqZBNGvYZcOgu3PM4HMLtRjDECi1ybcpwmWJr-y_PNNg8cBgGhPfFMm9Bae_YCAaC0S3zNZGjRjqXg0zSsEP1eulP-DGP36klBbsqqcPZ0kCMd2NE3192dPzx8gxdHNBi"/>
+</div>
+<span class="text-[9px] font-headline font-bold text-rose-400 bg-rose-500/10 px-2.5 py-1 rounded border border-rose-500/20 uppercase tracking-widest">OVERDUE</span>
+</div>
+<h3 class="text-lg font-headline font-bold text-on-surface mb-1 uppercase tracking-tight">Quantum Core Labs</h3>
+<p class="text-[10px] font-headline font-bold text-slate-500 uppercase tracking-[0.15em] mb-6">Research &amp; Development</p>
+<div class="mt-auto pt-6 border-t border-white/5 flex justify-between items-end">
+<div>
+<div class="text-[9px] font-bold text-slate-500 uppercase tracking-tighter mb-1">Total Billable</div>
+<div class="text-2xl font-headline font-bold text-on-surface">$412,000</div>
+</div>
+<button class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-rose-400 hover:bg-rose-500/20 hover:border-rose-500/30 transition-all">
+<span class="material-symbols-outlined text-[18px]">priority_high</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

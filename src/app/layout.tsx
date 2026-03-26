@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Manrope } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import WhatsAppButton from "@/components/layout/WhatsAppButton";
 import { COMPANY } from "@/lib/constants";
 import { OrganizationSchema } from "@/components/seo/JsonLd";
 
@@ -62,10 +59,7 @@ export default function RootLayout({
         className={`${spaceGrotesk.variable} ${manrope.variable} bg-background text-on-background font-body selection:bg-primary selection:text-on-primary-fixed antialiased min-h-screen flex flex-col overflow-x-hidden w-full`}
       >
         <OrganizationSchema />
-        <Header />
-        <main className="flex-1 pt-20 w-full">{children}</main>
-        <Footer />
-        <WhatsAppButton />
+        {children}
       </body>
     </html>
   );

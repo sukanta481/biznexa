@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getAllPosts } from "@/lib/mdx";
+import { getAllBlogPosts } from "@/lib/blog";
 import { COMPANY } from "@/lib/constants";
 import { BreadcrumbSchema } from "@/components/seo/JsonLd";
 
@@ -22,11 +22,10 @@ const STITCH_IMAGES = [
 
 const AUTHOR_IMAGE = "https://lh3.googleusercontent.com/aida-public/AB6AXuCR_6bd8GuWfs49lxyJtS9lnDuJGS4cLn9ft40MTuL7Eil1YIF1obwdhD6z_j61Pi_-bM64gDEKQjXnKVSMSGaHDCjEiqUQFUivmSjAXaXDokUg9GUyl0FbWf995neLwKOaejahPn-L5WW6vXGALuYOeUnQJeZxpoWDVPmSWDX_CFKJDElmO0185wALTgxgYdUq3DBveiA027ZDT-JMCd8z2GSduXG8uEo-seG3dMXvBlz-iQ4pZwT3qQFvkOCCVnzzpKSM8wzIHpsE";
 
-export default function BlogListingPage() {
-  const posts = getAllPosts();
+export default async function BlogListingPage() {
+  const posts = await getAllBlogPosts();
   // If we have posts, use the first one as featured, otherwise fall back
   const featuredPost = posts.length > 0 ? posts[0] : null;
-  const gridPosts = posts.length > 0 ? posts.slice(1) : [];
 
   return (
     <>

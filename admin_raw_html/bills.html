@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bills &amp; Invoicing | Biznexa CMS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline": "#6d758c",
+                        "on-secondary-container": "#ccccff",
+                        "on-primary-container": "#005359",
+                        "on-primary-fixed-variant": "#005e64",
+                        "surface": "#020617",
+                        "on-primary-fixed": "#003f43",
+                        "on-primary": "#005d63",
+                        "primary-dim": "#00deec",
+                        "surface-variant": "#0f172a",
+                        "surface-dim": "#020617",
+                        "secondary-fixed-dim": "#bdbeff",
+                        "on-secondary-fixed": "#160bae",
+                        "surface-container-high": "#1e293b",
+                        "tertiary-container": "#10b981",
+                        "inverse-surface": "#faf8ff",
+                        "surface-container-lowest": "#020617",
+                        "primary-fixed": "#00eefc",
+                        "on-error": "#490006",
+                        "outline-variant": "#334155",
+                        "on-surface": "#f8fafc",
+                        "background": "#020617",
+                        "surface-bright": "#1e293b",
+                        "secondary-fixed": "#cdcdff",
+                        "on-secondary": "#080079",
+                        "secondary-dim": "#6366f1",
+                        "surface-container-low": "#0f172a",
+                        "secondary-container": "#4338ca",
+                        "inverse-on-surface": "#4d556b",
+                        "tertiary": "#10b981",
+                        "inverse-primary": "#006a71",
+                        "primary-container": "#14b8a6",
+                        "on-tertiary-fixed-variant": "#006544",
+                        "on-error-container": "#ffa8a3",
+                        "surface-tint": "#22d3ee",
+                        "on-tertiary": "#064e3b",
+                        "tertiary-fixed-dim": "#6ee7b7",
+                        "tertiary-dim": "#6ee7b7",
+                        "tertiary-fixed": "#34d399",
+                        "error-dim": "#ef4444",
+                        "error-container": "#7f1d1d",
+                        "on-tertiary-container": "#ecfdf5",
+                        "on-tertiary-fixed": "#064e3b",
+                        "primary-fixed-dim": "#00deec",
+                        "error": "#f87171",
+                        "surface-container": "#0f172a",
+                        "on-surface-variant": "#b0b8c8",
+                        "on-secondary-fixed-variant": "#3a3ac8",
+                        "surface-container-highest": "#1e293b",
+                        "secondary": "#818cf8",
+                        "primary": "#22d3ee",
+                        "on-background": "#f8fafc"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Manrope"],
+                        "label": ["Space Grotesk"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .cyber-glow-text {
+            text-shadow: 0 0 15px rgba(34, 211, 238, 0.4);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #22d3ee; }
+        
+        .sidebar-item-active {
+            background: rgba(34, 211, 238, 0.08);
+            border-right: 3px solid #22d3ee;
+            color: #22d3ee;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary/30 min-h-screen">
+<!-- Sidebar -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-slate-950 border-r border-white/5 z-50 flex flex-col py-6">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-black text-white tracking-tighter font-headline flex items-center gap-2">
+<span class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-slate-950">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</span>
+                Biznexa
+            </h1>
+<p class="text-[10px] font-label uppercase tracking-[0.2em] text-primary/60 mt-1">Admin Console</p>
+</div>
+<nav class="flex-1 space-y-1 overflow-y-auto px-3 scrollbar-hide">
+<!-- Main -->
+<div class="px-3 mb-2">
+<p class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant/50">Main</p>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-white transition-all hover:bg-white/5 rounded-md group text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- Billing -->
+<div class="px-3 mb-2 mt-6">
+<p class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant/50">Billing</p>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-white transition-all hover:bg-white/5 rounded-md text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="group">group</span>
+<span>Clients</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 sidebar-item-active text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="receipt_long">receipt_long</span>
+<span class="font-semibold">Bills</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-white transition-all hover:bg-white/5 rounded-md text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="payments">payments</span>
+<span>Expenses</span>
+</a>
+<!-- Inspection -->
+<div class="px-3 mb-2 mt-6">
+<p class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant/50">Inspection</p>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-white transition-all hover:bg-white/5 rounded-md text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="analytics">analytics</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-white transition-all hover:bg-white/5 rounded-md text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="folder_open">folder_open</span>
+<span>Files</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-white transition-all hover:bg-white/5 rounded-md text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="category">category</span>
+<span>Masters</span>
+</a>
+<!-- Content -->
+<div class="px-3 mb-2 mt-6">
+<p class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant/50">Content</p>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-white transition-all hover:bg-white/5 rounded-md text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="work">work</span>
+<span>Projects</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-white transition-all hover:bg-white/5 rounded-md text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="smart_toy">smart_toy</span>
+<span>AI Agents</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-white transition-all hover:bg-white/5 rounded-md text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="design_services">design_services</span>
+<span>Services</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-white transition-all hover:bg-white/5 rounded-md text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="chat_bubble">chat_bubble</span>
+<span>Testimonials</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-white transition-all hover:bg-white/5 rounded-md text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="article">article</span>
+<span>Blog Posts</span>
+</a>
+<!-- Settings -->
+<div class="px-3 mb-2 mt-6">
+<p class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant/50">Settings</p>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-white transition-all hover:bg-white/5 rounded-md text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+<span>Site Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-white transition-all hover:bg-white/5 rounded-md text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="account_circle">account_circle</span>
+<span>My Profile</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-red-400 transition-all hover:bg-white/5 rounded-md text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 min-h-screen">
+<!-- Header -->
+<header class="sticky top-0 w-full z-40 bg-slate-950/80 backdrop-blur-xl border-b border-white/5 px-8 h-16 flex justify-between items-center">
+<div class="flex items-center gap-4 bg-slate-900/50 px-4 py-1.5 rounded-full border border-white/5 w-96">
+<span class="material-symbols-outlined text-on-surface-variant text-lg" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm text-on-surface w-full placeholder:text-on-surface-variant/40" placeholder="Search invoices, clients..." type="text"/>
+</div>
+<div class="flex items-center gap-5">
+<div class="flex items-center gap-1">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-all relative">
+<span class="material-symbols-outlined text-[22px]" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined text-[22px]" data-icon="settings">settings</span>
+</button>
+</div>
+<div class="h-6 w-px bg-white/10"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="text-xs font-bold text-white leading-none">Alex Chen</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-tighter mt-1">Financial Director</p>
+</div>
+<img alt="Profile" class="w-9 h-9 rounded-lg border border-primary/20 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLDC8ssaYdXOIygdfJNNYhogZ-CCo3ygrtMm3dGsjOIk_dudTE40MJZHQ7ynyDwjbw5tIOXnmRzLvpruKsdzFwpqaxtCZnuuZo-jSR8AdIBREA4lJ8RP9eDJcqp88bbkn6RjxxMIWjBZdM-pGt9qlGkfGeWdc5WiwwL4kGu_oWAw0xVj7yINmcXfZ89tOp0uKZFvwdccL4LnCwOe8YFOhZ1YjKYsYtq0QxGQh_K4qm7nh0TR1vyGVc7GGxg-XUc-WzUxJnDyBSNDJT"/>
+</div>
+</div>
+</header>
+<section class="p-8 max-w-[1600px] mx-auto space-y-8">
+<!-- Title & Create -->
+<div class="flex justify-between items-start">
+<div>
+<h2 class="text-3xl font-headline font-bold tracking-tight cyber-glow-text text-primary">Bills &amp; Invoicing</h2>
+<p class="text-on-surface-variant mt-1 text-sm">Manage commercial billing flow and monitor collection health.</p>
+</div>
+<button class="flex items-center gap-2 bg-primary px-6 py-2.5 rounded-lg text-slate-950 font-headline font-bold text-sm tracking-wide shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+                    CREATE NEW INVOICE
+                </button>
+</div>
+<!-- Metrics -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="glass-panel p-6 rounded-xl flex flex-col justify-between">
+<div>
+<span class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Total Invoiced</span>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="text-3xl font-headline font-bold text-white">$1.24M</span>
+<span class="text-tertiary text-xs font-medium flex items-center">
+<span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span>
+                                12%
+                            </span>
+</div>
+</div>
+<div class="mt-6 h-1 w-full bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-3/4 rounded-full"></div>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-xl border-red-500/20 bg-red-500/5">
+<span class="text-[10px] font-label text-red-400 uppercase tracking-widest">Outstanding Amount</span>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="text-3xl font-headline font-bold text-red-500">$342.5K</span>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+<p class="text-[11px] text-on-surface-variant">Immediate attention required</p>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-xl">
+<span class="text-[10px] font-label text-tertiary uppercase tracking-widest">Paid This Month</span>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="text-3xl font-headline font-bold text-white">$118.2K</span>
+</div>
+<div class="mt-6 flex gap-1 items-end h-6">
+<div class="w-1 bg-tertiary/20 rounded-full h-2"></div>
+<div class="w-1 bg-tertiary/40 rounded-full h-4"></div>
+<div class="w-1 bg-tertiary/20 rounded-full h-2"></div>
+<div class="w-1 bg-tertiary rounded-full h-6 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+<div class="w-1 bg-tertiary/60 rounded-full h-3"></div>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-xl">
+<span class="text-[10px] font-label text-secondary uppercase tracking-widest">Avg Collection Time</span>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="text-3xl font-headline font-bold text-white">14 Days</span>
+</div>
+<p class="text-[11px] text-on-surface-variant mt-6 italic">-2 days vs last quarter</p>
+</div>
+</div>
+<!-- Filters -->
+<div class="glass-panel p-5 rounded-2xl flex flex-wrap items-center gap-6">
+<div class="flex flex-col gap-1.5 min-w-[200px]">
+<label class="text-[10px] font-label uppercase text-on-surface-variant tracking-wider">Date Range</label>
+<div class="bg-slate-900/50 flex items-center px-4 py-2.5 rounded-lg gap-3 cursor-pointer border border-white/5 hover:border-primary/20 transition-all">
+<span class="material-symbols-outlined text-lg text-primary" data-icon="calendar_today">calendar_today</span>
+<span class="text-sm text-on-surface">Last 30 Days</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5 min-w-[200px]">
+<label class="text-[10px] font-label uppercase text-on-surface-variant tracking-wider">Service Category</label>
+<select class="bg-slate-900/50 text-sm text-on-surface border border-white/5 focus:border-primary/40 focus:ring-0 rounded-lg py-2.5 px-4">
+<option>All Services</option>
+<option>Cloud Infrastructure</option>
+<option>AI Consultancy</option>
+<option>Security Audit</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5 min-w-[200px]">
+<label class="text-[10px] font-label uppercase text-on-surface-variant tracking-wider">Region</label>
+<select class="bg-slate-900/50 text-sm text-on-surface border border-white/5 focus:border-primary/40 focus:ring-0 rounded-lg py-2.5 px-4">
+<option>Global (All)</option>
+<option>North America</option>
+<option>EMEA</option>
+<option>APAC</option>
+</select>
+</div>
+<div class="ml-auto mt-auto">
+<button class="bg-slate-800/50 hover:bg-slate-800 text-primary border border-primary/20 flex items-center gap-2 px-6 py-2.5 rounded-lg transition-all text-sm font-bold">
+<span class="material-symbols-outlined text-lg" data-icon="filter_list">filter_list</span>
+                        APPLY FILTERS
+                    </button>
+</div>
+</div>
+<!-- Table -->
+<div class="glass-panel rounded-2xl overflow-hidden border-none shadow-2xl">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-900/40 border-b border-white/5">
+<th class="px-6 py-4 text-[10px] font-label uppercase tracking-[0.2em] text-on-surface-variant">Invoice ID</th>
+<th class="px-6 py-4 text-[10px] font-label uppercase tracking-[0.2em] text-on-surface-variant">Client Name</th>
+<th class="px-6 py-4 text-[10px] font-label uppercase tracking-[0.2em] text-on-surface-variant">Amount</th>
+<th class="px-6 py-4 text-[10px] font-label uppercase tracking-[0.2em] text-on-surface-variant">Due Date</th>
+<th class="px-6 py-4 text-[10px] font-label uppercase tracking-[0.2em] text-on-surface-variant">Status</th>
+<th class="px-6 py-4 text-[10px] font-label uppercase tracking-[0.2em] text-on-surface-variant text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-5 font-headline text-sm font-medium text-white">#INV-2024-001</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-secondary/20 flex items-center justify-center text-secondary font-bold text-[10px]">NL</div>
+<span class="text-sm font-semibold text-white">Nebula Labs Corp.</span>
+</div>
+</td>
+<td class="px-6 py-5 font-headline text-sm font-bold text-white">$42,500.00</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">Oct 12, 2023</td>
+<td class="px-6 py-5">
+<span class="bg-tertiary/10 text-tertiary text-[10px] font-label uppercase tracking-widest px-3 py-1 rounded-full border border-tertiary/20">Paid</span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="download">download</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="send">send</span></button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-5 font-headline text-sm font-medium text-white">#INV-2024-002</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary/20 flex items-center justify-center text-primary font-bold text-[10px]">QT</div>
+<span class="text-sm font-semibold text-white">Quantum Tech Systems</span>
+</div>
+</td>
+<td class="px-6 py-5 font-headline text-sm font-bold text-white">$18,200.00</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">Nov 04, 2023</td>
+<td class="px-6 py-5">
+<span class="bg-white/5 text-on-surface-variant text-[10px] font-label uppercase tracking-widest px-3 py-1 rounded-full border border-white/10">Unpaid</span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="download">download</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="send">send</span></button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-5 font-headline text-sm font-medium text-white">#INV-2024-003</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-red-500/20 flex items-center justify-center text-red-400 font-bold text-[10px]">VE</div>
+<span class="text-sm font-semibold text-white">Vortex Energy Group</span>
+</div>
+</td>
+<td class="px-6 py-5 font-headline text-sm font-bold text-red-500">$124,000.00</td>
+<td class="px-6 py-5 text-sm text-red-400/80 font-medium">Oct 01, 2023</td>
+<td class="px-6 py-5">
+<span class="bg-red-500/10 text-red-400 text-[10px] font-label uppercase tracking-widest px-3 py-1 rounded-full border border-red-500/20 animate-pulse">Overdue</span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="download">download</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="send">send</span></button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-5 font-headline text-sm font-medium text-white">#INV-2024-004</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-tertiary/20 flex items-center justify-center text-tertiary font-bold text-[10px]">AS</div>
+<span class="text-sm font-semibold text-white">Apex Solutions Ltd</span>
+</div>
+</td>
+<td class="px-6 py-5 font-headline text-sm font-bold text-white">$9,450.00</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">Nov 15, 2023</td>
+<td class="px-6 py-5">
+<span class="bg-tertiary/10 text-tertiary text-[10px] font-label uppercase tracking-widest px-3 py-1 rounded-full border border-tertiary/20">Paid</span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="download">download</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="send">send</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 flex items-center justify-between bg-slate-900/40">
+<span class="text-[10px] text-on-surface-variant font-label uppercase tracking-wider">Showing 1 to 4 of 28 invoices</span>
+<div class="flex items-center gap-3">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-white/5 hover:bg-white/5 text-on-surface-variant transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
+</button>
+<div class="flex items-center gap-1.5">
+<button class="w-8 h-8 rounded-lg bg-primary text-slate-950 text-xs font-bold">1</button>
+<button class="w-8 h-8 rounded-lg hover:bg-white/5 transition-all text-xs font-bold text-on-surface-variant">2</button>
+<button class="w-8 h-8 rounded-lg hover:bg-white/5 transition-all text-xs font-bold text-on-surface-variant">3</button>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-white/5 hover:bg-white/5 text-on-surface-variant transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-8 right-8 w-14 h-14 rounded-xl bg-primary text-slate-950 shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 group">
+<span class="material-symbols-outlined font-bold text-2xl group-hover:rotate-90 transition-transform" data-icon="add" style="font-variation-settings: 'wght' 700;">add</span>
+</button>
+</body></html>

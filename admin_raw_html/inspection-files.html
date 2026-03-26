@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Biznexa | Inspection Files Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline": "#6d758c",
+              "on-secondary-container": "#ccccff",
+              "on-primary-container": "#005359",
+              "on-primary-fixed-variant": "#005e64",
+              "surface": "#060e20",
+              "on-primary-fixed": "#003f43",
+              "on-primary": "#005d63",
+              "primary-dim": "#00deec",
+              "surface-variant": "#192540",
+              "surface-dim": "#060e20",
+              "secondary-fixed-dim": "#bdbeff",
+              "on-secondary-fixed": "#160bae",
+              "surface-container-high": "#141f38",
+              "tertiary-container": "#69f6b8",
+              "inverse-surface": "#faf8ff",
+              "surface-container-lowest": "#000000",
+              "primary-fixed": "#00eefc",
+              "on-error": "#490006",
+              "outline-variant": "#40485d",
+              "on-surface": "#dee5ff",
+              "background": "#060e20",
+              "surface-bright": "#1f2b49",
+              "secondary-fixed": "#cdcdff",
+              "on-secondary": "#080079",
+              "secondary-dim": "#6063ee",
+              "surface-container-low": "#091328",
+              "secondary-container": "#2f2ebe",
+              "inverse-on-surface": "#4d556b",
+              "tertiary": "#9bffce",
+              "inverse-primary": "#006a71",
+              "primary-container": "#00eefc",
+              "on-tertiary-fixed-variant": "#006544",
+              "on-error-container": "#ffa8a3",
+              "surface-tint": "#8ff5ff",
+              "on-tertiary": "#006443",
+              "tertiary-fixed-dim": "#58e7ab",
+              "tertiary-dim": "#58e7ab",
+              "tertiary-fixed": "#69f6b8",
+              "error-dim": "#d7383b",
+              "error-container": "#9f0519",
+              "on-tertiary-container": "#005a3c",
+              "on-tertiary-fixed": "#00452d",
+              "primary-fixed-dim": "#00deec",
+              "error": "#ff716c",
+              "surface-container": "#0f1930",
+              "on-surface-variant": "#a3aac4",
+              "on-secondary-fixed-variant": "#3a3ac8",
+              "surface-container-highest": "#192540",
+              "secondary": "#9093ff",
+              "primary": "#8ff5ff",
+              "on-background": "#dee5ff"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #060e20;
+            color: #dee5ff;
+            font-family: 'Manrope', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(25, 37, 64, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(143, 245, 255, 0.05);
+        }
+        .sidebar-glass {
+            background: rgba(10, 15, 30, 0.7);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(143, 245, 255, 0.05);
+        }
+        .text-b0b8c8 { color: #b0b8c8; }
+        .bg-electric-green { background-color: #9bffce; color: #00452d; }
+    </style>
+</head>
+<body class="flex min-h-screen selection:bg-primary/30 selection:text-white">
+<!-- SideNavBar (Updated to Neon Logic v2 / SCREEN_93 style) -->
+<aside class="fixed left-0 top-0 h-screen w-64 sidebar-glass z-50 flex flex-col py-6">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-black text-white tracking-tighter font-headline flex items-center gap-2">
+<span class="w-2 h-6 bg-primary rounded-full"></span>
+            Biznexa
+        </h1>
+<p class="text-[10px] text-slate-500 font-label tracking-[0.2em] uppercase mt-1 pl-4">Admin Console</p>
+</div>
+<nav class="flex-1 space-y-1 overflow-y-auto px-4 custom-scrollbar">
+<!-- Main Section -->
+<div class="mb-6">
+<p class="px-4 text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-2">Main</p>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">grid_view</span>
+<span class="font-medium text-sm font-label">Dashboard</span>
+</a>
+</div>
+<!-- Billing Section -->
+<div class="mb-6">
+<p class="px-4 text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-2">Billing</p>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span>
+<span class="font-medium text-sm font-label">Clients</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+<span class="font-medium text-sm font-label">Bills</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+<span class="font-medium text-sm font-label">Expenses</span>
+</a>
+</div>
+<!-- Inspection Section -->
+<div class="mb-6">
+<p class="px-4 text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-2">Inspection</p>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+<span class="font-medium text-sm font-label">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-primary bg-primary/10 border-l-2 border-primary rounded-r-lg transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">folder_open</span>
+<span class="font-medium text-sm font-label">Files</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">database</span>
+<span class="font-medium text-sm font-label">Masters</span>
+</a>
+</div>
+<!-- Content Section -->
+<div class="mb-6">
+<p class="px-4 text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-2">Content</p>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">apartment</span>
+<span class="font-medium text-sm font-label">Projects</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">smart_toy</span>
+<span class="font-medium text-sm font-label">AI Agents</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">engineering</span>
+<span class="font-medium text-sm font-label">Services</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">reviews</span>
+<span class="font-medium text-sm font-label">Testimonials</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">news</span>
+<span class="font-medium text-sm font-label">Blog Posts</span>
+</a>
+</div>
+<!-- Settings Section -->
+<div class="pt-4 border-t border-white/5">
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="font-medium text-sm font-label">Site Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">account_circle</span>
+<span class="font-medium text-sm font-label">My Profile</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-error-dim hover:text-error hover:bg-error/5 rounded-lg transition-all group mt-2" href="#">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+<span class="font-medium text-sm font-label">Logout</span>
+</a>
+</div>
+</nav>
+</aside>
+<!-- Main Content Wrapper -->
+<main class="ml-64 flex-1 flex flex-col bg-surface relative min-h-screen">
+<!-- TopNavBar (Updated to SCREEN_93 glassmorphism) -->
+<header class="sticky top-0 w-full z-40 bg-surface/60 backdrop-blur-xl border-b border-white/5 h-16 px-8 flex justify-between items-center">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-lg">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-lg">search</span>
+<input class="w-full bg-white/5 border border-white/10 rounded-full pl-12 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary/30 outline-none text-on-surface placeholder-slate-500 transition-all" placeholder="Search inspections, files, or records..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-slate-400 hover:bg-white/5 hover:text-primary transition-all relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 bg-primary rounded-full border-2 border-[#060e20]"></span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-slate-400 hover:bg-white/5 hover:text-primary transition-all">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-8 w-px bg-white/10"></div>
+<div class="flex items-center gap-3 pl-2">
+<div class="text-right hidden sm:block">
+<p class="text-[10px] font-bold text-on-surface font-headline uppercase tracking-widest">User Account</p>
+<p class="text-[10px] text-slate-500 font-label">Security Lead</p>
+</div>
+<img alt="User Avatar" class="w-9 h-9 rounded-full ring-2 ring-primary/20 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLIBtERrrN766CYp0Ikz0whWxd5-oK9GyH1A2-RG0kkfpGzzop2Dbcp8l3X6OHBwdtc40fx7cx0auwy1qefzLbUl9txvxqgnGrtsieZ5cAkS7WYH_Jq12-RZZsMyWbMFMolThOnBLEhoh-sF_CO_LHoybvIqw1q7RBZDJaHE5e1RIzdj4PN8bv2Oc0f7SakVALHVV_TB206NCbayXeKcmKNIswvB-Z8QabEIM-FujGyJ92rtrSATS_qhTMIgnZHFEnXrsXw5GTKlGl"/>
+</div>
+</div>
+</header>
+<!-- Page Canvas -->
+<div class="p-8 space-y-8">
+<!-- Header Section -->
+<div class="flex justify-between items-end">
+<div class="space-y-1">
+<h2 class="text-4xl font-headline font-bold text-primary tracking-tight">Inspection Files</h2>
+<p class="text-b0b8c8 text-sm">Centralized repository for secure site audit documentation and master records.</p>
+</div>
+<button class="bg-tertiary px-6 py-3.5 rounded-xl flex items-center gap-2 font-headline font-black text-on-tertiary text-xs uppercase tracking-widest shadow-[0_8px_24px_rgba(155,255,206,0.2)] hover:shadow-[0_12px_32px_rgba(155,255,206,0.4)] transition-all active:scale-95 group">
+<span class="material-symbols-outlined text-lg group-hover:bounce">cloud_upload</span>
+                Upload New File
+            </button>
+</div>
+<!-- Metric Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<!-- Active Files -->
+<div class="glass-panel p-6 rounded-2xl flex flex-col justify-between group overflow-hidden relative border border-white/5">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-all"></div>
+<div class="flex justify-between items-start relative z-10">
+<span class="material-symbols-outlined text-primary text-3xl">folder_shared</span>
+<span class="text-[10px] font-label text-primary font-bold tracking-[0.2em] bg-primary/10 px-2 py-0.5 rounded-full">+12%</span>
+</div>
+<div class="mt-8 relative z-10">
+<p class="text-4xl font-headline font-bold tracking-tighter">1,284</p>
+<p class="text-b0b8c8 text-[10px] font-label uppercase tracking-[0.2em] mt-2">Active Files</p>
+</div>
+</div>
+<!-- Storage Used -->
+<div class="glass-panel p-6 rounded-2xl flex flex-col justify-between group overflow-hidden relative border border-white/5">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-secondary/5 rounded-full blur-2xl"></div>
+<div class="flex justify-between items-start relative z-10">
+<span class="material-symbols-outlined text-secondary text-3xl">storage</span>
+<span class="text-[10px] font-label text-secondary font-bold tracking-[0.2em]">74% FULL</span>
+</div>
+<div class="mt-8 relative z-10">
+<p class="text-4xl font-headline font-bold tracking-tighter">42.8 <span class="text-xl opacity-40">GB</span></p>
+<p class="text-b0b8c8 text-[10px] font-label uppercase tracking-[0.2em] mt-2">Storage Used</p>
+</div>
+</div>
+<!-- Flagged Files -->
+<div class="glass-panel p-6 rounded-2xl border-error/10 flex flex-col justify-between group overflow-hidden relative">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-error/5 rounded-full blur-2xl"></div>
+<div class="flex justify-between items-start relative z-10">
+<span class="material-symbols-outlined text-error text-3xl">report</span>
+<span class="text-[10px] font-label text-error font-bold tracking-[0.2em] bg-error/10 px-2 py-0.5 rounded-full">URGENT</span>
+</div>
+<div class="mt-8 relative z-10">
+<p class="text-4xl font-headline font-bold tracking-tighter">18</p>
+<p class="text-b0b8c8 text-[10px] font-label uppercase tracking-[0.2em] mt-2">Flagged Files</p>
+</div>
+</div>
+<!-- Last Scan -->
+<div class="glass-panel p-6 rounded-2xl flex flex-col justify-between group overflow-hidden relative border border-white/5">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-tertiary/5 rounded-full blur-2xl"></div>
+<div class="flex justify-between items-start relative z-10">
+<span class="material-symbols-outlined text-tertiary text-3xl">security</span>
+<span class="text-[10px] font-label text-tertiary font-bold tracking-[0.2em] bg-tertiary/10 px-2 py-0.5 rounded-full">SECURE</span>
+</div>
+<div class="mt-8 relative z-10">
+<p class="text-xl font-headline font-bold">Oct 24, 2023</p>
+<p class="text-b0b8c8 text-[10px] font-label uppercase tracking-[0.2em] mt-2">Last Scan Date</p>
+</div>
+</div>
+</div>
+<!-- Advanced Filters (Updated to match SCREEN_93 style) -->
+<div class="glass-panel p-4 rounded-2xl flex flex-wrap items-center gap-6 border border-white/5">
+<div class="flex items-center gap-3 text-b0b8c8 pl-2">
+<span class="material-symbols-outlined text-primary text-xl">tune</span>
+<span class="font-label text-[10px] uppercase tracking-[0.2em] font-bold">Filters</span>
+</div>
+<div class="flex flex-wrap gap-4 flex-1">
+<div class="relative group">
+<select class="bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[11px] font-bold font-label uppercase tracking-widest text-on-surface pl-4 pr-10 py-2.5 focus:ring-1 focus:ring-primary/30 transition-all appearance-none cursor-pointer min-w-[160px] outline-none">
+<option>Date Range: Last 30 Days</option>
+<option>Date Range: Last 90 Days</option>
+<option>Date Range: YTD</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none text-sm">expand_more</span>
+</div>
+<div class="relative group">
+<select class="bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[11px] font-bold font-label uppercase tracking-widest text-on-surface pl-4 pr-10 py-2.5 focus:ring-1 focus:ring-primary/30 transition-all appearance-none cursor-pointer min-w-[160px] outline-none">
+<option>Service: All Categories</option>
+<option>Service: Structural</option>
+<option>Service: Electrical</option>
+<option>Service: Fire Safety</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none text-sm">expand_more</span>
+</div>
+<div class="relative group">
+<select class="bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[11px] font-bold font-label uppercase tracking-widest text-on-surface pl-4 pr-10 py-2.5 focus:ring-1 focus:ring-primary/30 transition-all appearance-none cursor-pointer min-w-[160px] outline-none">
+<option>Region: Global Operations</option>
+<option>Region: North District</option>
+<option>Region: South District</option>
+<option>Region: Overseas</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none text-sm">expand_more</span>
+</div>
+</div>
+<div class="flex items-center gap-2 pr-2">
+<button class="w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 hover:bg-white/10 hover:text-primary transition-all text-b0b8c8 border border-white/5">
+<span class="material-symbols-outlined text-xl">refresh</span>
+</button>
+<button class="w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 hover:bg-white/10 hover:text-primary transition-all text-b0b8c8 border border-white/5">
+<span class="material-symbols-outlined text-xl">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Data Table Section (High Fidelity Glassmorphism) -->
+<div class="glass-panel rounded-2xl overflow-hidden border border-white/5">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-white/5">
+<th class="px-8 py-5 font-label text-[10px] uppercase tracking-[0.2em] text-b0b8c8 font-black">File Name</th>
+<th class="px-6 py-5 font-label text-[10px] uppercase tracking-[0.2em] text-b0b8c8 font-black text-center">Type</th>
+<th class="px-6 py-5 font-label text-[10px] uppercase tracking-[0.2em] text-b0b8c8 font-black">Size</th>
+<th class="px-6 py-5 font-label text-[10px] uppercase tracking-[0.2em] text-b0b8c8 font-black">Upload Date</th>
+<th class="px-6 py-5 font-label text-[10px] uppercase tracking-[0.2em] text-b0b8c8 font-black">Status</th>
+<th class="px-6 py-5 font-label text-[10px] uppercase tracking-[0.2em] text-b0b8c8 font-black">Owner</th>
+<th class="px-8 py-5"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<!-- Row 1 -->
+<tr class="hover:bg-primary/5 transition-all group cursor-pointer">
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="w-11 h-11 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div>
+<p class="font-bold text-sm text-on-surface">Structural_Audit_V2.pdf</p>
+<p class="text-[10px] text-slate-500 uppercase font-bold font-label tracking-widest mt-0.5">Project: Nexus Tower</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-center">
+<span class="bg-primary/10 border border-primary/20 px-3 py-1 rounded text-[10px] font-black text-primary uppercase tracking-widest">PDF</span>
+</td>
+<td class="px-6 py-5 text-sm text-b0b8c8 font-medium">12.4 MB</td>
+<td class="px-6 py-5 text-sm text-b0b8c8 font-medium">Oct 22, 2023</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-2 text-tertiary text-[11px] font-black font-headline uppercase tracking-widest">
+<span class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_12px_#9bffce]"></span>
+                                Secure
+                            </span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<img class="w-7 h-7 rounded-full ring-1 ring-white/10 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3FQG7JO-4XD6IbjuN_rgqd8hOD0N2tVP5I9gqG0HbYnUIlwso0wKU7-jf4r0fapfah1wOGIdRmr_6_sZeKUHQhe2eWZS83tYZ9_zx1A-BX9x6Bn6CdxNKxij1XEnR_-_Vvbz3XJpYyPZZxO9exI1U-KAekvtW2Ewx3-17J7KWsJzUaDuWYMOIk7z_MEwlIlum-J3vpgdK63G8118GMUvPw7bXPyw8LXwtjjvN-aG1WfagMn0dDTnQLvRqZShugn9VC1aI7B0Obnn9"/>
+<span class="text-sm font-medium text-on-surface">Alex Chen</span>
+</div>
+</td>
+<td class="px-8 py-5 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
+<button class="w-9 h-9 flex items-center justify-center bg-white/5 hover:bg-primary/20 hover:text-primary rounded-xl border border-white/5 transition-all">
+<span class="material-symbols-outlined text-xl">download</span>
+</button>
+<button class="w-9 h-9 flex items-center justify-center bg-white/5 hover:bg-primary/20 hover:text-primary rounded-xl border border-white/5 transition-all">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-primary/5 transition-all group cursor-pointer">
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="w-11 h-11 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">architecture</span>
+</div>
+<div>
+<p class="font-bold text-sm text-on-surface">Main_Elevator_Schematics.dwg</p>
+<p class="text-[10px] text-slate-500 uppercase font-bold font-label tracking-widest mt-0.5">Project: SkyRise Plaza</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-center">
+<span class="bg-secondary/10 border border-secondary/20 px-3 py-1 rounded text-[10px] font-black text-secondary uppercase tracking-widest">CAD</span>
+</td>
+<td class="px-6 py-5 text-sm text-b0b8c8 font-medium">45.2 MB</td>
+<td class="px-6 py-5 text-sm text-b0b8c8 font-medium">Oct 20, 2023</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-2 text-secondary text-[11px] font-black font-headline uppercase tracking-widest">
+<span class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_12px_#9093ff]"></span>
+                                Pending
+                            </span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<img class="w-7 h-7 rounded-full ring-1 ring-white/10 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSZFRn4EopZvb_ny5wJmuVaB9_esZGX8mVsex0oLOmYK_6fjohWXgQ6MSwELg5OEOWHIenWrxzTaAGfHp1mQNj3OIeZlKG-_ntrUyHwexy00YcoFSr00YYrdpXIj2dYS7rsirkZtLVQ2lEVX0lR9SDrpMBMOBy-EuapcpWXkLYzgI0bFUK5zFjE_s_M9JWZWaOyyHfQv0ft_axmJjRlpNRIWoCYvx6_ImeBKAf17jtdxKdrfVCJ8n6FVCSrBzDjSuYT9keFhoe-fSV"/>
+<span class="text-sm font-medium text-on-surface">Sarah J.</span>
+</div>
+</td>
+<td class="px-8 py-5 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
+<button class="w-9 h-9 flex items-center justify-center bg-white/5 hover:bg-primary/20 hover:text-primary rounded-xl border border-white/5 transition-all">
+<span class="material-symbols-outlined text-xl">download</span>
+</button>
+<button class="w-9 h-9 flex items-center justify-center bg-white/5 hover:bg-primary/20 hover:text-primary rounded-xl border border-white/5 transition-all">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-primary/5 transition-all group cursor-pointer">
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="w-11 h-11 rounded-xl bg-error/10 border border-error/20 flex items-center justify-center text-error group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<div>
+<p class="font-bold text-sm text-on-surface">Foundation_Crack_Log_01.xlsx</p>
+<p class="text-[10px] text-slate-500 uppercase font-bold font-label tracking-widest mt-0.5">Project: Marina Bay</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-center">
+<span class="bg-error/10 border border-error/20 px-3 py-1 rounded text-[10px] font-black text-error uppercase tracking-widest">DATA</span>
+</td>
+<td class="px-6 py-5 text-sm text-b0b8c8 font-medium">2.8 MB</td>
+<td class="px-6 py-5 text-sm text-b0b8c8 font-medium">Oct 19, 2023</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-2 text-error text-[11px] font-black font-headline uppercase tracking-widest">
+<span class="w-2 h-2 rounded-full bg-error shadow-[0_0_12px_#ff716c]"></span>
+                                Warning
+                            </span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-full bg-surface-container-highest border border-white/10 flex items-center justify-center text-[10px] font-black text-slate-400">MK</div>
+<span class="text-sm font-medium text-on-surface">Marcus Kane</span>
+</div>
+</td>
+<td class="px-8 py-5 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
+<button class="w-9 h-9 flex items-center justify-center bg-white/5 hover:bg-primary/20 hover:text-primary rounded-xl border border-white/5 transition-all">
+<span class="material-symbols-outlined text-xl">download</span>
+</button>
+<button class="w-9 h-9 flex items-center justify-center bg-white/5 hover:bg-primary/20 hover:text-primary rounded-xl border border-white/5 transition-all">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="px-8 py-6 bg-white/2 flex justify-between items-center border-t border-white/5">
+<p class="text-[11px] text-slate-500 font-bold font-label uppercase tracking-widest">Showing 3 of 1,284 entries</p>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center hover:bg-white/5 hover:text-primary disabled:opacity-30 transition-all" disabled="">
+<span class="material-symbols-outlined text-xl">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-xl bg-primary/20 text-primary border border-primary/20 flex items-center justify-center text-xs font-black">1</button>
+<button class="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center hover:bg-white/5 hover:text-primary text-xs font-black transition-all">2</button>
+<button class="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center hover:bg-white/5 hover:text-primary text-xs font-black transition-all">3</button>
+<button class="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center hover:bg-white/5 hover:text-primary transition-all">
+<span class="material-symbols-outlined text-xl">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Footer Decorative -->
+<div class="pt-12 pb-8 flex justify-center opacity-20 pointer-events-none">
+<div class="flex items-center gap-6">
+<div class="h-px w-32 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+<span class="material-symbols-outlined text-primary text-lg">precision_manufacturing</span>
+<div class="h-px w-32 bg-gradient-to-l from-transparent via-primary to-transparent"></div>
+</div>
+</div>
+</div>
+</main>
+<style>
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(143, 245, 255, 0.1);
+        border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(143, 245, 255, 0.3);
+    }
+    
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-3px); }
+    }
+    .group:hover .group-hover\:bounce {
+        animation: bounce 0.6s ease infinite;
+    }
+</style>
+</body></html>

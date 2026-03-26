@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Biznexa CMS - Site Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-error-container": "#ffa8a3",
+              "primary": "#8ff5ff",
+              "surface-container-high": "#141f38",
+              "surface": "#060e20",
+              "surface-variant": "#192540",
+              "primary-fixed": "#00eefc",
+              "on-background": "#dee5ff",
+              "on-surface-variant": "#a3aac4",
+              "surface-container-lowest": "#000000",
+              "tertiary-fixed-dim": "#58e7ab",
+              "error-container": "#9f0519",
+              "tertiary-fixed": "#69f6b8",
+              "on-secondary": "#080079",
+              "secondary": "#9093ff",
+              "on-tertiary-fixed": "#00452d",
+              "surface-container": "#0f1930",
+              "on-primary-fixed": "#003f43",
+              "tertiary": "#9bffce",
+              "surface-bright": "#1f2b49",
+              "on-tertiary-fixed-variant": "#006544",
+              "on-primary-fixed-variant": "#005e64",
+              "tertiary-dim": "#58e7ab",
+              "on-tertiary": "#006443",
+              "inverse-surface": "#faf8ff",
+              "on-primary-container": "#005359",
+              "surface-container-low": "#091328",
+              "secondary-fixed": "#cdcdff",
+              "outline-variant": "#40485d",
+              "surface-container-highest": "#192540",
+              "secondary-container": "#2f2ebe",
+              "primary-container": "#00eefc",
+              "surface-tint": "#8ff5ff",
+              "secondary-dim": "#6063ee",
+              "inverse-primary": "#006a71",
+              "error": "#ff716c",
+              "secondary-fixed-dim": "#bdbeff",
+              "on-error": "#490006",
+              "primary-fixed-dim": "#00deec",
+              "on-surface": "#dee5ff",
+              "on-primary": "#005d63",
+              "outline": "#6d758c",
+              "surface-dim": "#060e20",
+              "on-secondary-container": "#ccccff",
+              "inverse-on-surface": "#4d556b",
+              "background": "#060e20",
+              "error-dim": "#d7383b",
+              "on-secondary-fixed-variant": "#3a3ac8",
+              "on-tertiary-container": "#005a3c",
+              "on-secondary-fixed": "#160bae",
+              "tertiary-container": "#69f6b8",
+              "primary-dim": "#00deec"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; background-color: #060e20; color: #dee5ff; }
+        .font-headline { font-family: 'Space Grotesk', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-panel { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+    </style>
+</head>
+<body class="bg-surface selection:bg-primary/30 selection:text-primary overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-xl shadow-2xl shadow-cyan-900/10 flex justify-between items-center px-8 h-16 w-full">
+<div class="flex items-center gap-4">
+<span class="text-xl font-bold tracking-tight text-cyan-400 font-headline">Biznexa CMS</span>
+<div class="hidden md:flex ml-8 items-center bg-slate-900/40 rounded-lg px-3 py-1.5 gap-2 border border-outline-variant/15">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-64 text-on-surface placeholder:text-slate-500" placeholder="Search settings..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex gap-4 items-center">
+<button class="text-slate-400 hover:bg-cyan-400/10 hover:text-cyan-300 transition-all p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-cyan-400 font-bold hover:bg-cyan-400/10 transition-all p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+<img alt="User Profile Avatar" data-alt="Close-up of a professional male architect in a studio with soft cinematic lighting and bokeh background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaZQBA11QHezpnhjJ447bguhhDIVM7vHO1rfJXQ7H_D5VOTRhXkqPUktju9SyqExnej39J-5KEja2Afk32G-TnnD-V8bTJkmKGRjwkutVdkdvF6x1AN5sH-tvilYlVxV0epo7a8gmeOjHnBan09dxwWkqhIM0d09sdF50oY4LlsdMvAFmfCJbkWwIt-1qMA4iNqRTWQXOACelQmieBS50zz-oCsnlAE5pW8Z3kRdRahExToB9hjk5kLhafZlo_pU3ThVUaB18zCg4l"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 z-40 bg-slate-950/40 backdrop-blur-2xl flex flex-col py-6 px-4 gap-2 pt-20">
+<div class="mb-8 px-4">
+<h2 class="text-cyan-400 font-bold tracking-tighter font-headline text-lg">Biznexa</h2>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-headline">Enterprise CMS</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-colors rounded-md group" href="#">
+<span class="material-symbols-outlined group-hover:text-cyan-400 transition-colors" data-icon="dashboard">dashboard</span>
+<span class="font-headline uppercase tracking-widest text-[10px]">Main</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-colors rounded-md group" href="#">
+<span class="material-symbols-outlined group-hover:text-cyan-400 transition-colors" data-icon="payments">payments</span>
+<span class="font-headline uppercase tracking-widest text-[10px]">Billing</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-colors rounded-md group" href="#">
+<span class="material-symbols-outlined group-hover:text-cyan-400 transition-colors" data-icon="fact_check">fact_check</span>
+<span class="font-headline uppercase tracking-widest text-[10px]">Inspection</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-colors rounded-md group" href="#">
+<span class="material-symbols-outlined group-hover:text-cyan-400 transition-colors" data-icon="article">article</span>
+<span class="font-headline uppercase tracking-widest text-[10px]">Content</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-cyan-400 bg-cyan-400/10 rounded-md border-r-2 border-cyan-400 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-headline uppercase tracking-widest text-[10px] font-bold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-1 pt-6 border-t border-outline-variant/10">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-colors rounded-md" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-headline uppercase tracking-widest text-[10px]">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-colors rounded-md" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-headline uppercase tracking-widest text-[10px]">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 pb-12 px-12 min-h-screen">
+<header class="mb-12">
+<h1 class="text-4xl font-headline font-bold text-on-surface tracking-tight mb-2">Site Settings</h1>
+<p class="text-on-surface-variant max-w-2xl font-body">Configure your global platform architecture, SEO parameters, and cloud service integrations from a single authoritative dashboard.</p>
+</header>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-8">
+<!-- General Branding Section (Large Span) -->
+<section class="col-span-12 lg:col-span-8 bg-surface-container-low rounded-xl p-8 shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -mr-32 -mt-32 blur-3xl transition-all group-hover:bg-primary/10"></div>
+<div class="relative z-10">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary" data-icon="palette">palette</span>
+<h3 class="text-xl font-headline font-semibold text-on-surface">General Branding</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-6">
+<div class="flex flex-col gap-2">
+<label class="font-headline uppercase tracking-widest text-[10px] text-slate-500">Platform Identity</label>
+<input class="bg-surface-container-highest border-none rounded-sm px-4 py-3 focus:ring-1 focus:ring-primary/30 transition-all text-on-surface" type="text" value="Biznexa Cloud"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-headline uppercase tracking-widest text-[10px] text-slate-500">Primary Contact Email</label>
+<input class="bg-surface-container-highest border-none rounded-sm px-4 py-3 focus:ring-1 focus:ring-primary/30 transition-all text-on-surface" type="email" value="admin@biznexa.io"/>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<label class="font-headline uppercase tracking-widest text-[10px] text-slate-500">Brand Logo Asset</label>
+<div class="border-2 border-dashed border-outline-variant/30 rounded-lg p-6 flex flex-col items-center justify-center bg-surface-container-lowest/50 group/upload hover:bg-surface-container-lowest transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-3xl text-slate-600 group-hover/upload:text-primary transition-colors mb-2" data-icon="cloud_upload">cloud_upload</span>
+<p class="text-xs text-slate-400">SVG, PNG or WEBP (Max 2MB)</p>
+</div>
+</div>
+</div>
+<div class="mt-10 flex justify-end">
+<button class="bg-gradient-to-r from-tertiary to-tertiary-dim px-8 py-2.5 rounded-md font-headline uppercase tracking-widest text-xs font-bold text-on-tertiary hover:scale-105 active:scale-95 transition-all shadow-lg shadow-tertiary/20">
+                            Save Branding
+                        </button>
+</div>
+</div>
+</section>
+<!-- Quick Status Side Card -->
+<section class="col-span-12 lg:col-span-4 bg-surface-container-high rounded-xl p-8 flex flex-col justify-between border border-outline-variant/10">
+<div>
+<h4 class="font-headline uppercase tracking-widest text-[10px] text-primary mb-6">System Health</h4>
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<span class="text-sm text-slate-400">CMS Engine</span>
+<span class="px-2 py-0.5 bg-tertiary/10 text-tertiary text-[10px] font-bold rounded uppercase">Stable</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-sm text-slate-400">API Latency</span>
+<span class="text-sm text-on-surface font-mono">24ms</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-sm text-slate-400">Last Sync</span>
+<span class="text-sm text-on-surface">2m ago</span>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-8 border-t border-outline-variant/10">
+<p class="text-xs text-slate-500 italic">"Configuration changes are propagated across the global edge network in ~60 seconds."</p>
+</div>
+</section>
+<!-- SEO & Analytics Section -->
+<section class="col-span-12 lg:col-span-5 bg-surface-container rounded-xl p-8 shadow-sm">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-secondary" data-icon="query_stats">query_stats</span>
+<h3 class="text-xl font-headline font-semibold text-on-surface">SEO &amp; Analytics</h3>
+</div>
+<div class="space-y-6">
+<div class="flex flex-col gap-2">
+<label class="font-headline uppercase tracking-widest text-[10px] text-slate-500">Google Analytics 4 ID</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-none rounded-sm px-4 py-3 focus:ring-1 focus:ring-secondary/30 transition-all text-on-surface font-mono" type="text" value="G-BZNXA2024"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-headline uppercase tracking-widest text-[10px] text-slate-500">Global Meta Title</label>
+<input class="bg-surface-container-low border-none rounded-sm px-4 py-3 focus:ring-1 focus:ring-secondary/30 transition-all text-on-surface" placeholder="The Next Generation Enterprise CMS" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-headline uppercase tracking-widest text-[10px] text-slate-500">Meta Keywords</label>
+<textarea class="bg-surface-container-low border-none rounded-sm px-4 py-3 focus:ring-1 focus:ring-secondary/30 transition-all text-on-surface resize-none" rows="3">cms, enterprise, headless, nodejs, architecture</textarea>
+</div>
+<button class="w-full bg-gradient-to-r from-tertiary to-tertiary-dim py-3 rounded-md font-headline uppercase tracking-widest text-xs font-bold text-on-tertiary hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-tertiary/10">
+                        Update Metadata
+                    </button>
+</div>
+</section>
+<!-- API Configurations Section -->
+<section class="col-span-12 lg:col-span-7 bg-surface-container rounded-xl p-8 shadow-sm relative overflow-hidden">
+<div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-tertiary" data-icon="api">api</span>
+<h3 class="text-xl font-headline font-semibold text-on-surface">Cloud &amp; AI Bridge</h3>
+</div>
+<div class="space-y-8">
+<div class="flex items-start gap-4 p-4 bg-surface-container-highest/40 rounded-lg border border-outline-variant/10">
+<div class="p-2 bg-on-background/5 rounded text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="cloud">cloud</span>
+</div>
+<div class="flex-1 space-y-4">
+<h4 class="text-sm font-headline font-bold text-on-surface uppercase tracking-wider">AWS Storage Configuration</h4>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-2">
+<label class="text-[10px] uppercase text-slate-500">Access Key</label>
+<input class="bg-surface-container-low border-none text-xs rounded px-3 py-2 text-primary" type="password" value="••••••••••••••••"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-[10px] uppercase text-slate-500">S3 Region</label>
+<select class="bg-surface-container-low border-none text-xs rounded px-3 py-2 text-on-surface focus:ring-1 focus:ring-primary/30">
+<option>us-east-1</option>
+<option>eu-central-1</option>
+<option>ap-southeast-1</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-start gap-4 p-4 bg-surface-container-highest/40 rounded-lg border border-outline-variant/10">
+<div class="p-2 bg-on-background/5 rounded text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+</div>
+<div class="flex-1 space-y-4">
+<h4 class="text-sm font-headline font-bold text-on-surface uppercase tracking-wider">AI Provider Integration</h4>
+<div class="flex flex-col gap-2">
+<label class="text-[10px] uppercase text-slate-500">OpenAI Secret Key</label>
+<div class="flex gap-2">
+<input class="flex-1 bg-surface-container-low border-none text-xs rounded px-3 py-2 text-primary" type="password" value="sk-••••••••••••••••••••••••"/>
+<button class="bg-surface-container-highest px-3 text-[10px] font-headline uppercase border border-outline-variant/20 rounded hover:bg-surface-bright transition-colors">Test</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8 flex justify-between items-center">
+<span class="text-[10px] text-slate-500 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="lock">lock</span> 
+                        Encryption: AES-256-GCM
+                    </span>
+<button class="bg-gradient-to-r from-tertiary to-tertiary-dim px-8 py-2.5 rounded-md font-headline uppercase tracking-widest text-xs font-bold text-on-tertiary hover:opacity-90 transition-all">
+                        Secure All Keys
+                    </button>
+</div>
+</section>
+<!-- Decorative Visual Accent (Bento Filler) -->
+<div class="col-span-12 lg:col-span-12 h-64 rounded-xl overflow-hidden relative">
+<img class="w-full h-full object-cover opacity-50 grayscale hover:grayscale-0 transition-all duration-1000" data-alt="Abstract digital representation of global network with glowing cyan nodes and light traces on dark blue background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL12wKDySTP6LwyhMhlbWURsCwqHSAdstQV6ayWp7qo6SJSziKqt1Wa__74IfM4qxghwlnCAunCwBHUpBudiAzZKdS4TtttAez2YCA5dnDOMXN5f_p6HYJhUfpIgUPfHGBh6Ce0XjXjsiCD1eQ9UH_2gDLN_Sk9bJF0V4ckfj9ufdtFrYG8uq93MY1K5fZjlyBJn8KLWoPqRDPihx7SEI0RnF1AqFSfxv3vzBodkVjPwwucDQgfoAJqtoZM5eSnZZ-WKTKecSTXOuY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/60 to-transparent"></div>
+<div class="absolute bottom-8 left-8">
+<span class="inline-block px-3 py-1 bg-primary/20 text-primary text-[10px] font-headline font-bold uppercase tracking-widest rounded-full mb-3">Global Edge Network</span>
+<h3 class="text-2xl font-headline font-light tracking-tight text-white max-w-md">Your configuration is mirrored across <span class="text-primary font-bold">24 global regions</span> for sub-millisecond delivery.</h3>
+</div>
+</div>
+</div>
+</main>
+<!-- Background Elements -->
+<div class="fixed top-0 left-0 w-full h-full -z-50 pointer-events-none opacity-20">
+<div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-1/4 right-1/3 w-[600px] h-[600px] bg-secondary/10 rounded-full blur-[150px]"></div>
+</div>
+</body></html>

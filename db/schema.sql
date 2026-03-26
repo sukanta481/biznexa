@@ -1,0 +1,22 @@
+CREATE TABLE IF NOT EXISTS blog_posts (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  slug VARCHAR(255) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
+  content LONGTEXT NOT NULL,
+  author VARCHAR(150) NOT NULL DEFAULT 'Sukanta Saha',
+  category VARCHAR(120) NOT NULL DEFAULT 'Technology',
+  read_time VARCHAR(50) NOT NULL DEFAULT '5 min read',
+  cover_image TEXT NULL,
+  views INT UNSIGNED NOT NULL DEFAULT 0,
+  featured TINYINT(1) NOT NULL DEFAULT 0,
+  published TINYINT(1) NOT NULL DEFAULT 1,
+  published_at DATETIME NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_blog_posts_slug (slug),
+  KEY idx_blog_posts_published (published),
+  KEY idx_blog_posts_published_at (published_at),
+  KEY idx_blog_posts_category (category)
+);

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Biznexa CMS - Sign In</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary": "#005d63",
+              "outline": "#6d758c",
+              "background": "#060e20",
+              "error-dim": "#d7383b",
+              "tertiary-fixed-dim": "#58e7ab",
+              "on-tertiary-container": "#005a3c",
+              "error": "#ff716c",
+              "surface": "#060e20",
+              "surface-container": "#0f1930",
+              "tertiary-container": "#69f6b8",
+              "surface-container-low": "#091328",
+              "on-primary-fixed": "#003f43",
+              "primary-container": "#00eefc",
+              "inverse-primary": "#006a71",
+              "secondary-fixed-dim": "#bdbeff",
+              "surface-container-lowest": "#000000",
+              "primary-fixed-dim": "#00deec",
+              "surface-container-highest": "#192540",
+              "on-error": "#490006",
+              "tertiary-fixed": "#69f6b8",
+              "on-error-container": "#ffa8a3",
+              "primary-dim": "#00deec",
+              "inverse-surface": "#faf8ff",
+              "secondary-container": "#2f2ebe",
+              "surface-dim": "#060e20",
+              "tertiary": "#9bffce",
+              "on-secondary-container": "#ccccff",
+              "primary-fixed": "#00eefc",
+              "tertiary-dim": "#58e7ab",
+              "on-tertiary-fixed-variant": "#006544",
+              "on-tertiary-fixed": "#00452d",
+              "on-surface-variant": "#a3aac4",
+              "secondary-dim": "#6063ee",
+              "error-container": "#9f0519",
+              "on-tertiary": "#006443",
+              "surface-bright": "#1f2b49",
+              "on-background": "#dee5ff",
+              "inverse-on-surface": "#4d556b",
+              "surface-container-high": "#141f38",
+              "outline-variant": "#40485d",
+              "primary": "#8ff5ff",
+              "on-secondary": "#080079",
+              "surface-tint": "#8ff5ff",
+              "secondary": "#9093ff",
+              "on-primary-container": "#005359",
+              "on-surface": "#dee5ff",
+              "on-secondary-fixed-variant": "#3a3ac8",
+              "secondary-fixed": "#cdcdff",
+              "on-primary-fixed-variant": "#005e64",
+              "on-secondary-fixed": "#160bae",
+              "surface-variant": "#192540"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #060e20;
+            font-family: 'Manrope', sans-serif;
+            overflow: hidden;
+        }
+        .cyber-grid {
+            background-image: linear-gradient(to right, rgba(143, 245, 255, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(143, 245, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .glass-panel {
+            background: rgba(25, 37, 64, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="text-on-surface min-h-screen flex items-center justify-center relative">
+<!-- Background Architectural Elements -->
+<div class="absolute inset-0 cyber-grid opacity-30 z-0"></div>
+<div class="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px] z-0"></div>
+<div class="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-secondary/10 rounded-full blur-[150px] z-0"></div>
+<main class="relative z-10 w-full max-w-md px-6">
+<!-- Logo & Branding -->
+<div class="flex flex-col items-center mb-10">
+<div class="relative mb-4 group">
+<div class="absolute inset-0 bg-primary/20 blur-xl group-hover:bg-primary/40 transition-all duration-500"></div>
+<img alt="Biznexa CMS Logo" class="relative h-16 w-auto object-contain" data-alt="Abstract geometric logo for a tech company, glowing cyber cyan lines forming a futuristic hexagonal structure, high contrast dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIXlW2RkDsbD011S92Q1i0YmsTi2up7yUQts9xV8NWelTW8Fldhf19olm1QsxsxGkHXDpJ-9zNUYXN96bbDpjWFvcsBuUXfuIKymKpFgT06rQII_HkRFa1qdCbBWG6Rui2IrUA6BqkQ7-Zv6APUvIdY9t1ky2H_cvsSY33-nzDNo4vA9bisxZM5YPHveBG_Q3wbnsa58BN8elEBu7Z2_ZRlMwQDeIpaUwwjvUzk3ylf5aX-oC4DNwN786OfT0K-GJiffkPgpYno5aG"/>
+</div>
+<h1 class="font-headline text-3xl font-bold tracking-tighter text-on-surface flex items-baseline gap-1">
+                Biznexa <span class="text-primary">CMS</span>
+</h1>
+<p class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant mt-1">Digital Solutions Studio</p>
+</div>
+<!-- Login Container -->
+<div class="glass-panel border border-outline-variant/15 rounded-xl p-8 shadow-2xl relative overflow-hidden">
+<!-- Decorative Accent Line -->
+<div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-right from-transparent via-primary/40 to-transparent"></div>
+<form class="space-y-6">
+<!-- Input Group: Email -->
+<div class="space-y-2">
+<label class="font-label text-[11px] uppercase tracking-wider text-primary font-bold ml-1" for="email">Terminal ID / Email</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined text-sm">alternate_email</span>
+</div>
+<input class="w-full bg-surface-container-highest border-none rounded-lg py-3.5 pl-11 pr-4 text-sm text-on-surface placeholder:text-outline/50 focus:ring-1 focus:ring-primary/30 transition-all" id="email" name="email" placeholder="architect@biznexa.studio" type="email"/>
+</div>
+</div>
+<!-- Input Group: Password -->
+<div class="space-y-2">
+<div class="flex justify-between items-center ml-1">
+<label class="font-label text-[11px] uppercase tracking-wider text-primary font-bold" for="password">Access Code</label>
+<a class="font-body text-[11px] text-on-surface-variant hover:text-secondary transition-colors" href="#">Forgot Password?</a>
+</div>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined text-sm">lock_open</span>
+</div>
+<input class="w-full bg-surface-container-highest border-none rounded-lg py-3.5 pl-11 pr-4 text-sm text-on-surface placeholder:text-outline/50 focus:ring-1 focus:ring-primary/30 transition-all" id="password" name="password" placeholder="••••••••••••" type="password"/>
+</div>
+</div>
+<!-- Remember Me Toggle -->
+<div class="flex items-center gap-3 py-1">
+<div class="relative inline-flex h-5 w-9 items-center rounded-full bg-surface-container-highest cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="peer h-5 w-9 rounded-full border border-outline-variant/20 transition-all peer-checked:bg-primary/20"></div>
+<div class="absolute left-1 h-3 w-3 rounded-full bg-outline transition-all peer-checked:translate-x-4 peer-checked:bg-primary"></div>
+</div>
+<span class="font-body text-xs text-on-surface-variant">Maintain active session</span>
+</div>
+<!-- CTA Button -->
+<button class="w-full py-4 bg-tertiary-fixed text-on-tertiary-fixed font-headline font-bold text-sm rounded-lg relative group overflow-hidden transition-all active:scale-[0.98]" type="submit">
+<div class="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+<span class="relative flex items-center justify-center gap-2">
+                        Sign In to Console
+                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+</span>
+</button>
+</form>
+<!-- Bottom Accents -->
+<div class="mt-8 pt-6 border-t border-outline-variant/10 flex flex-col items-center gap-4">
+<p class="font-body text-[11px] text-on-surface-variant text-center leading-relaxed">
+                    Authorized access only. System activity is monitored under <br/>
+<span class="text-on-surface font-medium italic opacity-80">Architecture Protocol 7.2</span>
+</p>
+</div>
+</div>
+<!-- Secondary Navigation/Legal -->
+<footer class="mt-12 flex justify-between items-center text-[10px] font-label uppercase tracking-widest text-outline">
+<div class="flex gap-6">
+<a class="hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="hover:text-primary transition-colors" href="#">Security</a>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary shadow-[0_0_8px_rgba(155,255,206,0.8)]"></span>
+<span>Systems Nominal</span>
+</div>
+</footer>
+</main>
+<!-- Decorative Corner Brackets -->
+<div class="fixed top-8 left-8 w-12 h-12 border-l border-t border-outline-variant/20 pointer-events-none"></div>
+<div class="fixed top-8 right-8 w-12 h-12 border-r border-t border-outline-variant/20 pointer-events-none"></div>
+<div class="fixed bottom-8 left-8 w-12 h-12 border-l border-b border-outline-variant/20 pointer-events-none"></div>
+<div class="fixed bottom-8 right-8 w-12 h-12 border-r border-b border-outline-variant/20 pointer-events-none"></div>
+</body></html>
