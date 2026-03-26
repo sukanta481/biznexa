@@ -33,11 +33,10 @@ export default function Header() {
       <div className="flex justify-between items-center w-full px-8 py-4 max-w-7xl mx-auto">
         <div className="flex flex-col">
           <Link href="/" onClick={closeMenu} className="h-8 md:h-9 block">
-            {/* Exactly recreating the Stitch glowing logo */}
             <img
               alt="Biznexa Logo"
-              className="h-full w-auto object-contain brightness-0 invert [filter:drop-shadow(0_0_8px_rgba(0,255,65,0.5))]"
-              src="https://lh3.googleusercontent.com/aida/ADBb0ujvZvidqd0m5g5vdmrAjskhsTRlXLGd0I7OP2OuZYo8f4E6q8dIDFQRIPF0mtwRTqg2rwi71z8stJDGOxP4KJ8Jl5sNqAbYLgw7QZSSuJAAnKCg7HvAnXbjCLbbOOtCJIofa2S2fwUoThRl3ooCG8wWHoFOgL5hGhpyeQMqyfevEYBE716-JtxAM3BVBEZ51UWe30Uxp2xwX0ioi1lMoroAukCnAJEF__PZOeR4RKPJvqbxuRrG84nK8s8jQ_UVZFrilePcEKUGWr4"
+              className="h-full w-auto object-contain [filter:drop-shadow(0_0_8px_rgba(0,255,65,0.5))]"
+              src="/lightlogo.svg"
             />
           </Link>
           <span className="text-[8px] uppercase tracking-[0.3em] text-primary mt-1 font-label font-bold hidden md:block">

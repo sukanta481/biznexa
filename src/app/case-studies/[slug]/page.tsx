@@ -46,8 +46,25 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
         ]}
       />
 
-      {/* ─── Hero Section ─── */}
-      <section className="relative min-h-[870px] flex items-center overflow-hidden">
+      {/* ─── Hero Section — Mobile ─── */}
+      <section className="md:hidden px-6 py-8 mt-20">
+        <div className="space-y-2 mb-6">
+          <span className="text-primary font-label text-[10px] tracking-[0.2em] uppercase">Case Study: {study.category}</span>
+          <h1 className="text-4xl font-headline font-bold leading-tight tracking-tight text-white">{study.title}</h1>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          {study.results.slice(0, 2).map((result, i) => (
+            <div key={i} className="glass-panel p-5 rounded-lg border-l-2 border-l-tertiary">
+              <div className="text-3xl font-headline font-bold text-tertiary">{result.metric}</div>
+              <div className="text-[10px] font-label text-on-surface-variant uppercase tracking-wider mt-1">{result.label.split(' ')[0]}</div>
+              <div className="text-[11px] text-on-surface-variant mt-2">{result.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── Hero Section — Desktop ─── */}
+      <section className="hidden md:flex relative min-h-[870px] items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
             alt="Logistics background"
@@ -57,7 +74,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent"></div>
         </div>
-        
+
         <div className="relative z-10 max-w-7xl mx-auto px-8 w-full grid md:grid-cols-12 gap-12 items-center mt-20">
           <div className="md:col-span-7">
             <Link
@@ -101,10 +118,40 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
         </div>
       </section>
 
-      {/* ─── Content Sections: Bento Grid Approach ─── */}
-      <section className="max-w-7xl mx-auto px-8 py-24">
+      {/* ─── Content Sections ─── */}
+      {/* Mobile content */}
+      <section className="md:hidden px-6 space-y-12">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="h-[1px] w-8 bg-primary/30"></div>
+            <h2 className="text-xs font-label font-bold text-primary tracking-[0.15em] uppercase">The Challenge</h2>
+          </div>
+          <p className="text-on-surface-variant leading-relaxed text-sm font-body">
+            {study.challenge}
+          </p>
+        </div>
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="h-[1px] w-8 bg-primary/30"></div>
+            <h2 className="text-xs font-label font-bold text-primary tracking-[0.15em] uppercase">The Biznexa Solution</h2>
+          </div>
+          <p className="text-on-surface-variant leading-relaxed text-sm font-body">
+            {study.solution}
+          </p>
+          <ul className="space-y-3">
+            {study.technologies.slice(0, 3).map((tech, i) => (
+              <li key={i} className="flex gap-3">
+                <span className="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+                <span className="text-xs text-on-surface">{tech}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Desktop content */}
+      <section className="hidden md:block max-w-7xl mx-auto px-8 py-24">
         <div className="grid md:grid-cols-3 gap-8 mb-24">
-          {/* The Challenge */}
           <div className="md:col-span-1 bg-surface-container p-8 rounded-lg border border-outline-variant/10">
             <span className="material-symbols-outlined text-error text-4xl mb-6">warning</span>
             <h2 className="font-headline text-2xl font-bold mb-4 text-white">The Challenge</h2>
@@ -112,7 +159,6 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
               {study.challenge}
             </p>
           </div>
-          {/* The Solution */}
           <div className="md:col-span-2 bg-surface-container-high p-8 rounded-lg relative overflow-hidden group border border-outline-variant/10">
             <div className="absolute top-0 right-0 p-4 opacity-5">
               <span className="material-symbols-outlined text-9xl">psychology</span>
@@ -140,7 +186,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
           </div>
         </div>
 
-        {/* ─── Quantitative Results ─── */}
+        {/* Desktop Quantitative Results */}
         <div className="mb-24">
           <h2 className="font-label text-xs tracking-[0.3em] uppercase text-center mb-12 opacity-50 text-white">
             Quantitative Results
@@ -162,14 +208,14 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
           </div>
         </div>
 
-        {/* ─── Testimonial ─── */}
+        {/* Desktop Testimonial */}
         <div className="max-w-4xl mx-auto">
           <div className="relative p-12 glass-panel rounded-2xl border border-tertiary/20 text-center shadow-[0_0_30px_rgba(88,231,171,0.05)]">
             <span className="material-symbols-outlined text-6xl text-tertiary/20 absolute -top-8 left-1/2 -translate-x-1/2 bg-surface px-4">
               format_quote
             </span>
             <blockquote className="text-2xl md:text-3xl font-headline italic text-white mb-8 leading-snug">
-              "Biznexa didn't just provide a tool; they transformed our entire digital architecture. Their approach has set a new benchmark for what's possible."
+              &ldquo;Biznexa didn&apos;t just provide a tool; they transformed our entire digital architecture. Their approach has set a new benchmark for what&apos;s possible.&rdquo;
             </blockquote>
             <div className="flex flex-col items-center">
               <img
@@ -184,8 +230,99 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
         </div>
       </section>
 
-      {/* ─── Related Case Studies (Static Design Match) ─── */}
-      <section className="bg-surface-container-low py-24 border-t border-outline-variant/10">
+      {/* ─── Mobile Quantitative Results ─── */}
+      <section className="md:hidden mt-16 bg-surface-container-low py-12 px-6">
+        <h2 className="text-2xl font-headline font-bold mb-8 text-center text-white">Quantifiable Outcomes</h2>
+        <div className="space-y-8">
+          {study.results.map((result, index) => (
+            <div key={index}>
+              <div className="text-center">
+                <div className="text-5xl font-headline font-bold text-primary mb-2">{result.metric}</div>
+                <p className="text-xs font-label text-on-surface-variant uppercase tracking-widest">{result.label}</p>
+              </div>
+              {index < study.results.length - 1 && (
+                <div className="h-[1px] w-12 bg-outline-variant mx-auto mt-8"></div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── Mobile Testimonial ─── */}
+      <section className="md:hidden px-6 py-16">
+        <div className="glass-panel p-8 rounded-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-10">
+            <span className="material-symbols-outlined text-6xl">format_quote</span>
+          </div>
+          <p className="text-on-surface italic leading-relaxed mb-8 relative z-10 font-body">
+            &ldquo;Biznexa didn&apos;t just provide a tool; they transformed our entire digital architecture. Their approach has set a new benchmark for what&apos;s possible.&rdquo;
+          </p>
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full overflow-hidden border border-primary/30">
+              <img
+                alt="Executive Portrait"
+                className="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuA39dAxR9YZVgFTIudq8UvVHpwyh4vL5FsGYdmOONfKAbAWFbmDBlgLQPZ0Ctl2q4Izf9z4uyzck6_whZbYOjBW2keOStaU9071r3jqs9K4Q8I2eO96_6iCudlne_fL6GWy282SLQ5RMxj8nKPx83DJi6cUHfL5Nkbbwj2BuNZDUD7IRSvmFIyFS_uZzYm4nHON2yAu0InYEpnmIm93vc8HnteJtx1qvAwHX7Ypf_pm_8KHvxyOEgwzQd_BIMPIYoB9JTofNsedXNwi"
+              />
+            </div>
+            <div>
+              <div className="text-sm font-bold font-headline text-white">{study.client}</div>
+              <div className="text-[10px] text-on-surface-variant uppercase tracking-wider">Executive Sponsor</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Related Case Studies ─── */}
+      {/* Mobile carousel */}
+      <section className="md:hidden py-12 border-t border-primary/10">
+        <div className="px-6 flex justify-between items-end mb-6">
+          <div>
+            <h3 className="text-xs font-label text-primary tracking-widest uppercase mb-1">More Success</h3>
+            <h2 className="text-xl font-headline font-bold text-white">Similar Projects</h2>
+          </div>
+          <div className="flex gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+          </div>
+        </div>
+        <div className="flex overflow-x-auto gap-4 px-6 snap-x scrollbar-hide">
+          <Link href="/case-studies" className="min-w-[280px] snap-start glass-panel rounded-xl overflow-hidden flex-shrink-0 block">
+            <div className="h-40 w-full bg-surface-container">
+              <img alt="Case study 1" className="w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxHqT2oPqWwJ6aYHsffnQ2NRB2SaV5X2rjORn7NxmtjzSpX7M_0vxVY8NgWoVmhqtwQt2zn3K6J1WcJ3gLBJYV8QMbvHajYjsWH6-UQe3X4x5-6Hvjm_rDzqR2ViexQ4eb0SE0QJ-zsC__1mk2251jYi8kChRXcE4-jRi7YFTQSNWPvDnIhJ6RQJK3nHA0GECgeehtxRDFry479COiGexfmcniP0lJP1cniZcL1zWZ1hXL_tpzev577IZ4gQbaK0QhhGkUR5eWHMKC" />
+            </div>
+            <div className="p-5">
+              <div className="text-[10px] text-primary font-label uppercase tracking-widest mb-2">FinTech</div>
+              <h4 className="font-headline font-bold mb-3 text-white">Algorithmic Risk Assessment</h4>
+              <span className="text-[10px] font-label text-primary tracking-tighter flex items-center gap-2">VIEW CASE <span className="material-symbols-outlined text-xs">arrow_forward</span></span>
+            </div>
+          </Link>
+          <Link href="/case-studies" className="min-w-[280px] snap-start glass-panel rounded-xl overflow-hidden flex-shrink-0 block">
+            <div className="h-40 w-full bg-surface-container">
+              <img alt="Case study 2" className="w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCE6EY6e-REWanzm5V86o0yysbjCXynPzrvG9XAr1M4RT-kHbB1chXHx2o4IN36sEa9I1qyA5X8YFebfLNBMTFBPDsov4sIIkC5r906iuM-rVUdkmR_Kj1LRYYPjyWn_cFkzpOMo0enDaORtb0xlrXFn_F04BiYtktGbhmOzzMBdJ1yj3izpxa63ah6AK961CEmTAeP101AYnsTDkjTbQIrB18beFIX4IIHWEV0e1Mat-aqFWrrYa9GIpgZ7Ch6a3SkCzjYQNt9LFv" />
+            </div>
+            <div className="p-5">
+              <div className="text-[10px] text-primary font-label uppercase tracking-widest mb-2">Hardware</div>
+              <h4 className="font-headline font-bold mb-3 text-white">IoT Edge Node Integration</h4>
+              <span className="text-[10px] font-label text-primary tracking-tighter flex items-center gap-2">VIEW CASE <span className="material-symbols-outlined text-xs">arrow_forward</span></span>
+            </div>
+          </Link>
+          <Link href="/case-studies" className="min-w-[280px] snap-start glass-panel rounded-xl overflow-hidden flex-shrink-0 block">
+            <div className="h-40 w-full bg-surface-container">
+              <img alt="Case study 3" className="w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyOmAOx7_tiWDzPxfie3T4xRIZSUPKYydwaaq-T9pyeOQDozsFRWc0-GALxl1_UBKG_O3-O-2_jag7YJfkQEcsHg3q7HlGi1kMNF26rHu5-OM98kAe97aj3QYQbLYE7Bvvwkk_ZZcMluI6yzOVtVLkxGVtlPSNg6unrZbeMnXIOK-QXSacFdWOaZyWNxKEmh3s9DiWwmxHr4J6Q_aJpv_hpHExl2HhlWzH-ilxli_RSA0ARuuuVz1iKy-7kw4LXK2r8atJ_8WNRI_d" />
+            </div>
+            <div className="p-5">
+              <div className="text-[10px] text-primary font-label uppercase tracking-widest mb-2">Manufacturing</div>
+              <h4 className="font-headline font-bold mb-3 text-white">Predictive Maintenance</h4>
+              <span className="text-[10px] font-label text-primary tracking-tighter flex items-center gap-2">VIEW CASE <span className="material-symbols-outlined text-xs">arrow_forward</span></span>
+            </div>
+          </Link>
+        </div>
+      </section>
+
+      {/* Desktop grid */}
+      <section className="hidden md:block bg-surface-container-low py-24 border-t border-outline-variant/10">
         <div className="max-w-7xl mx-auto px-8">
           <div className="flex justify-between items-end mb-12">
             <h3 className="font-headline text-3xl font-bold text-white tracking-tight">Related Case Studies</h3>
@@ -193,51 +330,31 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
               View All <span className="material-symbols-outlined text-sm">arrow_forward</span>
             </Link>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             <Link href="/case-studies" className="group cursor-pointer">
               <div className="overflow-hidden rounded-lg mb-6 aspect-video bg-surface-container-high border border-outline-variant/20 relative">
                 <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-colors duration-500 z-10 mix-blend-overlay"></div>
-                <img
-                  alt="Case study 1"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxHqT2oPqWwJ6aYHsffnQ2NRB2SaV5X2rjORn7NxmtjzSpX7M_0vxVY8NgWoVmhqtwQt2zn3K6J1WcJ3gLBJYV8QMbvHajYjsWH6-UQe3X4x5-6Hvjm_rDzqR2ViexQ4eb0SE0QJ-zsC__1mk2251jYi8kChRXcE4-jRi7YFTQSNWPvDnIhJ6RQJK3nHA0GECgeehtxRDFry479COiGexfmcniP0lJP1cniZcL1zWZ1hXL_tpzev577IZ4gQbaK0QhhGkUR5eWHMKC"
-                />
+                <img alt="Case study 1" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxHqT2oPqWwJ6aYHsffnQ2NRB2SaV5X2rjORn7NxmtjzSpX7M_0vxVY8NgWoVmhqtwQt2zn3K6J1WcJ3gLBJYV8QMbvHajYjsWH6-UQe3X4x5-6Hvjm_rDzqR2ViexQ4eb0SE0QJ-zsC__1mk2251jYi8kChRXcE4-jRi7YFTQSNWPvDnIhJ6RQJK3nHA0GECgeehtxRDFry479COiGexfmcniP0lJP1cniZcL1zWZ1hXL_tpzev577IZ4gQbaK0QhhGkUR5eWHMKC" />
               </div>
               <span className="font-label text-xs text-primary uppercase tracking-widest font-bold">FinTech</span>
-              <h4 className="font-headline text-xl font-bold mt-2 text-white group-hover:text-primary transition-colors">
-                Algorithmic Risk Assessment
-              </h4>
+              <h4 className="font-headline text-xl font-bold mt-2 text-white group-hover:text-primary transition-colors">Algorithmic Risk Assessment</h4>
             </Link>
-
             <Link href="/case-studies" className="group cursor-pointer">
               <div className="overflow-hidden rounded-lg mb-6 aspect-video bg-surface-container-high border border-outline-variant/20 relative">
                 <div className="absolute inset-0 bg-secondary/0 group-hover:bg-secondary/20 transition-colors duration-500 z-10 mix-blend-overlay"></div>
-                <img
-                  alt="Case study 2"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCE6EY6e-REWanzm5V86o0yysbjCXynPzrvG9XAr1M4RT-kHbB1chXHx2o4IN36sEa9I1qyA5X8YFebfLNBMTFBPDsov4sIIkC5r906iuM-rVUdkmR_Kj1LRYYPjyWn_cFkzpOMo0enDaORtb0xlrXFn_F04BiYtktGbhmOzzMBdJ1yj3izpxa63ah6AK961CEmTAeP101AYnsTDkjTbQIrB18beFIX4IIHWEV0e1Mat-aqFWrrYa9GIpgZ7Ch6a3SkCzjYQNt9LFv"
-                />
+                <img alt="Case study 2" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCE6EY6e-REWanzm5V86o0yysbjCXynPzrvG9XAr1M4RT-kHbB1chXHx2o4IN36sEa9I1qyA5X8YFebfLNBMTFBPDsov4sIIkC5r906iuM-rVUdkmR_Kj1LRYYPjyWn_cFkzpOMo0enDaORtb0xlrXFn_F04BiYtktGbhmOzzMBdJ1yj3izpxa63ah6AK961CEmTAeP101AYnsTDkjTbQIrB18beFIX4IIHWEV0e1Mat-aqFWrrYa9GIpgZ7Ch6a3SkCzjYQNt9LFv" />
               </div>
               <span className="font-label text-xs text-secondary uppercase tracking-widest font-bold">Hardware</span>
-              <h4 className="font-headline text-xl font-bold mt-2 text-white group-hover:text-secondary transition-colors">
-                IoT Edge Node Integration
-              </h4>
+              <h4 className="font-headline text-xl font-bold mt-2 text-white group-hover:text-secondary transition-colors">IoT Edge Node Integration</h4>
             </Link>
-
             <Link href="/case-studies" className="group cursor-pointer">
               <div className="overflow-hidden rounded-lg mb-6 aspect-video bg-surface-container-high border border-outline-variant/20 relative">
-                 <div className="absolute inset-0 bg-tertiary/0 group-hover:bg-tertiary/20 transition-colors duration-500 z-10 mix-blend-overlay"></div>
-                <img
-                  alt="Case study 3"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyOmAOx7_tiWDzPxfie3T4xRIZSUPKYydwaaq-T9pyeOQDozsFRWc0-GALxl1_UBKG_O3-O-2_jag7YJfkQEcsHg3q7HlGi1kMNF26rHu5-OM98kAe97aj3QYQbLYE7Bvvwkk_ZZcMluI6yzOVtVLkxGVtlPSNg6unrZbeMnXIOK-QXSacFdWOaZyWNxKEmh3s9DiWwmxHr4J6Q_aJpv_hpHExl2HhlWzH-ilxli_RSA0ARuuuVz1iKy-7kw4LXK2r8atJ_8WNRI_d"
-                />
+                <div className="absolute inset-0 bg-tertiary/0 group-hover:bg-tertiary/20 transition-colors duration-500 z-10 mix-blend-overlay"></div>
+                <img alt="Case study 3" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyOmAOx7_tiWDzPxfie3T4xRIZSUPKYydwaaq-T9pyeOQDozsFRWc0-GALxl1_UBKG_O3-O-2_jag7YJfkQEcsHg3q7HlGi1kMNF26rHu5-OM98kAe97aj3QYQbLYE7Bvvwkk_ZZcMluI6yzOVtVLkxGVtlPSNg6unrZbeMnXIOK-QXSacFdWOaZyWNxKEmh3s9DiWwmxHr4J6Q_aJpv_hpHExl2HhlWzH-ilxli_RSA0ARuuuVz1iKy-7kw4LXK2r8atJ_8WNRI_d" />
               </div>
               <span className="font-label text-xs text-tertiary uppercase tracking-widest font-bold">Manufacturing</span>
-              <h4 className="font-headline text-xl font-bold mt-2 text-white group-hover:text-tertiary transition-colors">
-                Predictive Maintenance Systems
-              </h4>
+              <h4 className="font-headline text-xl font-bold mt-2 text-white group-hover:text-tertiary transition-colors">Predictive Maintenance Systems</h4>
             </Link>
           </div>
         </div>

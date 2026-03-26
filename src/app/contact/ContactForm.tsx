@@ -47,23 +47,25 @@ export default function ContactForm() {
   return (
     <>
       {/* ─── Hero Section ─── */}
-      <section className="max-w-7xl mx-auto px-8 mb-24 relative mt-12">
-        <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary/5 rounded-full blur-[120px]"></div>
+      <section className="max-w-7xl mx-auto px-6 md:px-8 mb-10 md:mb-24 relative mt-0 md:mt-12 py-16 md:py-0 overflow-hidden">
+        <div className="absolute -top-24 -right-24 md:-left-24 w-64 md:w-96 h-64 md:h-96 bg-secondary/10 md:bg-primary/5 rounded-full blur-[100px] md:blur-[120px]"></div>
+        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-primary/10 rounded-full blur-[100px] md:hidden"></div>
         <div className="relative z-10 max-w-3xl">
-          <h1 className="font-headline text-6xl md:text-7xl font-bold text-on-surface tracking-tighter leading-none mb-8">
+          <span className="font-label uppercase tracking-[0.2em] text-[0.6875rem] text-primary mb-4 block md:hidden">Initiate Transmission</span>
+          <h1 className="font-headline text-4xl md:text-7xl font-bold text-on-surface tracking-tight md:tracking-tighter leading-tight md:leading-none mb-6 md:mb-8">
             Ready to Start Your{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
               Project?
             </span>
           </h1>
-          <p className="text-xl leading-relaxed max-w-2xl opacity-90 font-body text-on-surface-variant">
-            Engineering breakthroughs aren't found in templates. They are built through rigorous logic, iterative design, and an unwavering commitment to structural integrity. Let's define your next evolution.
+          <p className="text-on-surface-variant text-lg leading-relaxed max-w-md md:max-w-2xl font-body">
+            We&apos;re here to engineer your next digital breakthrough. Let&apos;s talk about your goals.
           </p>
         </div>
       </section>
 
       {/* ─── Main Contact Grid ─── */}
-      <section className="max-w-7xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-32">
+      <section className="max-w-7xl mx-auto px-6 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-12 items-start mb-16 md:mb-32">
         {/* Contact Form Card */}
         <div className="lg:col-span-7 glass-panel p-8 md:p-12 rounded-xl border border-outline-variant/20 shadow-[0_0_20px_rgba(0,255,102,0.05)]">
           <h2 className="font-headline text-2xl font-bold text-on-surface mb-8 tracking-tight">
@@ -210,8 +212,8 @@ export default function ContactForm() {
       </section>
 
       {/* ─── FAQ Section ─── */}
-      <section className="max-w-4xl mx-auto px-8 mb-24">
-        <h2 className="font-headline text-3xl font-bold text-on-surface mb-12 text-center tracking-tight">
+      <section className="max-w-4xl mx-auto px-6 md:px-8 mb-16 md:mb-24">
+        <h2 className="font-headline text-xl md:text-3xl font-bold text-on-surface mb-8 md:mb-12 md:text-center tracking-tight">
           Common Inquiries
         </h2>
         <div className="space-y-4">

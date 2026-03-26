@@ -15,12 +15,12 @@ export default function Home() {
   return (
     <>
       {/* ─── Hero Section ─── */}
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden px-8">
+      <section className="relative min-h-0 md:min-h-[85vh] flex items-center justify-center overflow-hidden px-6 md:px-8 py-20 md:py-0">
         <div className="absolute inset-0 hero-glow"></div>
         {/* Decorative Elements */}
         <div className="absolute top-1/4 left-10 w-64 h-64 bg-primary/10 rounded-full blur-[100px]"></div>
         <div className="absolute bottom-1/4 right-10 w-80 h-80 bg-secondary/10 rounded-full blur-[120px]"></div>
-        
+
         <div className="relative z-10 max-w-7xl mx-auto text-center">
           <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface-container cyber-border">
             <span
@@ -33,16 +33,18 @@ export default function Home() {
               Your Digital Solutions Studio
             </span>
           </div>
-          
-          <h1 className="font-headline text-5xl md:text-8xl font-bold tracking-tighter mb-8 leading-[0.9] text-glow">
-            WE ENGINEER<br />
-            <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
-              DIGITAL SYSTEMS THAT SCALE
+
+          <h1 className="font-headline text-4xl md:text-8xl font-bold tracking-tight md:tracking-tighter mb-6 md:mb-8 leading-[1.1] md:leading-[0.9] text-glow">
+            <span className="md:hidden">WE ENGINEER <span className="text-primary">DIGITAL SYSTEMS</span> THAT SCALE</span>
+            <span className="hidden md:inline">WE ENGINEER<br />
+              <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
+                DIGITAL SYSTEMS THAT SCALE
+              </span>
             </span>
           </h1>
-          
-          <p className="max-w-2xl mx-auto text-on-surface-variant text-lg md:text-xl font-body leading-relaxed mb-12">
-            We build high-performance websites and AI-driven automation that transform your operations into a growth engine.
+
+          <p className="max-w-xs md:max-w-2xl mx-auto text-on-surface-variant text-base md:text-xl font-body leading-relaxed mb-8 md:mb-12">
+            We build high-performance websites and AI-driven automation that transform your operations.
           </p>
           
           <div className="flex flex-col sm:flex-row w-full sm:w-auto items-center justify-center gap-4 sm:gap-6 mt-8 px-6 sm:px-0">
@@ -159,27 +161,27 @@ export default function Home() {
       </section>
 
       {/* ─── India & Beyond Section ─── */}
-      <section className="py-24 px-8">
-        <div className="max-w-7xl mx-auto rounded-3xl overflow-hidden h-[600px] relative shadow-[0_0_50px_rgba(0,255,65,0.1)] group">
+      <section className="py-20 md:py-24 px-6 md:px-8">
+        <div className="max-w-7xl mx-auto rounded-3xl overflow-hidden h-[350px] md:h-[600px] relative shadow-[0_0_50px_rgba(0,255,65,0.1)] border border-outline-variant/10 md:border-none group">
           <img 
             alt="Global connectivity map" 
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[10s]" 
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7v72RwlUG4-gPEjoCcbKG84e-pU6IYdjPRyzNxBGplKogCgwd0OEJk806x8WUbsnGu8ikYYSWn-P8YLQKyJPjPC5sUvKZVZehvTRKdATMIqbsFSzGnIgdGn0fefGxvhmome4FM2jkk0H0lJY8KDMUZ15EgUfv2FPk3ovD9t4WCfBsfQzMf5rnt2H8MBscud1XwMTFPbfKW_I2i5zp8eLt8AbFmo4STAIPipEvI2ixSdH9bHHTMkz8tyZnjGsIH5M83w-N3a-Gjhck"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
-          <div className="absolute inset-0 flex items-center justify-center text-center p-12">
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 md:via-background/60 to-transparent"></div>
+          <div className="absolute inset-0 flex items-center justify-center text-center p-6 md:p-12">
             <div className="max-w-3xl">
-              <h2 className="font-headline text-4xl md:text-6xl font-bold text-white mb-8 leading-tight">
+              <h2 className="font-headline text-2xl md:text-6xl font-bold text-white mb-6 md:mb-8 leading-tight">
                 SERVING BUSINESSES ACROSS INDIA &amp; BEYOND
               </h2>
-              <div className="flex flex-wrap justify-center gap-10 mt-10">
+              <div className="flex flex-wrap justify-center gap-6 md:gap-10 mt-6 md:mt-10">
                 <div className="flex flex-col items-center">
-                  <span className="material-symbols-outlined text-primary mb-2 text-4xl">location_on</span>
-                  <span className="font-label text-xs uppercase tracking-widest text-white">Kolkata HQ</span>
+                  <span className="material-symbols-outlined text-primary mb-1 md:mb-2 text-2xl md:text-4xl">location_on</span>
+                  <span className="font-label text-[8px] md:text-xs uppercase tracking-widest text-white">Kolkata HQ</span>
                 </div>
                 <div className="flex flex-col items-center">
-                  <span className="material-symbols-outlined text-primary mb-2 text-4xl">public</span>
-                  <span className="font-label text-xs uppercase tracking-widest text-white">Global Nodes</span>
+                  <span className="material-symbols-outlined text-primary mb-1 md:mb-2 text-2xl md:text-4xl">public</span>
+                  <span className="font-label text-[8px] md:text-xs uppercase tracking-widest text-white">Global Nodes</span>
                 </div>
               </div>
             </div>

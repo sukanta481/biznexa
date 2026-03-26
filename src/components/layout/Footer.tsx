@@ -10,12 +10,11 @@ export default function Footer() {
         <div className="flex flex-col md:grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 lg:gap-24">
           {/* Brand Column */}
           <div className="md:col-span-5 flex flex-col gap-6 md:space-y-8">
-            <div className="text-2xl font-bold text-primary font-headline md:hidden">BIZNEXA</div>
-            <div className="hidden md:block h-10">
+            <div className="h-8 md:h-10">
               <img
                 alt="Biznexa Logo"
-                className="h-full w-auto object-contain brightness-0 invert [filter:drop-shadow(0_0_10px_rgba(0,255,65,0.4))]"
-                src="https://lh3.googleusercontent.com/aida/ADBb0ujvZvidqd0m5g5vdmrAjskhsTRlXLGd0I7OP2OuZYo8f4E6q8dIDFQRIPF0mtwRTqg2rwi71z8stJDGOxP4KJ8Jl5sNqAbYLgw7QZSSuJAAnKCg7HvAnXbjCLbbOOtCJIofa2S2fwUoThRl3ooCG8wWHoFOgL5hGhpyeQMqyfevEYBE716-JtxAM3BVBEZ51UWe30Uxp2xwX0ioi1lMoroAukCnAJEF__PZOeR4RKPJvqbxuRrG84nK8s8jQ_UVZFrilePcEKUGWr4"
+                className="h-full w-auto object-contain [filter:drop-shadow(0_0_10px_rgba(0,255,65,0.4))]"
+                src="/lightlogo.svg"
               />
             </div>
             <p className="font-body font-light text-[#b0b8c8] text-sm md:text-base leading-relaxed md:max-w-sm">

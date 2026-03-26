@@ -105,8 +105,29 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         url={postUrl}
       />
 
-      {/* ─── Hero Section ─── */}
-      <header className="relative w-full h-[716px] flex items-end overflow-hidden mb-16 mt-20">
+      {/* ─── Hero Section — Mobile ─── */}
+      <header className="md:hidden px-6 mb-12 mt-24">
+        <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden mb-8">
+          <img
+            alt="Future of AI"
+            className="w-full h-full object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7ffkI_HOf7ReVFogp_FYUqoHrikhdH2nmvJK2zHqKXxRf3j9czdQ2Vn21cC848Z0hFERhjl_xDaA1A189pD8m1vFVOrx7CnWJ9Zyvh5gQED0o3JrTQcGomJQGChhJqqrxI-0sDSovyenIxIsumDoLO5RgIfjoysuxx1NJO4HJ5W5AWxdi1ytyK71LmvHPu2zm-iBocZThLXQEq4YSUlwYjqCvXTRShYNEkvwlAGLkoIzSWvHtJfkio88Ob86EMFy0-l_LmMxI_xqv"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-60"></div>
+          <div className="absolute bottom-4 left-4 right-4 glass-panel p-4 rounded-lg border border-outline-variant/20">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-[10px] font-headline uppercase tracking-widest text-tertiary bg-tertiary/10 px-2 py-0.5 rounded">{post.category}</span>
+              <span className="text-[10px] font-headline uppercase tracking-widest text-on-surface-variant">{post.readTime}</span>
+            </div>
+            <h1 className="text-xl font-headline font-bold text-on-surface leading-tight tracking-tight">
+              {post.title}
+            </h1>
+          </div>
+        </div>
+      </header>
+
+      {/* ─── Hero Section — Desktop ─── */}
+      <header className="hidden md:flex relative w-full h-[716px] items-end overflow-hidden mb-16 mt-20">
         <div className="absolute inset-0 z-0">
           <img
             alt="Future of AI"
@@ -154,22 +175,34 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-12 gap-[44px]">
+      <div className="max-w-7xl mx-auto px-6 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-[44px]">
         {/* ─── Article Content ─── */}
-        <article className="lg:col-span-8 max-w-[800px] text-on-surface-variant text-lg leading-relaxed w-full">
+        <article className="lg:col-span-8 max-w-[800px] text-on-surface-variant text-base md:text-lg leading-relaxed w-full">
+          {/* Mobile author info */}
+          <div className="flex items-center gap-3 mb-10 text-on-surface-variant md:hidden">
+            <div className="w-8 h-8 rounded-full bg-surface-container-high border border-primary/20 flex items-center justify-center overflow-hidden">
+              <img alt={post.author} className="w-full h-full object-cover" src={AUTHOR_IMG} />
+            </div>
+            <div className="text-xs font-body">
+              <p className="font-bold text-on-surface leading-none mb-1">{post.author}</p>
+              <p className="opacity-70 leading-none">Published {new Date(post.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</p>
+            </div>
+          </div>
+
           <MDXRemote source={post.content} components={mdxComponents} />
 
           {/* Author Bio Box */}
-          <div className="mt-16 p-8 glass-panel rounded-xl flex flex-col md:flex-row items-center gap-8 border border-outline-variant/20 shadow-[0_0_20px_rgba(0,0,0,0.3)] bg-surface-container-high/40">
-            <div className="w-24 h-24 rounded-full overflow-hidden flex-shrink-0 border-2 border-primary/20">
+          <div className="mt-16 p-6 md:p-8 glass-panel rounded-xl flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 border border-outline-variant/20 shadow-[0_0_20px_rgba(0,0,0,0.3)] bg-surface-container-high/40">
+            <div className="w-16 h-16 md:w-24 md:h-24 rounded-full overflow-hidden flex-shrink-0 border-2 border-primary/20">
               <img alt={post.author} className="w-full h-full object-cover" src={AUTHOR_IMG} />
             </div>
-            <div className="flex-grow text-center md:text-left">
-              <h4 className="font-headline text-xl font-bold text-white mb-2">{post.author}</h4>
+            <div className="flex-grow text-left md:text-left">
+              <h4 className="font-headline text-base md:text-xl font-bold text-white mb-1 md:mb-2">{post.author}</h4>
+              <p className="text-primary text-xs font-headline uppercase tracking-widest mb-2 md:hidden">Chief Digital Architect</p>
               <p className="text-on-surface-variant text-sm mb-4 leading-relaxed font-body">
                 Pioneering digital excellence through innovative web solutions and intelligent automation for growing enterprises.
               </p>
-              <div className="flex justify-center md:justify-start gap-4">
+              <div className="flex gap-4 pt-4 md:pt-0 border-t md:border-t-0 border-outline-variant/10">
                 <a className="text-primary hover:text-tertiary transition-colors" href="#"><span className="material-symbols-outlined text-xl">link</span></a>
                 <a className="text-primary hover:text-tertiary transition-colors" href="#"><span className="material-symbols-outlined text-xl">alternate_email</span></a>
                 <a className="text-primary hover:text-tertiary transition-colors" href="#"><span className="material-symbols-outlined text-xl">terminal</span></a>
@@ -178,8 +211,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
         </article>
 
-        {/* ─── Sidebar ─── */}
-        <aside className="lg:col-span-4 pl-0 lg:pl-10 border-t lg:border-t-0 lg:border-l border-outline-variant/10 space-y-10 pt-10 lg:pt-0">
+        {/* ─── Sidebar (desktop only) ─── */}
+        <aside className="hidden lg:block lg:col-span-4 pl-0 lg:pl-10 border-t lg:border-t-0 lg:border-l border-outline-variant/10 space-y-10 pt-10 lg:pt-0">
           {/* Book a Call CTA */}
           <div className="p-8 rounded-xl border border-primary/40 bg-surface-container-high/60 shadow-[0_0_30px_rgba(88,231,171,0.05)]">
             <h3 className="font-headline text-xl font-bold text-white mb-4">Transform Your Business</h3>
@@ -240,10 +273,43 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </aside>
       </div>
 
+      {/* ─── Mobile Newsletter ─── */}
+      <section className="lg:hidden mt-20 px-6 py-20 bg-surface-container-lowest border-y border-outline-variant/10">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="material-symbols-outlined text-tertiary">mail</span>
+          <h3 className="font-headline font-bold text-lg uppercase tracking-tight">Insights Loop</h3>
+        </div>
+        <p className="text-sm text-on-surface-variant font-body mb-8 leading-relaxed">
+          Get the latest digital architecture blueprints and strategic insights delivered to your terminal weekly.
+        </p>
+        <div className="flex flex-col gap-3">
+          <input
+            className="bg-surface-container border-none text-on-surface text-sm font-label tracking-wider placeholder:text-outline-variant rounded-md py-4 px-4 focus:ring-1 focus:ring-primary/30 transition-all outline-none"
+            placeholder="ENTER TERMINAL EMAIL"
+            type="email"
+          />
+          <button className="bg-primary text-on-primary-fixed font-headline font-bold text-sm py-4 uppercase tracking-widest rounded-md hover:brightness-110 transition-colors shadow-[0_4px_12px_rgba(0,255,102,0.2)]">
+            Subscribe
+          </button>
+        </div>
+      </section>
+
       {/* ─── Related Insights ─── */}
-      <section className="mt-24 pt-24 border-t border-outline-variant/10 pb-20">
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="flex justify-between items-end mb-12">
+      <section className="mt-20 md:mt-24 pt-20 md:pt-24 border-t border-outline-variant/10 pb-20">
+        <div className="max-w-7xl mx-auto px-6 md:px-8">
+          {/* Mobile header */}
+          <h3 className="md:hidden font-headline font-bold text-xl text-on-surface mb-6 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="w-3 h-3 bg-primary rounded-full"></span>
+              Related Insights
+            </div>
+            <div className="flex items-center gap-2 text-[10px] text-tertiary uppercase tracking-widest opacity-80">
+              <span className="material-symbols-outlined text-sm">swipe_left</span>
+              Swipe
+            </div>
+          </h3>
+          {/* Desktop header */}
+          <div className="hidden md:flex justify-between items-end mb-12">
             <h2 className="font-headline text-4xl font-bold tracking-tighter text-white">
               Related <span className="text-secondary">Insights</span>
             </h2>
@@ -251,21 +317,63 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               View All <span className="material-symbols-outlined text-sm">arrow_forward</span>
             </Link>
           </div>
-          <div className="grid md:grid-cols-3 gap-8 items-stretch">
-            {/* Post 1 */}
+
+          {/* Mobile carousel */}
+          <div className="md:hidden">
+            <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-4 pb-8">
+              <Link href="/blog" className="block group flex-shrink-0 w-[85vw] snap-center">
+                <div className="flex flex-col h-full rounded-xl overflow-hidden bg-surface-container-low border border-outline-variant/10">
+                  <div className="aspect-video w-full overflow-hidden">
+                    <img alt="Security" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnG37EZ0BPfXw_gbA1Ew-mZpKMFnOVQRwXU0QTaTP7l0Gwoj_yiV7r4BAuXrjhie93ECwY3tXR_d91K0DL45IJWzRCTH-eHBAic-pAkkwZkND0lVuAaAMy3K9zy27PgMDZ7nT-VyazcsN3qFhUIVruuTbxOR0I78HLX23jmqJP_bHYsDEoz5B5JIYdW4ZqwTwDlXASlvmDvOX1sS7QlEVEHQAsgRuzCwC2a7xiHgm1-Q37yUCD0kp9KRRMJOvNgjQzWurWtGu_0_rm" />
+                  </div>
+                  <div className="p-5 glass-panel h-full">
+                    <span className="text-[10px] font-headline text-primary uppercase tracking-widest mb-2 block">Security</span>
+                    <h4 className="font-headline font-bold text-base leading-snug text-on-surface">Securing the Edge: Future Proofing Infrastructure</h4>
+                    <p className="text-xs text-on-surface-variant mt-4">8 Min Read &bull; Oct 12, 2024</p>
+                  </div>
+                </div>
+              </Link>
+              <Link href="/blog" className="block group flex-shrink-0 w-[85vw] snap-center">
+                <div className="flex flex-col h-full rounded-xl overflow-hidden bg-surface-container-low border border-outline-variant/10">
+                  <div className="aspect-video w-full overflow-hidden">
+                    <img alt="Cloud" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdtzqnsrfPwkXy8nrMSOmzAH5GHVhurIdR3pHKWWHvJe__kHkMocgzajrsu739uQnCfJ3KEAiuGwn-YEf8NGXl1SuxQvBi-4LKGtXph-yrr0cxlgsTPECO84NnCe6LMjm2LFvgGWLedS17enTSMiLHIJTlqCtVURmfKtvQHDFsro--E4OQE3Nnj5TxJHOwdlMwxkZj7VzozNfDNbWMbtdP7gOU751AIJgrTqQliW4Qh6bupjX0L7sipa_tRhBqnmjetAHsUIKDe4L5" />
+                  </div>
+                  <div className="p-5 glass-panel h-full">
+                    <span className="text-[10px] font-headline text-primary uppercase tracking-widest mb-2 block">Cloud</span>
+                    <h4 className="font-headline font-bold text-base leading-snug text-on-surface">Serverless Architecture: Scale Without Limits</h4>
+                    <p className="text-xs text-on-surface-variant mt-4">15 Min Read &bull; Oct 08, 2024</p>
+                  </div>
+                </div>
+              </Link>
+              <Link href="/blog" className="block group flex-shrink-0 w-[85vw] snap-center">
+                <div className="flex flex-col h-full rounded-xl overflow-hidden bg-surface-container-low border border-outline-variant/10">
+                  <div className="aspect-video w-full overflow-hidden">
+                    <img alt="Hardware" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKqT-HVYzbgqhKZXMyR09xkSIrd9qS6BYTkvCpe80ZZ8XPg_OZ5yB2OZxug3yAVngVmq4o3YOAShS55yaJQ5koSzpI8Bt_MIsfHRUujDIicyOVKcFGTr7Tq8QDfx3nG1d-C33QjfIBsVMgV3jUbg00UILKFxSEaWGRD3xIzZ1MwSxsK2XpdoFEX1WgswZuJzjeIrbXbXtHj5qkxIKaiDwI9zMTqA0ZRxmLvaRD3c3_p1X-MyfhVaTQEP8Ogam5glqTsQr1FPVfYzWQ" />
+                  </div>
+                  <div className="p-5 glass-panel h-full">
+                    <span className="text-[10px] font-headline text-tertiary uppercase tracking-widest mb-2 block">Hardware</span>
+                    <h4 className="font-headline font-bold text-base leading-snug text-on-surface">The Silicon Shift: India&apos;s New Chip Economy</h4>
+                    <p className="text-xs text-on-surface-variant mt-4">10 Min Read &bull; Sep 29, 2024</p>
+                  </div>
+                </div>
+              </Link>
+            </div>
+            <div className="flex justify-center gap-2 mt-2">
+              <span className="w-2 h-2 rounded-full bg-tertiary"></span>
+              <span className="w-2 h-2 rounded-full bg-outline-variant/30"></span>
+              <span className="w-2 h-2 rounded-full bg-outline-variant/30"></span>
+            </div>
+          </div>
+
+          {/* Desktop grid */}
+          <div className="hidden md:grid md:grid-cols-3 gap-8 items-stretch">
             <Link href="/blog" className="glass-panel border-outline-variant/20 shadow-[0_4px_20px_rgba(0,0,0,0.2)] group cursor-pointer overflow-hidden rounded-xl flex flex-col h-full hover:-translate-y-2 transition-transform duration-300 bg-surface-container-high/40">
               <div className="aspect-video overflow-hidden">
-                <img
-                  alt="Security"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnG37EZ0BPfXw_gbA1Ew-mZpKMFnOVQRwXU0QTaTP7l0Gwoj_yiV7r4BAuXrjhie93ECwY3tXR_d91K0DL45IJWzRCTH-eHBAic-pAkkwZkND0lVuAaAMy3K9zy27PgMDZ7nT-VyazcsN3qFhUIVruuTbxOR0I78HLX23jmqJP_bHYsDEoz5B5JIYdW4ZqwTwDlXASlvmDvOX1sS7QlEVEHQAsgRuzCwC2a7xiHgm1-Q37yUCD0kp9KRRMJOvNgjQzWurWtGu_0_rm"
-                />
+                <img alt="Security" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnG37EZ0BPfXw_gbA1Ew-mZpKMFnOVQRwXU0QTaTP7l0Gwoj_yiV7r4BAuXrjhie93ECwY3tXR_d91K0DL45IJWzRCTH-eHBAic-pAkkwZkND0lVuAaAMy3K9zy27PgMDZ7nT-VyazcsN3qFhUIVruuTbxOR0I78HLX23jmqJP_bHYsDEoz5B5JIYdW4ZqwTwDlXASlvmDvOX1sS7QlEVEHQAsgRuzCwC2a7xiHgm1-Q37yUCD0kp9KRRMJOvNgjQzWurWtGu_0_rm" />
               </div>
               <div className="p-6 flex-grow flex flex-col">
                 <span className="font-label text-[10px] tracking-[0.2em] uppercase text-secondary mb-4 block font-bold">Security</span>
-                <h3 className="font-headline text-xl font-bold text-white leading-tight mb-4 group-hover:text-primary transition-colors">
-                  Securing the Edge: Future Proofing Infrastructure
-                </h3>
+                <h3 className="font-headline text-xl font-bold text-white leading-tight mb-4 group-hover:text-primary transition-colors">Securing the Edge: Future Proofing Infrastructure</h3>
                 <div className="mt-auto flex items-center gap-2 text-on-surface-variant text-xs font-label uppercase tracking-widest font-bold">
                   <span>8 Min Read</span>
                   <div className="w-1 h-1 bg-outline-variant/50 rounded-full"></div>
@@ -273,20 +381,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 </div>
               </div>
             </Link>
-            {/* Post 2 */}
             <Link href="/blog" className="glass-panel border-outline-variant/20 shadow-[0_4px_20px_rgba(0,0,0,0.2)] group cursor-pointer overflow-hidden rounded-xl flex flex-col h-full hover:-translate-y-2 transition-transform duration-300 bg-surface-container-high/40">
               <div className="aspect-video overflow-hidden">
-                <img
-                  alt="Cloud"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdtzqnsrfPwkXy8nrMSOmzAH5GHVhurIdR3pHKWWHvJe__kHkMocgzajrsu739uQnCfJ3KEAiuGwn-YEf8NGXl1SuxQvBi-4LKGtXph-yrr0cxlgsTPECO84NnCe6LMjm2LFvgGWLedS17enTSMiLHIJTlqCtVURmfKtvQHDFsro--E4OQE3Nnj5TxJHOwdlMwxkZj7VzozNfDNbWMbtdP7gOU751AIJgrTqQliW4Qh6bupjX0L7sipa_tRhBqnmjetAHsUIKDe4L5"
-                />
+                <img alt="Cloud" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdtzqnsrfPwkXy8nrMSOmzAH5GHVhurIdR3pHKWWHvJe__kHkMocgzajrsu739uQnCfJ3KEAiuGwn-YEf8NGXl1SuxQvBi-4LKGtXph-yrr0cxlgsTPECO84NnCe6LMjm2LFvgGWLedS17enTSMiLHIJTlqCtVURmfKtvQHDFsro--E4OQE3Nnj5TxJHOwdlMwxkZj7VzozNfDNbWMbtdP7gOU751AIJgrTqQliW4Qh6bupjX0L7sipa_tRhBqnmjetAHsUIKDe4L5" />
               </div>
               <div className="p-6 flex-grow flex flex-col">
                 <span className="font-label text-[10px] tracking-[0.2em] uppercase text-primary mb-4 block font-bold">Cloud</span>
-                <h3 className="font-headline text-xl font-bold text-white leading-tight mb-4 group-hover:text-primary transition-colors">
-                  Serverless Architecture: Scale Without Limits
-                </h3>
+                <h3 className="font-headline text-xl font-bold text-white leading-tight mb-4 group-hover:text-primary transition-colors">Serverless Architecture: Scale Without Limits</h3>
                 <div className="mt-auto flex items-center gap-2 text-on-surface-variant text-xs font-label uppercase tracking-widest font-bold">
                   <span>15 Min Read</span>
                   <div className="w-1 h-1 bg-outline-variant/50 rounded-full"></div>
@@ -294,20 +395,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 </div>
               </div>
             </Link>
-            {/* Post 3 */}
             <Link href="/blog" className="glass-panel border-outline-variant/20 shadow-[0_4px_20px_rgba(0,0,0,0.2)] group cursor-pointer overflow-hidden rounded-xl flex flex-col h-full hover:-translate-y-2 transition-transform duration-300 bg-surface-container-high/40">
               <div className="aspect-video overflow-hidden">
-                <img
-                  alt="Hardware"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKqT-HVYzbgqhKZXMyR09xkSIrd9qS6BYTkvCpe80ZZ8XPg_OZ5yB2OZxug3yAVngVmq4o3YOAShS55yaJQ5koSzpI8Bt_MIsfHRUujDIicyOVKcFGTr7Tq8QDfx3nG1d-C33QjfIBsVMgV3jUbg00UILKFxSEaWGRD3xIzZ1MwSxsK2XpdoFEX1WgswZuJzjeIrbXbXtHj5qkxIKaiDwI9zMTqA0ZRxmLvaRD3c3_p1X-MyfhVaTQEP8Ogam5glqTsQr1FPVfYzWQ"
-                />
+                <img alt="Hardware" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKqT-HVYzbgqhKZXMyR09xkSIrd9qS6BYTkvCpe80ZZ8XPg_OZ5yB2OZxug3yAVngVmq4o3YOAShS55yaJQ5koSzpI8Bt_MIsfHRUujDIicyOVKcFGTr7Tq8QDfx3nG1d-C33QjfIBsVMgV3jUbg00UILKFxSEaWGRD3xIzZ1MwSxsK2XpdoFEX1WgswZuJzjeIrbXbXtHj5qkxIKaiDwI9zMTqA0ZRxmLvaRD3c3_p1X-MyfhVaTQEP8Ogam5glqTsQr1FPVfYzWQ" />
               </div>
               <div className="p-6 flex-grow flex flex-col">
                 <span className="font-label text-[10px] tracking-[0.2em] uppercase text-tertiary mb-4 block font-bold">Hardware</span>
-                <h3 className="font-headline text-xl font-bold text-white leading-tight mb-4 group-hover:text-primary transition-colors">
-                  The Silicon Shift: India's New Chip Economy
-                </h3>
+                <h3 className="font-headline text-xl font-bold text-white leading-tight mb-4 group-hover:text-primary transition-colors">The Silicon Shift: India&apos;s New Chip Economy</h3>
                 <div className="mt-auto flex items-center gap-2 text-on-surface-variant text-xs font-label uppercase tracking-widest font-bold">
                   <span>10 Min Read</span>
                   <div className="w-1 h-1 bg-outline-variant/50 rounded-full"></div>
