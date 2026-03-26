@@ -2,28 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 
-export default function AdminDashboard() {
-    const [dateFilter, setDateFilter] = useState('Last 30 Days');
-    const [serviceFilter, setServiceFilter] = useState('All');
-    const [regionFilter, setRegionFilter] = useState('EMEA');
-    const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-    const dropdownRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        function handleClickOutside(e: MouseEvent) {
-            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-                setOpenDropdown(null);
-            }
-        }
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    const dateOptions = ['Last 7 Days', 'Last 30 Days', 'Last 90 Days', 'This Year', 'All Time'];
-    const serviceOptions = ['All', 'Web Dev', 'AI Solutions', 'Marketing', 'Cloud Infra'];
-    const regionOptions = ['EMEA', 'APAC', 'Americas', 'Global'];
-
-    const FilterButton = ({ icon, label, value, options, id, onSelect }: { icon: string; label: string; value: string; options: string[]; id: string; onSelect: (v: string) => void }) => (
+function FilterButton({ icon, label, value, options, id, openDropdown, setOpenDropdown, onSelect }: { icon: string; label: string; value: string; options: string[]; id: string; openDropdown: string | null; setOpenDropdown: (v: string | null) => void; onSelect: (v: string) => void }) {
+    return (
         <div className="relative">
             <button
                 onClick={() => setOpenDropdown(openDropdown === id ? null : id)}
@@ -48,6 +28,28 @@ export default function AdminDashboard() {
             )}
         </div>
     );
+}
+
+export default function AdminDashboard() {
+    const [dateFilter, setDateFilter] = useState('Last 30 Days');
+    const [serviceFilter, setServiceFilter] = useState('All');
+    const [regionFilter, setRegionFilter] = useState('EMEA');
+    const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        function handleClickOutside(e: MouseEvent) {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+                setOpenDropdown(null);
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const dateOptions = ['Last 7 Days', 'Last 30 Days', 'Last 90 Days', 'This Year', 'All Time'];
+    const serviceOptions = ['All', 'Web Dev', 'AI Solutions', 'Marketing', 'Cloud Infra'];
+    const regionOptions = ['EMEA', 'APAC', 'Americas', 'Global'];
 
     return (
         <div className="flex flex-col gap-8">
@@ -60,9 +62,9 @@ export default function AdminDashboard() {
 
                 {/* Top-level filters */}
                 <div className="flex flex-wrap items-center gap-3" ref={dropdownRef}>
-                    <FilterButton icon="calendar_today" label="" value={dateFilter} options={dateOptions} id="date" onSelect={setDateFilter} />
-                    <FilterButton icon="filter_list" label="Service" value={serviceFilter} options={serviceOptions} id="service" onSelect={setServiceFilter} />
-                    <FilterButton icon="public" label="Region" value={regionFilter} options={regionOptions} id="region" onSelect={setRegionFilter} />
+                    <FilterButton icon="calendar_today" label="" value={dateFilter} options={dateOptions} id="date" openDropdown={openDropdown} setOpenDropdown={setOpenDropdown} onSelect={setDateFilter} />
+                    <FilterButton icon="filter_list" label="Service" value={serviceFilter} options={serviceOptions} id="service" openDropdown={openDropdown} setOpenDropdown={setOpenDropdown} onSelect={setServiceFilter} />
+                    <FilterButton icon="public" label="Region" value={regionFilter} options={regionOptions} id="region" openDropdown={openDropdown} setOpenDropdown={setOpenDropdown} onSelect={setRegionFilter} />
                 </div>
             </div>
 

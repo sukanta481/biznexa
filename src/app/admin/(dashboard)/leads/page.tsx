@@ -288,7 +288,7 @@ export default function LeadsCRM() {
                                 <div className="w-2 h-2 rounded-full bg-secondary mt-1.5 z-10 shadow-[0_0_8px_rgba(99,102,241,1)]"></div>
                                 <div className="absolute left-[3px] top-4 w-[1px] h-full bg-white/5"></div>
                                 <div>
-                                    <p className="text-sm text-on-surface font-bold leading-tight">Julian Vane opened 'Proposal_v2.pdf'</p>
+                                    <p className="text-sm text-on-surface font-bold leading-tight">Julian Vane opened &apos;Proposal_v2.pdf&apos;</p>
                                     <p className="text-[10px] text-slate-500 uppercase font-headline font-bold mt-1">1 HOUR AGO</p>
                                 </div>
                             </div>

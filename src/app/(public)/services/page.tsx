@@ -75,7 +75,7 @@ export default function ServicesPage() {
             </div>
             <h3 className="font-headline text-xl font-bold mb-4 text-white">Detect</h3>
             <p className="font-body text-sm text-on-surface-variant leading-relaxed">
-              We analyze your current website, competitors, and market to find what's working and what's not.
+              We analyze your current website, competitors, and market to find what&apos;s working and what&apos;s not.
             </p>
           </div>
 

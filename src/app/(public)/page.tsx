@@ -119,7 +119,7 @@ export default function Home() {
             <div className="relative z-10">
               <span className="font-label text-[10px] md:text-xs text-secondary tracking-widest uppercase mb-2 block">02 / Automation</span>
               <h3 className="font-headline text-xl md:text-2xl font-bold mb-4 text-white">AI &amp; WORKFLOW AUTOMATION</h3>
-              <p className="text-on-surface-variant text-sm">Automate repetitive tasks and integrate AI agents that work 24/7 to boost your team's productivity.</p>
+              <p className="text-on-surface-variant text-sm">Automate repetitive tasks and integrate AI agents that work 24/7 to boost your team&apos;s productivity.</p>
             </div>
           </div>
           
@@ -198,9 +198,9 @@ export default function Home() {
         
         <div className="flex md:grid overflow-x-auto md:overflow-visible scrollbar-hide snap-x snap-mandatory md:snap-none pb-8 md:pb-0 px-6 md:px-0 gap-6 md:gap-8 md:grid-cols-3">
           <div className="snap-center shrink-0 w-[85vw] md:w-auto p-10 rounded-2xl md:rounded-xl bg-surface-container-high border border-white/5 italic text-on-surface-variant relative hover-lift transition-all">
-            <span className="absolute top-4 left-4 text-primary text-4xl font-headline opacity-30">"</span>
+            <span className="absolute top-4 left-4 text-primary text-4xl font-headline opacity-30">&ldquo;</span>
             <p className="text-white md:text-on-surface-variant text-lg md:text-xl md:italic leading-relaxed">
-              "Biznexa transformed our manual sales process into a fully automated lead-gen machine. Our ROI tripled in just 3 months."
+              &ldquo;Biznexa transformed our manual sales process into a fully automated lead-gen machine. Our ROI tripled in just 3 months.&rdquo;
             </p>
             <div className="mt-10 md:mt-8 flex items-center gap-4 not-italic">
               <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">AK</div>
@@ -212,9 +212,9 @@ export default function Home() {
           </div>
           
           <div className="snap-center shrink-0 w-[85vw] md:w-auto p-10 rounded-2xl md:rounded-xl bg-surface-container-high border border-white/5 italic text-on-surface-variant relative hover-lift transition-all">
-            <span className="absolute top-4 left-4 text-primary text-4xl font-headline opacity-30">"</span>
+            <span className="absolute top-4 left-4 text-primary text-4xl font-headline opacity-30">&ldquo;</span>
             <p className="text-white md:text-on-surface-variant text-lg md:text-xl md:italic leading-relaxed">
-              "The website they built for us isn't just a site; it's a high-performance engine. The UI design is years ahead of our competitors."
+              &ldquo;The website they built for us isn&apos;t just a site; it&apos;s a high-performance engine. The UI design is years ahead of our competitors.&rdquo;
             </p>
             <div className="mt-10 md:mt-8 flex items-center gap-4 not-italic">
               <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">SR</div>
@@ -226,9 +226,9 @@ export default function Home() {
           </div>
           
           <div className="snap-center shrink-0 w-[85vw] md:w-auto p-10 rounded-2xl md:rounded-xl bg-surface-container-high border border-white/5 italic text-on-surface-variant relative hover-lift transition-all">
-            <span className="absolute top-4 left-4 text-primary text-4xl font-headline opacity-30">"</span>
+            <span className="absolute top-4 left-4 text-primary text-4xl font-headline opacity-30">&ldquo;</span>
             <p className="text-white md:text-on-surface-variant text-lg md:text-xl md:italic leading-relaxed">
-              "Professional, technical, and visionary. Their AI solutions saved us over 40 hours of manual data entry per week."
+              &ldquo;Professional, technical, and visionary. Their AI solutions saved us over 40 hours of manual data entry per week.&rdquo;
             </p>
             <div className="mt-10 md:mt-8 flex items-center gap-4 not-italic">
               <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">MD</div>
