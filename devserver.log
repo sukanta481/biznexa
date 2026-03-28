@@ -1,0 +1,48 @@
+
+> biznexa@0.1.0 dev
+> next dev
+
+ ⚠ Port 3000 is in use by process 6360, using available port 3002 instead.
+   ▲ Next.js 15.5.14
+   - Local:        http://localhost:3002
+   - Network:      http://10.74.225.140:3002
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 2.4s
+ ○ Compiling / ...
+ ✓ Compiled / in 7.5s (686 modules)
+ GET / 200 in 8076ms
+ GET / 200 in 179ms
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 574ms (431 modules)
+ GET /favicon.ico 200 in 787ms
+ ○ Compiling /admin ...
+ ✓ Compiled /admin in 658ms (706 modules)
+ GET / 200 in 374ms
+ GET /admin 200 in 1150ms
+ ○ Compiling /admin/blog ...
+ ✓ Compiled /admin/blog in 1492ms (879 modules)
+ GET /admin/blog 200 in 1795ms
+ ✓ Compiled in 1638ms (871 modules)
+ GET /admin/blog 200 in 366ms
+ GET /admin/blog 200 in 283ms
+ ✓ Compiled /favicon.ico in 157ms (625 modules)
+ GET /favicon.ico 200 in 332ms
+ ✓ Compiled in 3.1s (871 modules)
+ GET /admin/blog 200 in 2198ms
+ GET /admin/blog 200 in 81ms
+ ✓ Compiled in 756ms (871 modules)
+ GET /admin/blog 200 in 441ms
+ ✓ Compiled in 2.4s (871 modules)
+ GET /admin/blog 200 in 409ms
+ ✓ Compiled in 954ms (871 modules)
+ GET /admin/blog 200 in 333ms
+ ✓ Compiled in 732ms (871 modules)
+ GET /admin/blog 200 in 280ms
+ ✓ Compiled in 380ms (263 modules)
+ GET /admin/blog 200 in 152ms
+ ✓ Compiled in 351ms (263 modules)
+ GET /admin/blog 200 in 153ms
+ ○ Compiling /api/admin/upload ...
+[?25h

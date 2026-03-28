@@ -19,13 +19,13 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   if (!post) return {};
 
   return {
-    title: `${post.title} | ${COMPANY.name} Insights`,
-    description: post.description,
+    title: post.seoTitle ?? `${post.title} | ${COMPANY.name} Insights`,
+    description: post.seoDescription ?? post.description,
     authors: [{ name: post.author }],
     openGraph: {
       type: "article",
-      title: post.title,
-      description: post.description,
+      title: post.seoTitle ?? post.title,
+      description: post.seoDescription ?? post.description,
       publishedTime: post.date,
       authors: [post.author],
     },
@@ -99,6 +99,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   const postUrl = `${COMPANY.website}/blog/${post.slug}`;
+  const heroImage = post.coverImage ?? "https://lh3.googleusercontent.com/aida-public/AB6AXuB7ffkI_HOf7ReVFogp_FYUqoHrikhdH2nmvJK2zHqKXxRf3j9czdQ2Vn21cC848Z0hFERhjl_xDaA1A189pD8m1vFVOrx7CnWJ9Zyvh5gQED0o3JrTQcGomJQGChhJqqrxI-0sDSovyenIxIsumDoLO5RgIfjoysuxx1NJO4HJ5W5AWxdi1ytyK71LmvHPu2zm-iBocZThLXQEq4YSUlwYjqCvXTRShYNEkvwlAGLkoIzSWvHtJfkio88Ob86EMFy0-l_LmMxI_xqv";
+  const authorImage = post.authorImage ?? AUTHOR_IMG;
+  const heroImageAlt = post.coverImageAlt ?? post.title;
 
   return (
     <>
@@ -121,9 +124,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <header className="md:hidden px-6 mb-12 mt-24">
         <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden mb-8">
           <img
-            alt="Future of AI"
+            alt={heroImageAlt}
             className="w-full h-full object-cover"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7ffkI_HOf7ReVFogp_FYUqoHrikhdH2nmvJK2zHqKXxRf3j9czdQ2Vn21cC848Z0hFERhjl_xDaA1A189pD8m1vFVOrx7CnWJ9Zyvh5gQED0o3JrTQcGomJQGChhJqqrxI-0sDSovyenIxIsumDoLO5RgIfjoysuxx1NJO4HJ5W5AWxdi1ytyK71LmvHPu2zm-iBocZThLXQEq4YSUlwYjqCvXTRShYNEkvwlAGLkoIzSWvHtJfkio88Ob86EMFy0-l_LmMxI_xqv"
+            src={heroImage}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-60"></div>
           <div className="absolute bottom-4 left-4 right-4 glass-panel p-4 rounded-lg border border-outline-variant/20">
@@ -142,9 +145,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <header className="hidden md:flex relative w-full h-[716px] items-end overflow-hidden mb-16 mt-20">
         <div className="absolute inset-0 z-0">
           <img
-            alt="Future of AI"
+            alt={heroImageAlt}
             className="w-full h-full object-cover opacity-40"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7ffkI_HOf7ReVFogp_FYUqoHrikhdH2nmvJK2zHqKXxRf3j9czdQ2Vn21cC848Z0hFERhjl_xDaA1A189pD8m1vFVOrx7CnWJ9Zyvh5gQED0o3JrTQcGomJQGChhJqqrxI-0sDSovyenIxIsumDoLO5RgIfjoysuxx1NJO4HJ5W5AWxdi1ytyK71LmvHPu2zm-iBocZThLXQEq4YSUlwYjqCvXTRShYNEkvwlAGLkoIzSWvHtJfkio88Ob86EMFy0-l_LmMxI_xqv"
+            src={heroImage}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
         </div>
@@ -171,7 +174,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-surface-container-highest border border-outline-variant/30 overflow-hidden">
-                  <img alt={post.author} className="w-full h-full object-cover" src={AUTHOR_IMG} />
+                  <img alt={post.author} className="w-full h-full object-cover" src={authorImage} />
                 </div>
                 <div>
                   <p className="text-sm font-bold text-white font-body">{post.author}</p>
@@ -193,7 +196,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Mobile author info */}
           <div className="flex items-center gap-3 mb-10 text-on-surface-variant md:hidden">
             <div className="w-8 h-8 rounded-full bg-surface-container-high border border-primary/20 flex items-center justify-center overflow-hidden">
-              <img alt={post.author} className="w-full h-full object-cover" src={AUTHOR_IMG} />
+              <img alt={post.author} className="w-full h-full object-cover" src={authorImage} />
             </div>
             <div className="text-xs font-body">
               <p className="font-bold text-on-surface leading-none mb-1">{post.author}</p>
@@ -206,7 +209,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Author Bio Box */}
           <div className="mt-16 p-6 md:p-8 glass-panel rounded-xl flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 border border-outline-variant/20 shadow-[0_0_20px_rgba(0,0,0,0.3)] bg-surface-container-high/40">
             <div className="w-16 h-16 md:w-24 md:h-24 rounded-full overflow-hidden flex-shrink-0 border-2 border-primary/20">
-              <img alt={post.author} className="w-full h-full object-cover" src={AUTHOR_IMG} />
+              <img alt={post.author} className="w-full h-full object-cover" src={authorImage} />
             </div>
             <div className="flex-grow text-left md:text-left">
               <h4 className="font-headline text-base md:text-xl font-bold text-white mb-1 md:mb-2">{post.author}</h4>

@@ -10,10 +10,17 @@ export interface BlogPost {
   description: string;
   date: string;
   author: string;
+  authorImage?: string | null;
   category: string;
+  serviceLine?: string | null;
+  region?: string | null;
   readTime: string;
   published: boolean;
   content: string;
+  coverImage?: string | null;
+  coverImageAlt?: string | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
 }
 
 export function getAllPosts(): BlogPost[] {
@@ -36,10 +43,17 @@ export function getAllPosts(): BlogPost[] {
         description: data.description || "",
         date: data.date || "",
         author: data.author || "Sukanta Saha",
+        authorImage: data.authorImage || null,
         category: data.category || "Technology",
+        serviceLine: data.serviceLine || null,
+        region: data.region || "Global",
         readTime: data.readTime || "5 min read",
         published: data.published !== false,
         content,
+        coverImage: data.coverImage || null,
+        coverImageAlt: data.coverImageAlt || null,
+        seoTitle: data.seoTitle || null,
+        seoDescription: data.seoDescription || null,
       } satisfies BlogPost;
     })
     .filter((post) => post.published)
@@ -64,10 +78,17 @@ export function getPostBySlug(slug: string): BlogPost | undefined {
     description: data.description || "",
     date: data.date || "",
     author: data.author || "Sukanta Saha",
+    authorImage: data.authorImage || null,
     category: data.category || "Technology",
+    serviceLine: data.serviceLine || null,
+    region: data.region || "Global",
     readTime: data.readTime || "5 min read",
     published: data.published !== false,
     content,
+    coverImage: data.coverImage || null,
+    coverImageAlt: data.coverImageAlt || null,
+    seoTitle: data.seoTitle || null,
+    seoDescription: data.seoDescription || null,
   };
 }
 

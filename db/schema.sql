@@ -5,12 +5,18 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   description TEXT NOT NULL,
   content LONGTEXT NOT NULL,
   author VARCHAR(150) NOT NULL DEFAULT 'Sukanta Saha',
+  author_image TEXT NULL,
   category VARCHAR(120) NOT NULL DEFAULT 'Technology',
+  service_line VARCHAR(120) NULL,
+  region VARCHAR(80) NOT NULL DEFAULT 'Global',
   read_time VARCHAR(50) NOT NULL DEFAULT '5 min read',
   cover_image TEXT NULL,
+  cover_image_alt VARCHAR(255) NULL,
   views INT UNSIGNED NOT NULL DEFAULT 0,
   featured TINYINT(1) NOT NULL DEFAULT 0,
   published TINYINT(1) NOT NULL DEFAULT 1,
+  seo_title VARCHAR(255) NULL,
+  seo_description TEXT NULL,
   published_at DATETIME NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -18,5 +24,7 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   UNIQUE KEY uq_blog_posts_slug (slug),
   KEY idx_blog_posts_published (published),
   KEY idx_blog_posts_published_at (published_at),
-  KEY idx_blog_posts_category (category)
+  KEY idx_blog_posts_category (category),
+  KEY idx_blog_posts_service_line (service_line),
+  KEY idx_blog_posts_region (region)
 );

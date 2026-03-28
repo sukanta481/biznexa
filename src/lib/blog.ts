@@ -1,8 +1,8 @@
 import "server-only";
 
-import type { RowDataPacket } from "mysql2/promise";
+import type { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
-import { query } from "@/lib/db";
+import { isMissingDatabaseConfigError, query } from "@/lib/db";
 import { getAllPosts, getAllPostSlugs, getPostBySlug, type BlogPost as FileBlogPost } from "@/lib/mdx";
 
 export interface BlogPost {
@@ -12,13 +12,19 @@ export interface BlogPost {
   description: string;
   date: string;
   author: string;
+  authorImage?: string | null;
   category: string;
+  serviceLine?: string | null;
+  region?: string | null;
   readTime: string;
   published: boolean;
   content: string;
   coverImage?: string | null;
+  coverImageAlt?: string | null;
   views?: number;
   featured?: boolean;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
 }
 
 interface BlogPostRow extends RowDataPacket {
@@ -28,12 +34,18 @@ interface BlogPostRow extends RowDataPacket {
   description: string;
   content: string;
   author: string;
+  author_image: string | null;
   category: string;
+  service_line: string | null;
+  region: string | null;
   read_time: string;
   cover_image: string | null;
+  cover_image_alt: string | null;
   published: number;
   featured: number;
   views: number;
+  seo_title: string | null;
+  seo_description: string | null;
   published_at: Date | string | null;
   created_at: Date | string | null;
 }
@@ -87,12 +99,38 @@ export interface AdminBlogDashboardData {
   categoryStats: AdminBlogCategoryStat[];
 }
 
+export interface CreateBlogPostInput {
+  title: string;
+  slug?: string;
+  description: string;
+  content: string;
+  author: string;
+  authorImage?: string | null;
+  category: string;
+  serviceLine?: string | null;
+  region?: string | null;
+  readTime: string;
+  coverImage?: string | null;
+  coverImageAlt?: string | null;
+  featured?: boolean;
+  published?: boolean;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  publishedAt?: string | null;
+}
+
 interface BlogSchemaConfig {
   selectSql: string;
   publishedCondition: string;
   sortSql: string;
   publishedCountSql: string;
   draftCountSql: string;
+  hasAuthorImage: boolean;
+  hasServiceLine: boolean;
+  hasRegion: boolean;
+  hasCoverImageAlt: boolean;
+  hasSeoTitle: boolean;
+  hasSeoDescription: boolean;
 }
 
 function isSchemaMismatchError(error: unknown) {
@@ -101,6 +139,24 @@ function isSchemaMismatchError(error: unknown) {
     error !== null &&
     "code" in error &&
     (error.code === "ER_BAD_FIELD_ERROR" || error.code === "ER_NO_SUCH_TABLE")
+  );
+}
+
+function isDatabaseConnectivityError(error: unknown) {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    typeof error.code === "string" &&
+    ["ECONNREFUSED", "ECONNRESET", "ENOTFOUND", "ETIMEDOUT"].includes(error.code)
+  );
+}
+
+function shouldUseFileFallback(error: unknown) {
+  return (
+    isSchemaMismatchError(error) ||
+    isMissingDatabaseConfigError(error) ||
+    isDatabaseConnectivityError(error)
   );
 }
 
@@ -117,6 +173,51 @@ function toIsoString(value: Date | string | null | undefined) {
   return Number.isNaN(parsed.getTime()) ? new Date().toISOString() : parsed.toISOString();
 }
 
+function toNullableDateTime(value: string | null | undefined) {
+  if (!value) {
+    return null;
+  }
+
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed.toISOString().slice(0, 19).replace("T", " ");
+}
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .replace(/-{2,}/g, "-");
+}
+
+async function ensureUniqueSlug(baseSlug: string) {
+  const normalizedBase = slugify(baseSlug) || `blog-post-${Date.now()}`;
+  const rows = await query<SlugRow[]>(
+    `
+      SELECT slug
+      FROM blog_posts
+      WHERE slug = ? OR slug LIKE ?
+      ORDER BY slug ASC
+    `,
+    [normalizedBase, `${normalizedBase}-%`],
+  );
+
+  const usedSlugs = new Set(rows.map((row) => row.slug));
+
+  if (!usedSlugs.has(normalizedBase)) {
+    return normalizedBase;
+  }
+
+  let suffix = 2;
+
+  while (usedSlugs.has(`${normalizedBase}-${suffix}`)) {
+    suffix += 1;
+  }
+
+  return `${normalizedBase}-${suffix}`;
+}
+
 function mapRowToPost(row: BlogPostRow): BlogPost {
   return {
     id: row.id,
@@ -125,12 +226,18 @@ function mapRowToPost(row: BlogPostRow): BlogPost {
     description: row.description,
     content: row.content,
     author: row.author,
+    authorImage: row.author_image,
     category: row.category,
+    serviceLine: row.service_line,
+    region: row.region,
     readTime: row.read_time,
     coverImage: row.cover_image,
+    coverImageAlt: row.cover_image_alt,
     published: Boolean(row.published),
     featured: Boolean(row.featured),
     views: row.views,
+    seoTitle: row.seo_title,
+    seoDescription: row.seo_description,
     date: toIsoString(row.published_at ?? row.created_at),
   };
 }
@@ -155,13 +262,17 @@ async function getBlogSchemaConfig(): Promise<BlogSchemaConfig> {
       : "''";
 
   const authorSql = columns.has("author") ? "COALESCE(author, 'Sukanta Saha')" : "'Sukanta Saha'";
+  const authorImageSql = columns.has("author_image") ? "author_image" : "NULL";
   const readTimeSql = columns.has("read_time") ? "COALESCE(read_time, '5 min read')" : "'5 min read'";
+  const serviceLineSql = columns.has("service_line") ? "service_line" : "NULL";
+  const regionSql = columns.has("region") ? "COALESCE(region, 'Global')" : "'Global'";
 
   const coverImageSql = columns.has("cover_image")
     ? "cover_image"
     : columns.has("featured_image")
       ? "featured_image"
       : "NULL";
+  const coverImageAltSql = columns.has("cover_image_alt") ? "cover_image_alt" : "NULL";
 
   const publishedSql = columns.has("published")
     ? "published"
@@ -171,6 +282,8 @@ async function getBlogSchemaConfig(): Promise<BlogSchemaConfig> {
 
   const featuredSql = columns.has("featured") ? "featured" : "0";
   const viewsSql = columns.has("views") ? "COALESCE(views, 0)" : "0";
+  const seoTitleSql = columns.has("seo_title") ? "seo_title" : "NULL";
+  const seoDescriptionSql = columns.has("seo_description") ? "seo_description" : descriptionSql;
 
   const publishedAtSql = columns.has("published_at")
     ? "published_at"
@@ -193,18 +306,30 @@ async function getBlogSchemaConfig(): Promise<BlogSchemaConfig> {
         ${descriptionSql} AS description,
         content,
         ${authorSql} AS author,
+        ${authorImageSql} AS author_image,
         COALESCE(category, 'Technology') AS category,
+        ${serviceLineSql} AS service_line,
+        ${regionSql} AS region,
         ${readTimeSql} AS read_time,
         ${coverImageSql} AS cover_image,
+        ${coverImageAltSql} AS cover_image_alt,
         ${publishedSql} AS published,
         ${featuredSql} AS featured,
         ${viewsSql} AS views,
+        ${seoTitleSql} AS seo_title,
+        ${seoDescriptionSql} AS seo_description,
         ${publishedAtSql} AS published_at,
         ${createdAtSql} AS created_at
       FROM blog_posts
     `,
     publishedCondition: `${publishedSql} = 1`,
     sortSql: `${featuredSql} DESC, COALESCE(${publishedAtSql}, ${createdAtSql}) DESC`,
+    hasAuthorImage: columns.has("author_image"),
+    hasServiceLine: columns.has("service_line"),
+    hasRegion: columns.has("region"),
+    hasCoverImageAlt: columns.has("cover_image_alt"),
+    hasSeoTitle: columns.has("seo_title"),
+    hasSeoDescription: columns.has("seo_description"),
     publishedCountSql: columns.has("published")
       ? "SUM(CASE WHEN published = 1 THEN 1 ELSE 0 END)"
       : columns.has("status")
@@ -229,12 +354,94 @@ export async function getAllBlogPosts() {
 
     return rows.map(mapRowToPost);
   } catch (error) {
-    if (!isSchemaMismatchError(error)) {
+    if (!shouldUseFileFallback(error)) {
       throw error;
     }
 
     return getAllPosts().map(fromFilePost);
   }
+}
+
+export async function createBlogPost(input: CreateBlogPostInput) {
+  const schema = await getBlogSchemaConfig();
+  const slug = await ensureUniqueSlug(input.slug || input.title);
+  const published = input.published ?? true;
+  const publishedAt = published
+    ? toNullableDateTime(input.publishedAt) ?? toNullableDateTime(new Date().toISOString())
+    : null;
+
+  const columns = [
+    "slug",
+    "title",
+    "description",
+    "content",
+    "author",
+    "category",
+    "read_time",
+    "cover_image",
+    "featured",
+    "published",
+    "published_at",
+  ];
+
+  const values: unknown[] = [
+    slug,
+    input.title.trim(),
+    input.description.trim(),
+    input.content,
+    input.author.trim(),
+    input.category.trim(),
+    input.readTime.trim(),
+    input.coverImage?.trim() || null,
+    published ? Number(Boolean(input.featured)) : Number(Boolean(input.featured)),
+    Number(published),
+    publishedAt,
+  ];
+
+  if (schema.hasAuthorImage) {
+    columns.push("author_image");
+    values.push(input.authorImage?.trim() || null);
+  }
+
+  if (schema.hasServiceLine) {
+    columns.push("service_line");
+    values.push(input.serviceLine?.trim() || null);
+  }
+
+  if (schema.hasRegion) {
+    columns.push("region");
+    values.push(input.region?.trim() || "Global");
+  }
+
+  if (schema.hasCoverImageAlt) {
+    columns.push("cover_image_alt");
+    values.push(input.coverImageAlt?.trim() || null);
+  }
+
+  if (schema.hasSeoTitle) {
+    columns.push("seo_title");
+    values.push(input.seoTitle?.trim() || null);
+  }
+
+  if (schema.hasSeoDescription) {
+    columns.push("seo_description");
+    values.push(input.seoDescription?.trim() || null);
+  }
+
+  const placeholders = columns.map(() => "?").join(", ");
+
+  const result = await query<ResultSetHeader>(
+    `
+      INSERT INTO blog_posts (${columns.join(", ")})
+      VALUES (${placeholders})
+    `,
+    values,
+  );
+
+  return {
+    id: result.insertId,
+    slug,
+  };
 }
 
 export async function getBlogPostBySlug(slug: string) {
@@ -252,7 +459,7 @@ export async function getBlogPostBySlug(slug: string) {
     const post = rows[0];
     return post ? mapRowToPost(post) : null;
   } catch (error) {
-    if (!isSchemaMismatchError(error)) {
+    if (!shouldUseFileFallback(error)) {
       throw error;
     }
 
@@ -273,7 +480,7 @@ export async function getAllBlogSlugs() {
 
     return rows.map((row) => row.slug);
   } catch (error) {
-    if (!isSchemaMismatchError(error)) {
+    if (!shouldUseFileFallback(error)) {
       throw error;
     }
 
@@ -333,7 +540,7 @@ export async function getAdminBlogDashboardData(): Promise<AdminBlogDashboardDat
       })),
     };
   } catch (error) {
-    if (!isSchemaMismatchError(error)) {
+    if (!shouldUseFileFallback(error)) {
       throw error;
     }
 

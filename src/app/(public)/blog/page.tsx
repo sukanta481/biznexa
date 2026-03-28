@@ -28,6 +28,8 @@ export default async function BlogListingPage() {
   const posts = await getAllBlogPosts();
   // If we have posts, use the first one as featured, otherwise fall back
   const featuredPost = posts.length > 0 ? posts[0] : null;
+  const featuredImage = featuredPost?.coverImage ?? "https://lh3.googleusercontent.com/aida-public/AB6AXuCiM9Oxq36ibZ9WYyBfDjv_J4NvliAAXKaTYVrzcZJfeosLOqS_Ljw546q6JD8dxUUW2U4XPgLgPOuutiCjLvwVGevNGYtMw0WhIBQk6-RtABRLt9IuW4oTD_1630t-C6CkM6UUk0588VHUVTF77GbOc-GJ8Jwfa3BrAWrO_7FFhj5OozkGwYH3EElucv67uioyT2mzVO5l67yFeebgAfH2kKluki2lnBjXbnsqgbhuYrHgkoK-ahktVJz87g6BYZjDKildhv_U-IQc";
+  const featuredImageAlt = featuredPost?.coverImageAlt ?? featuredPost?.title ?? "Premium AI Visualization";
 
   return (
     <>
@@ -45,9 +47,9 @@ export default async function BlogListingPage() {
           <div className="relative glass-panel rounded-xl md:rounded-3xl overflow-hidden flex flex-col lg:flex-row min-h-0 md:min-h-[500px] border border-primary/10 shadow-2xl md:shadow-none">
             <div className="lg:w-1/2 relative h-64 lg:h-auto">
               <img
-                alt="Premium AI Visualization"
+                alt={featuredImageAlt}
                 className="absolute inset-0 w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiM9Oxq36ibZ9WYyBfDjv_J4NvliAAXKaTYVrzcZJfeosLOqS_Ljw546q6JD8dxUUW2U4XPgLgPOuutiCjLvwVGevNGYtMw0WhIBQk6-RtABRLt9IuW4oTD_1630t-C6CkM6UUk0588VHUVTF77GbOc-GJ8Jwfa3BrAWrO_7FFhj5OozkGwYH3EElucv67uioyT2mzVO5l67yFeebgAfH2kKluki2lnBjXbnsqgbhuYrHgkoK-ahktVJz87g6BYZjDKildhv_U-IQc"
+                src={featuredImage}
               />
               <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#060e20] md:from-background via-[#060e20]/40 md:via-transparent to-transparent"></div>
               <div className="absolute top-4 left-4 md:hidden">
@@ -125,7 +127,7 @@ export default async function BlogListingPage() {
                       <img
                         alt={post.title}
                         className="w-full h-full object-cover grayscale brightness-75"
-                        src={STITCH_IMAGES[index % STITCH_IMAGES.length]}
+                        src={post.coverImage ?? STITCH_IMAGES[index % STITCH_IMAGES.length]}
                       />
                     </div>
                     <div className="w-2/3 p-4 flex flex-col justify-between">
@@ -136,11 +138,11 @@ export default async function BlogListingPage() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <img
-                            alt="Sukanta Saha"
+                            alt={post.author}
                             className="w-5 h-5 rounded-full border border-primary/20"
-                            src={AUTHOR_IMAGE}
+                            src={post.authorImage ?? AUTHOR_IMAGE}
                           />
-                          <span className="text-on-surface-variant text-[10px]">Sukanta Saha</span>
+                          <span className="text-on-surface-variant text-[10px]">{post.author}</span>
                         </div>
                         <span className="text-on-surface-variant text-[10px]">{post.readTime}</span>
                       </div>
@@ -167,7 +169,7 @@ export default async function BlogListingPage() {
                     <img
                       alt={post.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                      src={STITCH_IMAGES[index % STITCH_IMAGES.length]}
+                      src={post.coverImage ?? STITCH_IMAGES[index % STITCH_IMAGES.length]}
                     />
                     <span className="absolute top-4 left-4 px-3 py-1 bg-surface-container-highest/90 backdrop-blur-md text-primary text-[10px] font-bold uppercase tracking-widest rounded-sm">
                       {post.category}
@@ -183,11 +185,11 @@ export default async function BlogListingPage() {
                     <div className="pt-4 mt-auto flex items-center justify-between border-t border-outline-variant/10">
                       <div className="flex items-center gap-3">
                         <img
-                          alt="Author"
+                          alt={post.author}
                           className="w-6 h-6 rounded-full border border-primary/30"
                           src={AUTHOR_IMAGE}
                         />
-                        <span className="text-xs font-medium text-on-surface-variant font-body">By Sukanta Saha</span>
+                        <span className="text-xs font-medium text-on-surface-variant font-body">By {post.author}</span>
                       </div>
                       <Link
                         href={`/blog/${post.slug}`}

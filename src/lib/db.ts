@@ -1,8 +1,9 @@
 import "server-only";
 
-import mysql, { type Pool, type PoolOptions, type RowDataPacket } from "mysql2/promise";
+import mysql, { type Pool, type PoolOptions, type ResultSetHeader, type RowDataPacket } from "mysql2/promise";
 
 type DatabaseTarget = "local" | "live";
+const MISSING_DB_CONFIG_PREFIX = "Missing database configuration for";
 
 declare global {
   var __biznexaDbPool: Pool | undefined;
@@ -23,7 +24,7 @@ function readConfig(target: DatabaseTarget): PoolOptions {
 
   if (!host || !database || !user) {
     throw new Error(
-      `Missing database configuration for ${target}. Check ${prefix}HOST, ${prefix}NAME, ${prefix}USER, and related env vars.`,
+      `${MISSING_DB_CONFIG_PREFIX} ${target}. Check ${prefix}HOST, ${prefix}NAME, ${prefix}USER, and related env vars.`,
     );
   }
 
@@ -37,6 +38,7 @@ function readConfig(target: DatabaseTarget): PoolOptions {
     connectionLimit: 10,
     queueLimit: 0,
     enableKeepAlive: true,
+    connectTimeout: 10_000,
   };
 }
 
@@ -44,19 +46,21 @@ function createPool() {
   return mysql.createPool(readConfig(getDatabaseTarget()));
 }
 
-export const db = globalThis.__biznexaDbPool ?? createPool();
+function getDb() {
+  if (!globalThis.__biznexaDbPool) {
+    globalThis.__biznexaDbPool = createPool();
+  }
 
-if (process.env.NODE_ENV !== "production") {
-  globalThis.__biznexaDbPool = db;
+  return globalThis.__biznexaDbPool;
 }
 
-export async function query<T extends RowDataPacket[]>(sql: string, params: unknown[] = []) {
-  const [rows] = await db.query<T>(sql, params);
+export async function query<T extends RowDataPacket[] | ResultSetHeader>(sql: string, params: unknown[] = []) {
+  const [rows] = await getDb().query<T>(sql, params);
   return rows;
 }
 
 export async function pingDatabase() {
-  await db.query("SELECT 1");
+  await getDb().query("SELECT 1");
 }
 
 export function getActiveDatabaseLabel() {
@@ -67,4 +71,8 @@ export function getActiveDatabaseLabel() {
     target,
     database: database ?? "",
   };
+}
+
+export function isMissingDatabaseConfigError(error: unknown) {
+  return error instanceof Error && error.message.startsWith(MISSING_DB_CONFIG_PREFIX);
 }
