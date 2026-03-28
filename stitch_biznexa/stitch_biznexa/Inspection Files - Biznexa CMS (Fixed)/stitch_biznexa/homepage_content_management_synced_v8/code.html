@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Homepage Content Management | Biznexa CMS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed": "#69f6b8",
+              "outline": "#6d758c",
+              "secondary": "#9093ff",
+              "on-tertiary-fixed-variant": "#006544",
+              "tertiary-dim": "#58e7ab",
+              "tertiary-fixed-dim": "#58e7ab",
+              "on-error-container": "#ffa8a3",
+              "inverse-surface": "#faf8ff",
+              "secondary-fixed-dim": "#bdbeff",
+              "primary": "#8ff5ff",
+              "error-dim": "#d7383b",
+              "tertiary-container": "#69f6b8",
+              "on-secondary-fixed": "#160bae",
+              "surface-container": "#0f1930",
+              "secondary-dim": "#6063ee",
+              "on-background": "#dee5ff",
+              "inverse-primary": "#006a71",
+              "on-primary-fixed-variant": "#005e64",
+              "secondary-container": "#2f2ebe",
+              "primary-container": "#00eefc",
+              "surface": "#060e20",
+              "surface-container-highest": "#192540",
+              "error-container": "#9f0519",
+              "secondary-fixed": "#cdcdff",
+              "on-secondary-fixed-variant": "#3a3ac8",
+              "on-error": "#490006",
+              "surface-container-low": "#091328",
+              "on-tertiary-container": "#005a3c",
+              "on-tertiary-fixed": "#00452d",
+              "outline-variant": "#40485d",
+              "surface-tint": "#8ff5ff",
+              "on-secondary-container": "#ccccff",
+              "on-primary-fixed": "#003f43",
+              "primary-dim": "#00deec",
+              "surface-variant": "#192540",
+              "on-primary": "#005d63",
+              "surface-container-lowest": "#000000",
+              "error": "#ff716c",
+              "inverse-on-surface": "#4d556b",
+              "surface-bright": "#1f2b49",
+              "on-surface": "#dee5ff",
+              "on-primary-container": "#005359",
+              "on-tertiary": "#006443",
+              "primary-fixed": "#00eefc",
+              "background": "#060e20",
+              "tertiary": "#9bffce",
+              "on-secondary": "#080079",
+              "surface-dim": "#060e20",
+              "on-surface-variant": "#a3aac4",
+              "surface-container-high": "#141f38",
+              "primary-fixed-dim": "#00deec"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .glass-card {
+        background: rgba(15, 25, 48, 0.4);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(222, 229, 255, 0.05);
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      input:focus, textarea:focus, select:focus {
+        outline: none;
+        box-shadow: 0 0 0 1px rgba(143, 245, 255, 0.3);
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(143, 245, 255, 0.1);
+        border-radius: 10px;
+      }
+    </style>
+</head>
+<body class="bg-[#050b18] text-on-surface font-body selection:bg-primary/30 min-h-screen">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-[#000000]/40 backdrop-blur-3xl flex flex-col border-r border-[#dee5ff]/5">
+<div class="p-8 pb-4"><img alt="Biznexa Logo" class="h-8 w-auto mb-2" src="https://lh3.googleusercontent.com/aida/ADBb0ujSS_HgDAmTjaB6SE0Ip2B1nNpny9KjMistM4HEfynWXxQ1rtKB3_zEFOEE3VhiydP4Q35W6mzaKnpxuvzdPiCKXdVBHxFVpirCjcQmN0yaLa2-QPCLnx4FawOtoGx-5i8riWZ8DyhvpapP5_freDgNMqwfGe1QyGRiRtN5iMvRj0mDnztzsN_TLf0ajBMQoYHN1pLfYllcEN31FLq0IiAuLW9GElVyhehiJMigAPN68KMaFe4mHEor1i7zYfl_bIv4mAtX_KMIBRc"/>
+<div class="text-[10px] text-on-tertiary-fixed font-label tracking-widest uppercase opacity-40">Editorial CMS</div></div>
+<nav class="flex-1 space-y-1 px-4 pb-8 mt-4 overflow-y-auto">
+<div class="pt-4 pb-3 px-4">
+<span class="text-[10px] font-label text-on-surface-variant uppercase tracking-[0.2em] opacity-30">Main</span>
+</div>
+<a class="text-[#dee5ff]/40 hover:text-[#dee5ff] px-4 py-3 flex items-center gap-3 hover:bg-[#192540]/30 transition-all group rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl group-hover:text-primary transition-colors">dashboard</span>
+<span class="font-label text-[11px] uppercase tracking-widest">Dashboard</span>
+</a>
+<div class="pt-6 pb-3 px-4">
+<span class="text-[10px] font-label text-on-surface-variant uppercase tracking-[0.2em] opacity-30">Billing</span>
+</div>
+<a class="text-[#dee5ff]/40 hover:text-[#dee5ff] px-4 py-3 flex items-center gap-3 hover:bg-[#192540]/30 transition-all group rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl group-hover:text-primary transition-colors">group</span>
+<span class="font-label text-[11px] uppercase tracking-widest">Clients</span>
+</a>
+<a class="text-[#dee5ff]/40 hover:text-[#dee5ff] px-4 py-3 flex items-center justify-between group hover:bg-[#192540]/30 transition-all rounded-lg" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-xl group-hover:text-primary transition-colors">receipt_long</span>
+<span class="font-label text-[11px] uppercase tracking-widest">Bills</span>
+</div>
+<span class="bg-error/20 text-error text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter">Unpaid</span>
+</a>
+<a class="text-[#dee5ff]/40 hover:text-[#dee5ff] px-4 py-3 flex items-center gap-3 hover:bg-[#192540]/30 transition-all group rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl group-hover:text-primary transition-colors">payments</span>
+<span class="font-label text-[11px] uppercase tracking-widest">Expenses</span>
+</a>
+<div class="pt-6 pb-3 px-4">
+<span class="text-[10px] font-label text-on-surface-variant uppercase tracking-[0.2em] opacity-30">Inspection</span>
+</div>
+<a class="text-[#dee5ff]/40 hover:text-[#dee5ff] px-4 py-3 flex items-center gap-3 hover:bg-[#192540]/30 transition-all group rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl group-hover:text-primary transition-colors">monitoring</span>
+<span class="font-label text-[11px] uppercase tracking-widest">Dashboard</span>
+</a>
+<a class="text-[#dee5ff]/40 hover:text-[#dee5ff] px-4 py-3 flex items-center justify-between group hover:bg-[#192540]/30 transition-all rounded-lg" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-xl group-hover:text-primary transition-colors">folder_open</span>
+<span class="font-label text-[11px] uppercase tracking-widest">Files</span>
+</div>
+<span class="bg-primary/20 text-primary text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter">Warning</span>
+</a>
+<a class="text-[#dee5ff]/40 hover:text-[#dee5ff] px-4 py-3 flex items-center gap-3 hover:bg-[#192540]/30 transition-all group rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl group-hover:text-primary transition-colors">database</span>
+<span class="font-label text-[11px] uppercase tracking-widest">Masters</span>
+</a>
+<div class="pt-6 pb-3 px-4">
+<span class="text-[10px] font-label text-on-surface-variant uppercase tracking-[0.2em] opacity-30">Content Manage</span>
+</div>
+<a class="bg-gradient-to-r from-primary/10 to-transparent text-primary border-l-2 border-primary px-4 py-3 flex items-center gap-3 transition-all rounded-r-lg" href="#">
+<span class="material-symbols-outlined text-xl">home</span>
+<span class="font-label text-[11px] uppercase tracking-widest">Homepage</span>
+</a>
+<a class="text-[#dee5ff]/40 hover:text-[#dee5ff] px-4 py-3 flex items-center gap-3 hover:bg-[#192540]/30 transition-all group rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl group-hover:text-primary transition-colors">info</span>
+<span class="font-label text-[11px] uppercase tracking-widest">About Us</span>
+</a>
+<a class="text-[#dee5ff]/40 hover:text-[#dee5ff] px-4 py-3 flex items-center gap-3 hover:bg-[#192540]/30 transition-all group rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl group-hover:text-primary transition-colors">hub</span>
+<span class="font-label text-[11px] uppercase tracking-widest">Services</span>
+</a>
+<a class="text-[#dee5ff]/40 hover:text-[#dee5ff] px-4 py-3 flex items-center gap-3 hover:bg-[#192540]/30 transition-all group rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl group-hover:text-primary transition-colors">work</span>
+<span class="font-label text-[11px] uppercase tracking-widest">Case Studies</span>
+</a>
+<a class="text-[#dee5ff]/40 hover:text-[#dee5ff] px-4 py-3 flex items-center gap-3 hover:bg-[#192540]/30 transition-all group rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl group-hover:text-primary transition-colors">article</span>
+<span class="font-label text-[11px] uppercase tracking-widest">Blogs</span>
+</a>
+<div class="pt-6 pb-3 px-4">
+<span class="text-[10px] font-label text-on-surface-variant uppercase tracking-[0.2em] opacity-30">Settings</span>
+</div>
+<a class="text-[#dee5ff]/40 hover:text-[#dee5ff] px-4 py-3 flex items-center gap-3 hover:bg-[#192540]/30 transition-all group rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl group-hover:text-primary transition-colors">settings</span>
+<span class="font-label text-[11px] uppercase tracking-widest">Site Settings</span>
+</a>
+<a class="text-[#dee5ff]/40 hover:text-[#dee5ff] px-4 py-3 flex items-center gap-3 hover:bg-[#192540]/30 transition-all group rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl group-hover:text-primary transition-colors">account_circle</span>
+<span class="font-label text-[11px] uppercase tracking-widest">My Profile</span>
+</a>
+<a class="text-[#dee5ff]/40 hover:text-[#dee5ff] px-4 py-3 flex items-center gap-3 hover:bg-[#192540]/30 transition-all group rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl group-hover:text-error transition-colors">logout</span>
+<span class="font-label text-[11px] uppercase tracking-widest">Logout</span>
+</a></nav>
+<div class="p-4 mt-auto">
+<button class="w-full bg-[#1de9ff] text-black font-label text-[11px] uppercase tracking-widest py-3 rounded-md font-bold hover:shadow-[0_0_20px_rgba(29,233,255,0.3)] transition-all">
+                New Project
+            </button>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-[#050b18]/40 backdrop-blur-xl flex justify-between items-center px-8 border-b border-[#dee5ff]/5">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="flex items-center bg-surface-container-highest/20 rounded-lg px-4 py-2 gap-3 border border-outline-variant/10 w-full group focus-within:border-primary/30 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none text-sm w-full focus:ring-0 p-0 placeholder:text-on-surface-variant/30 text-on-surface" placeholder="Search content..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex gap-2">
+<button class="text-[#dee5ff]/50 hover:text-primary transition-colors p-2 rounded-lg">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-[#dee5ff]/50 hover:text-primary transition-colors p-2 rounded-lg">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+<div class="relative group cursor-pointer">
+<img alt="User profile" class="w-8 h-8 rounded-lg border border-primary/20 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMutO3akJn2IMaYizrwUvgPOZLi5liOeyqXSuSy8D4WmtPyOU6WA0Yt-pPNDrSiE4OfuPIe1XsAeFJ89-udk4SDtw2Yt6_kmXilDiyuxt-pbXNqZ1AXg9NARosvQa0TO1X1QZvCcSxDtv47TucvhkeSHrrmsJ1Jn49xYaWQ2N8wJLtMwbev6EL6Nz9LTPbgEWRXnWNyGNFETrMQeBEfQXQ8nNwF0wh97GTLShm6nRuiTraYn9vgKBSEMpaOkO0A4tF3aI2rlZT3hms"/>
+<div class="absolute bottom-0 right-0 w-2 h-2 bg-tertiary-fixed rounded-full border-2 border-[#050b18]"></div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 pt-24 px-12 pb-20">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div>
+<h1 class="text-5xl font-headline font-bold text-on-surface tracking-tight leading-tight">Manage Homepage Content</h1>
+<p class="text-on-surface-variant mt-3 max-w-xl font-body text-sm leading-relaxed opacity-70">Control every pixel of the Biznexa homepage. Real-time content synchronization with production CDN enabled.</p>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-3 bg-[#192540]/30 backdrop-blur-lg border border-outline-variant/10 rounded-lg text-[#dee5ff]/80 font-label text-[10px] uppercase tracking-[0.2em] hover:bg-[#192540]/50 transition-all">
+                    Preview Website
+                </button>
+<button class="px-8 py-3 bg-gradient-to-r from-tertiary-dim/80 to-tertiary-fixed/80 text-black font-label text-[10px] uppercase tracking-[0.2em] font-bold rounded-lg shadow-lg shadow-tertiary-container/5 hover:shadow-tertiary-container/10 transition-all">
+                    Publish Changes
+                </button>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-8">
+<!-- 1. Hero Section Card -->
+<section class="col-span-12 glass-card rounded-2xl p-8">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary" data-icon="rocket_launch">rocket_launch</span>
+<h2 class="text-sm font-headline font-bold text-primary uppercase tracking-[0.25em]">Hero Section</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+<div class="space-y-6">
+<div class="space-y-2">
+<label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60">Headline</label>
+<input class="w-full bg-[#050b18]/80 border border-outline-variant/10 rounded-lg px-4 py-3 text-on-surface text-sm focus:border-primary/30 transition-all font-headline font-medium" type="text" value="We Engineer Digital Systems That Scale"/>
+</div>
+<div class="space-y-2">
+<label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60">Subtitle</label>
+<textarea class="w-full bg-[#050b18]/80 border border-outline-variant/10 rounded-lg px-4 py-3 text-on-surface text-sm focus:border-primary/30 transition-all leading-relaxed" rows="3">Websites · AI Automation · Digital Marketing</textarea>
+</div>
+</div>
+<div class="space-y-6">
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60">Primary CTA Text</label>
+<input class="w-full bg-[#050b18]/80 border border-outline-variant/10 rounded-lg px-4 py-3 text-on-surface text-sm" type="text" value="BOOK A CALL"/>
+</div>
+<div class="space-y-2">
+<label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60">Secondary CTA Text</label>
+<input class="w-full bg-[#050b18]/80 border border-outline-variant/10 rounded-lg px-4 py-3 text-on-surface text-sm" type="text" value="START YOUR PROJECT"/>
+</div>
+</div>
+<div class="relative h-32 rounded-xl overflow-hidden group border border-outline-variant/10 shadow-inner">
+<img class="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" data-alt="abstract architectural rendering of floating glass structures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0N78WpvI5j_r4o-XnkSsyGnbOVXTH8EIy0By6C79OS0-xixYflb2BgWuaFFnD_AIEDa_O4zF7kCCvZfGhiSx7UMsv3oqOBnmRpwbAwTfKZb-2cOXAFLjDMUMV7m-n7ux8supxQykk0KHFE_F8l-b5ruJOReQ-6PBC3X3ylbWrczS0jcmLgk3CFQvfl0y0_xLjiAYWLp3Pf3kjF1M_8rnf1i949hH6Jyes7duuLBgl9fotCSlgLTxQfChbru1EdqNOdmnTibPIFHvP"/>
+<div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer backdrop-blur-sm">
+<span class="font-label text-[10px] uppercase tracking-widest text-primary">Edit Hero Background</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. Core Services (Bento Grid) Card -->
+<section class="col-span-12 glass-card rounded-2xl p-8">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary" data-icon="grid_view">grid_view</span>
+<h2 class="text-sm font-headline font-bold text-secondary uppercase tracking-[0.25em]">Core Services (Bento Grid)</h2>
+</div>
+<button class="text-[10px] font-label text-secondary uppercase tracking-widest font-bold bg-secondary/5 px-4 py-2 rounded-lg border border-secondary/20 hover:bg-secondary/10 transition-colors">Rearrange Grid</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Service 1 -->
+<div class="bg-[#050b18]/60 p-6 rounded-xl border border-outline-variant/10 space-y-4">
+<div class="flex justify-between items-start">
+<select class="bg-surface-container border-none text-[10px] text-primary rounded px-2 py-1 font-label uppercase tracking-tighter">
+<option>code</option>
+<option>smart_toy</option>
+<option>blur_on</option>
+</select>
+<span class="material-symbols-outlined text-on-surface-variant/20 text-sm cursor-move">drag_handle</span>
+</div>
+<input class="w-full bg-transparent border-none p-0 text-sm font-headline font-bold text-on-surface focus:ring-0" type="text" value="Custom Web Development"/>
+<textarea class="w-full bg-transparent border-none p-0 text-xs text-on-surface-variant/60 focus:ring-0 resize-none leading-relaxed" rows="3">Scalable, lightning-fast web applications built with the latest frameworks.</textarea>
+</div>
+<!-- Service 2 -->
+<div class="bg-[#050b18]/60 p-6 rounded-xl border border-outline-variant/10 space-y-4">
+<div class="flex justify-between items-start">
+<select class="bg-surface-container border-none text-[10px] text-primary rounded px-2 py-1 font-label uppercase tracking-tighter">
+<option>smart_toy</option>
+<option>code</option>
+</select>
+<span class="material-symbols-outlined text-on-surface-variant/20 text-sm cursor-move">drag_handle</span>
+</div>
+<input class="w-full bg-transparent border-none p-0 text-sm font-headline font-bold text-on-surface focus:ring-0" type="text" value="AI &amp; Workflow Automation"/>
+<textarea class="w-full bg-transparent border-none p-0 text-xs text-on-surface-variant/60 focus:ring-0 resize-none leading-relaxed" rows="3">Automate repetitive tasks and integrate AI agents that work 24/7.</textarea>
+</div>
+<!-- Service 3 -->
+<div class="bg-[#050b18]/60 p-6 rounded-xl border border-outline-variant/10 space-y-4">
+<div class="flex justify-between items-start">
+<select class="bg-surface-container border-none text-[10px] text-primary rounded px-2 py-1 font-label uppercase tracking-tighter">
+<option>blur_on</option>
+<option>palette</option>
+</select>
+<span class="material-symbols-outlined text-on-surface-variant/20 text-sm cursor-move">drag_handle</span>
+</div>
+<input class="w-full bg-transparent border-none p-0 text-sm font-headline font-bold text-on-surface focus:ring-0" type="text" value="UI/UX Design"/>
+<textarea class="w-full bg-transparent border-none p-0 text-xs text-on-surface-variant/60 focus:ring-0 resize-none leading-relaxed" rows="3">Intuitive, immersive user experiences that convert visitors into loyal customers.</textarea>
+</div>
+<!-- Service 4 -->
+<div class="bg-[#050b18]/60 p-6 rounded-xl border border-outline-variant/10 space-y-4">
+<div class="flex justify-between items-start">
+<select class="bg-surface-container border-none text-[10px] text-primary rounded px-2 py-1 font-label uppercase tracking-tighter">
+<option>trending_up</option>
+<option>public</option>
+</select>
+<span class="material-symbols-outlined text-on-surface-variant/20 text-sm cursor-move">drag_handle</span>
+</div>
+<input class="w-full bg-transparent border-none p-0 text-sm font-headline font-bold text-on-surface focus:ring-0" type="text" value="Digital Marketing &amp; SEO"/>
+<textarea class="w-full bg-transparent border-none p-0 text-xs text-on-surface-variant/60 focus:ring-0 resize-none leading-relaxed" rows="3">Data-driven strategies to dominate search results and social feeds.</textarea>
+</div>
+</div>
+</section>
+<!-- 3. Global Reach / Earth Section Card -->
+<section class="col-span-12 lg:col-span-5 glass-card rounded-2xl p-8 border-l-2 border-l-tertiary/20">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-tertiary" data-icon="public">public</span>
+<h2 class="text-sm font-headline font-bold text-tertiary uppercase tracking-[0.25em]">Global Reach</h2>
+</div>
+<div class="space-y-6">
+<div class="space-y-2">
+<label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60">Section Tagline</label>
+<input class="w-full bg-[#050b18]/80 border border-outline-variant/10 rounded-lg px-4 py-3 text-on-surface text-sm" type="text" value="Serving Businesses Across India &amp; Beyond"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60">Marker 1 Label</label>
+<input class="w-full bg-[#050b18]/80 border border-outline-variant/10 rounded-lg px-4 py-2 text-on-surface text-xs" type="text" value="Kolkata HQ"/>
+</div>
+<div class="space-y-2">
+<label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60">Marker 2 Label</label>
+<input class="w-full bg-[#050b18]/80 border border-outline-variant/10 rounded-lg px-4 py-2 text-on-surface text-xs" type="text" value="Global Nodes"/>
+</div>
+</div>
+<div class="h-44 bg-[#050b18]/80 rounded-xl overflow-hidden relative border border-outline-variant/10">
+<img class="w-full h-full object-cover opacity-40 grayscale" data-alt="global connectivity map" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7v72RwlUG4-gPEjoCcbKG84e-pU6IYdjPRyzNxBGplKogCgwd0OEJk806x8WUbsnGu8ikYYSWn-P8YLQKyJPjPC5sUvKZVZehvTRKdATMIqbsFSzGnIgdGn0fefGxvhmome4FM2jkk0H0lJY8KDMUZ15EgUfv2FPk3ovD9t4WCfBsfQzMf5rnt2H8MBscud1XwMTFPbfKW_I2i5zp8eLt8AbFmo4STAIPipEvI2ixSdH9bHHTMkz8tyZnjGsIH5M83w-N3a-Gjhck"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<button class="bg-black/60 px-4 py-2 rounded-lg text-[10px] font-label uppercase tracking-widest border border-white/10 backdrop-blur-md">Manage Data Points</button>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. Testimonials Section Card -->
+<section class="col-span-12 lg:col-span-7 glass-card rounded-2xl p-8 border-l-2 border-l-secondary/20">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary" data-icon="format_quote">format_quote</span>
+<h2 class="text-sm font-headline font-bold text-secondary uppercase tracking-[0.25em]">Client Testimonials</h2>
+</div>
+<button class="text-[10px] font-label text-secondary uppercase tracking-widest font-bold bg-secondary/5 px-4 py-2 rounded-lg border border-secondary/20 hover:bg-secondary/10 transition-colors">Add Testimonial</button>
+</div>
+<div class="space-y-4">
+<!-- Testimonial Entry -->
+<div class="bg-[#050b18]/60 p-4 rounded-xl border border-outline-variant/5 flex gap-4 group hover:border-secondary/30 transition-all">
+<div class="w-12 h-12 rounded-full bg-secondary/20 flex-shrink-0 flex items-center justify-center text-secondary font-bold text-xs border border-secondary/20">AK</div>
+<div class="flex-1 space-y-2">
+<div class="flex justify-between">
+<input class="bg-transparent border-none p-0 text-sm font-bold text-on-surface focus:ring-0 w-1/2" type="text" value="Amit Kumar"/>
+<input class="bg-transparent border-none p-0 text-[10px] text-secondary uppercase tracking-widest focus:ring-0 text-right w-1/2" type="text" value="TECHSPRINT (SAAS)"/>
+</div>
+<textarea class="w-full bg-transparent border-none p-0 text-xs text-on-surface-variant/70 focus:ring-0 resize-none leading-relaxed italic" rows="2">"Biznexa transformed our manual sales process into a fully automated lead-gen machine."</textarea>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-error/40 hover:text-error">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+<!-- Testimonial Entry 2 -->
+<div class="bg-[#050b18]/60 p-4 rounded-xl border border-outline-variant/5 flex gap-4 group hover:border-secondary/30 transition-all">
+<div class="w-12 h-12 rounded-full bg-secondary/20 flex-shrink-0 flex items-center justify-center text-secondary font-bold text-xs border border-secondary/20">SR</div>
+<div class="flex-1 space-y-2">
+<div class="flex justify-between">
+<input class="bg-transparent border-none p-0 text-sm font-bold text-on-surface focus:ring-0 w-1/2" type="text" value="Sonia Roy"/>
+<input class="bg-transparent border-none p-0 text-[10px] text-secondary uppercase tracking-widest focus:ring-0 text-right w-1/2" type="text" value="LUXMEDIA (E-COMMERCE)"/>
+</div>
+<textarea class="w-full bg-transparent border-none p-0 text-xs text-on-surface-variant/70 focus:ring-0 resize-none leading-relaxed italic" rows="2">"The website they built for us isn't just a site; it's a high-performance engine."</textarea>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-error/40 hover:text-error">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 5. FAQ Section Card -->
+<section class="col-span-12 lg:col-span-6 glass-card rounded-2xl p-8 border-l-2 border-l-primary/20">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="quiz">quiz</span>
+<h2 class="text-sm font-headline font-bold text-primary uppercase tracking-[0.25em]">FAQ Manager</h2>
+</div>
+<button class="text-[10px] font-label text-primary uppercase tracking-widest font-bold bg-primary/5 px-4 py-2 rounded-lg border border-primary/20 hover:bg-primary/10 transition-colors">Add Question</button>
+</div>
+<div class="space-y-4">
+<div class="p-4 bg-[#050b18]/60 rounded-xl border border-outline-variant/5 space-y-2">
+<div class="flex items-center justify-between">
+<input class="w-full bg-transparent border-none p-0 text-sm font-medium text-on-surface focus:ring-0" type="text" value="How long does a website take to build?"/>
+<span class="material-symbols-outlined text-xs text-on-surface-variant cursor-pointer">expand_more</span>
+</div>
+<textarea class="w-full bg-transparent border-none p-0 text-xs text-on-surface-variant/50 focus:ring-0 resize-none border-t border-outline-variant/5 pt-2 mt-2" rows="2">Typically 4-8 weeks for a standard high-performance build.</textarea>
+</div>
+<div class="p-4 bg-[#050b18]/60 rounded-xl border border-outline-variant/5 space-y-2">
+<div class="flex items-center justify-between">
+<input class="w-full bg-transparent border-none p-0 text-sm font-medium text-on-surface focus:ring-0" type="text" value="Do you provide ongoing support?"/>
+<span class="material-symbols-outlined text-xs text-on-surface-variant cursor-pointer">expand_more</span>
+</div>
+<textarea class="w-full bg-transparent border-none p-0 text-xs text-on-surface-variant/50 focus:ring-0 resize-none border-t border-outline-variant/5 pt-2 mt-2" rows="2">Yes, we offer maintenance retainers for performance and security.</textarea>
+</div>
+</div>
+</section>
+<!-- 6. CTA Section Card -->
+<section class="col-span-12 lg:col-span-6 glass-card rounded-2xl p-8 border-l-2 border-l-primary-container/20">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary-container" data-icon="campaign">campaign</span>
+<h2 class="text-sm font-headline font-bold text-primary-container uppercase tracking-[0.25em]">CTA Conversion Bar</h2>
+</div>
+<div class="space-y-6">
+<div class="space-y-2">
+<label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60">Section Headline</label>
+<input class="w-full bg-[#050b18]/80 border border-outline-variant/10 rounded-lg px-4 py-3 text-on-surface text-lg font-headline font-bold tracking-tight" type="text" value="READY TO SCALE YOUR BUSINESS?"/>
+</div>
+<div class="space-y-2">
+<label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60">Primary Button Label</label>
+<input class="w-full bg-[#050b18]/80 border border-outline-variant/10 rounded-lg px-4 py-3 text-on-surface text-sm" type="text" value="BOOK A FREE CONSULTATION"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60">Email Address</label>
+<input class="w-full bg-[#050b18]/80 border border-outline-variant/10 rounded-lg px-4 py-3 text-on-surface text-xs" type="text" value="hello@biznexa.com"/>
+</div>
+<div class="space-y-2">
+<label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60">Phone Number</label>
+<input class="w-full bg-[#050b18]/80 border border-outline-variant/10 rounded-lg px-4 py-3 text-on-surface text-xs" type="text" value="+91 98765 43210"/>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>

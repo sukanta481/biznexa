@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Biznexa CMS | Edit Case Study</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-dim": "#00deec",
+                        "on-primary-fixed": "#003f43",
+                        "on-primary": "#005d63",
+                        "surface-variant": "#192540",
+                        "surface-container-lowest": "#000000",
+                        "error": "#ff716c",
+                        "outline-variant": "#40485d",
+                        "surface-tint": "#8ff5ff",
+                        "on-secondary-container": "#ccccff",
+                        "on-tertiary": "#006443",
+                        "primary-fixed": "#00eefc",
+                        "background": "#060e20",
+                        "tertiary": "#9bffce",
+                        "on-secondary": "#080079",
+                        "on-surface-variant": "#a3aac4",
+                        "surface-dim": "#060e20",
+                        "surface-container-high": "#141f38",
+                        "primary-fixed-dim": "#00deec",
+                        "inverse-on-surface": "#4d556b",
+                        "surface-bright": "#1f2b49",
+                        "on-surface": "#dee5ff",
+                        "on-primary-container": "#005359",
+                        "secondary-fixed-dim": "#bdbeff",
+                        "tertiary-container": "#69f6b8",
+                        "primary": "#8ff5ff",
+                        "error-dim": "#d7383b",
+                        "surface-container": "#0f1930",
+                        "secondary-dim": "#6063ee",
+                        "on-background": "#dee5ff",
+                        "inverse-primary": "#006a71",
+                        "on-secondary-fixed": "#160bae",
+                        "on-primary-fixed-variant": "#005e64",
+                        "tertiary-fixed": "#69f6b8",
+                        "outline": "#6d758c",
+                        "secondary": "#9093ff",
+                        "on-tertiary-fixed-variant": "#006544",
+                        "tertiary-dim": "#58e7ab",
+                        "tertiary-fixed-dim": "#58e7ab",
+                        "inverse-surface": "#faf8ff",
+                        "on-error-container": "#ffa8a3",
+                        "secondary-fixed": "#cdcdff",
+                        "on-secondary-fixed-variant": "#3a3ac8",
+                        "on-error": "#490006",
+                        "surface-container-low": "#091328",
+                        "on-tertiary-fixed": "#00452d",
+                        "on-tertiary-container": "#005a3c",
+                        "surface": "#060e20",
+                        "secondary-container": "#2f2ebe",
+                        "primary-container": "#00eefc",
+                        "surface-container-highest": "#192540",
+                        "error-container": "#9f0519"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Manrope"],
+                        "label": ["Space Grotesk"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(25, 37, 64, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .cyber-glow-border:focus-within {
+            box-shadow: 0 0 15px rgba(143, 245, 255, 0.15);
+        }
+        /* Custom scrollbar for dark theme */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #060e20; }
+        ::-webkit-scrollbar-thumb { background: #192540; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8ff5ff; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/30">
+<!-- SideNavBar (Shared Component) -->
+<aside class="h-screen w-72 fixed left-0 top-0 overflow-y-auto z-40 flex flex-col border-r border-[#dee5ff]/10 bg-[#060e20]/80 backdrop-blur-2xl shadow-2xl shadow-black/50">
+<div class="p-8">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-8 h-8 bg-primary rounded-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-fixed text-xl" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+<h1 class="text-[#8ff5ff] font-black tracking-widest text-lg font-headline">NEON LOGIC</h1>
+</div>
+<p class="text-xs text-on-surface-variant font-label uppercase tracking-widest mb-10">Admin Console v2</p>
+<nav class="flex-1 space-y-1">
+<p class="px-6 py-2 text-[10px] font-label text-on-surface-variant/50 tracking-[0.2em] uppercase">Core Metrics</p>
+<a class="text-[#dee5ff]/60 hover:text-[#dee5ff] px-6 py-3 flex items-center gap-4 hover:bg-[#192540]/50 transition-colors duration-300" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span class="font-label text-xs uppercase tracking-wider">Dashboard</span>
+</a>
+<p class="px-6 py-4 text-[10px] font-label text-on-surface-variant/50 tracking-[0.2em] uppercase">Content Manage</p>
+<a class="text-[#dee5ff]/60 hover:text-[#dee5ff] px-6 py-3 flex items-center gap-4 hover:bg-[#192540]/50 transition-colors duration-300" href="#">
+<span class="material-symbols-outlined text-xl">home</span>
+<span class="font-label text-xs uppercase tracking-wider">Homepage</span>
+</a>
+<a class="text-[#dee5ff]/60 hover:text-[#dee5ff] px-6 py-3 flex items-center gap-4 hover:bg-[#192540]/50 transition-colors duration-300" href="#">
+<span class="material-symbols-outlined text-xl">article</span>
+<span class="font-label text-xs uppercase tracking-wider">Blogs</span>
+</a>
+<!-- Active Item -->
+<a class="text-[#8ff5ff] bg-[#8ff5ff]/10 border-r-2 border-[#8ff5ff] font-semibold px-6 py-3 flex items-center gap-4 transition-transform active:translate-x-1" href="#">
+<span class="material-symbols-outlined text-xl">work</span>
+<span class="font-label text-xs uppercase tracking-wider">Case Studies</span>
+</a>
+<a class="text-[#dee5ff]/60 hover:text-[#dee5ff] px-6 py-3 flex items-center gap-4 hover:bg-[#192540]/50 transition-colors duration-300" href="#">
+<span class="material-symbols-outlined text-xl">construction</span>
+<span class="font-label text-xs uppercase tracking-wider">Services</span>
+</a>
+<p class="px-6 py-4 text-[10px] font-label text-on-surface-variant/50 tracking-[0.2em] uppercase">Systems</p>
+<a class="text-[#dee5ff]/60 hover:text-[#dee5ff] px-6 py-3 flex items-center gap-4 hover:bg-[#192540]/50 transition-colors duration-300" href="#">
+<span class="material-symbols-outlined text-xl">database</span>
+<span class="font-label text-xs uppercase tracking-wider">Masters</span>
+</a>
+<a class="text-[#dee5ff]/60 hover:text-[#dee5ff] px-6 py-3 flex items-center gap-4 hover:bg-[#192540]/50 transition-colors duration-300" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span class="font-label text-xs uppercase tracking-wider">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-10 pb-6 border-t border-[#dee5ff]/5">
+<button class="w-full bg-primary-container text-on-primary-container font-label text-xs uppercase tracking-widest py-3 rounded-sm flex items-center justify-center gap-2 hover:bg-primary-dim transition-all mb-6">
+<span class="material-symbols-outlined text-sm">add</span> New Report
+                </button>
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-6 py-2 text-[#dee5ff]/60 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">help</span>
+<span class="text-xs font-label uppercase">Support</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-2 text-error/70 hover:text-error transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">logout</span>
+<span class="text-xs font-label uppercase">Logout</span>
+</a>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<main class="ml-72 min-h-screen flex flex-col">
+<!-- TopAppBar (Shared Component) -->
+<header class="docked full-width top-0 sticky z-50 flex justify-between items-center w-full px-12 h-16 bg-[#060e20]/60 backdrop-blur-xl bg-[#192540]/40 border-none shadow-[0px_4px_30px_rgba(0,240,255,0.05)]">
+<div class="flex items-center gap-8 w-1/2">
+<div class="relative w-full max-w-md group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-highest/50 border-none rounded-sm py-2 pl-10 pr-4 text-sm font-body text-on-surface placeholder:text-on-surface-variant/30 focus:ring-1 focus:ring-primary/30 cyber-glow-border transition-all" placeholder="Global Search Collections..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-[#dee5ff]/70 hover:text-[#8ff5ff] hover:bg-[#192540]/60 p-2 rounded-sm transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-[#dee5ff]/70 hover:text-[#8ff5ff] hover:bg-[#192540]/60 p-2 rounded-sm transition-all">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-outline-variant/30">
+<div class="text-right">
+<p class="text-[10px] font-label uppercase tracking-widest text-primary leading-none">Admin</p>
+<p class="text-sm font-headline font-bold text-on-surface">Alex Rivera</p>
+</div>
+<img alt="User Administrator Profile" class="w-10 h-10 rounded-sm object-cover border border-primary/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCP0Zvr5Hgri1A8k3pRIeSrlA4uyxx5M6DSGehJsk5S3BqwI7lGxvfHl9E_qDyit-BBIibyNoqvL9w-euGDdbkAYjXqLRXDtU38WcSeRbzPIsvmHxDjdOVfy-v-RbNT6XVcdy9iHHAsWWZbQ3uhGuJDIMNmnNdrnzzWmsdkpGZwY-CKORRvA0hyCXLpBCUnfKNQ1F3IvocX2CX3Pr_aBZm-wa9wizkFktjKdfg-0dOjrXMEAZFRBIKDwXHENtiGD7oLjSeZ-TlswA9j"/>
+</div>
+</div>
+</header>
+<!-- Main Workspace -->
+<div class="flex-1 p-12 space-y-12 max-w-7xl mx-auto w-full">
+<div class="flex items-center justify-between">
+<div>
+<nav class="flex items-center gap-2 mb-2">
+<a class="text-[10px] font-label text-on-surface-variant hover:text-primary uppercase tracking-widest" href="#">Case Studies</a>
+<span class="material-symbols-outlined text-xs text-on-surface-variant/30">chevron_right</span>
+<span class="text-[10px] font-label text-primary uppercase tracking-widest">Editor</span>
+</nav>
+<h2 class="text-4xl font-headline font-bold tracking-tight text-on-surface">AI Logistics Transformation</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-6 py-3 text-on-surface-variant font-label text-xs uppercase tracking-widest hover:text-on-surface transition-colors">Discard</button>
+<button class="bg-tertiary text-on-tertiary-fixed font-label font-bold text-xs uppercase tracking-widest px-10 py-3 rounded-sm shadow-xl shadow-tertiary/10 hover:shadow-tertiary/20 hover:scale-[1.02] transition-all">
+                        Publish Changes
+                    </button>
+</div>
+</div>
+<!-- Editor Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+<!-- Left Column: Core Data -->
+<div class="lg:col-span-2 space-y-10">
+<!-- 1. Hero & Identity Section -->
+<section class="glass-panel p-8 rounded-lg border border-outline-variant/10 space-y-6">
+<div class="flex items-center gap-3 border-b border-outline-variant/10 pb-4">
+<span class="material-symbols-outlined text-primary">id_card</span>
+<h3 class="font-headline font-bold text-lg uppercase tracking-wider">Hero &amp; Identity</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">Project Title</label>
+<input class="w-full bg-surface-container-low border border-outline-variant/20 focus:border-primary/50 focus:ring-0 p-4 font-headline text-lg text-on-surface" type="text" value="AI Logistics Transformation"/>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">Category</label>
+<select class="w-full bg-surface-container-low border border-outline-variant/20 focus:border-primary/50 focus:ring-0 p-4 text-sm text-on-surface appearance-none">
+<option>AI &amp; Automation</option>
+<option selected="">Supply Chain Logistics</option>
+<option>FinTech Solutions</option>
+<option>Digital Transformation</option>
+</select>
+</div>
+<div class="md:col-span-2 space-y-2">
+<label class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">Hero Background Image URL</label>
+<div class="flex gap-2">
+<input class="flex-1 bg-surface-container-low border border-outline-variant/20 focus:border-primary/50 focus:ring-0 p-4 text-sm font-mono text-on-surface-variant" type="text" value="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d"/>
+<button class="bg-surface-container-highest px-4 text-primary hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">upload_file</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. Narrative Sections -->
+<section class="glass-panel p-8 rounded-lg border border-outline-variant/10 space-y-8">
+<div class="flex items-center gap-3 border-b border-outline-variant/10 pb-4">
+<span class="material-symbols-outlined text-primary">auto_stories</span>
+<h3 class="font-headline font-bold text-lg uppercase tracking-wider">Narrative Content</h3>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<label class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">The Challenge</label>
+<span class="text-[10px] text-on-surface-variant/40">Markdown Supported</span>
+</div>
+<textarea class="w-full h-40 bg-surface-container-low border border-outline-variant/20 focus:border-primary/50 focus:ring-0 p-4 text-sm font-body text-on-surface leading-relaxed" placeholder="Describe the problem client was facing...">Global supply chain disruptions caused a 40% spike in operational overhead. Manual tracking systems were failing to keep up with real-time volatility...</textarea>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<label class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">The Biznexa Solution</label>
+<span class="text-[10px] text-on-surface-variant/40">Markdown Supported</span>
+</div>
+<textarea class="w-full h-48 bg-surface-container-low border border-outline-variant/20 focus:border-primary/50 focus:ring-0 p-4 text-sm font-body text-on-surface leading-relaxed">We implemented a bespoke neural routing engine that processed millions of data points hourly. The solution integrated directly with their ERP, automating redirect logic for late shipments...</textarea>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<label class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">Final Outcome</label>
+<span class="text-[10px] text-on-surface-variant/40">Markdown Supported</span>
+</div>
+<textarea class="w-full h-40 bg-surface-container-low border border-outline-variant/20 focus:border-primary/50 focus:ring-0 p-4 text-sm font-body text-on-surface leading-relaxed">The transformation resulted in a complete overhaul of the delivery lifecycle. Customer satisfaction scores hit a record high within three months of deployment.</textarea>
+</div>
+</section>
+</div>
+<!-- Right Column: Results & Proof -->
+<div class="space-y-10">
+<!-- 2. Impact Summary -->
+<section class="glass-panel p-8 rounded-lg border border-outline-variant/10 space-y-6">
+<div class="flex items-center gap-3 border-b border-outline-variant/10 pb-4">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<h3 class="font-headline font-bold text-lg uppercase tracking-wider">Quantitative Results</h3>
+</div>
+<div class="space-y-6">
+<!-- Stat 1 -->
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="text-[9px] font-label uppercase tracking-widest text-on-surface-variant/60">Value 1</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/20 p-2 text-primary font-bold" type="text" value="70%"/>
+</div>
+<div class="space-y-2">
+<label class="text-[9px] font-label uppercase tracking-widest text-on-surface-variant/60">Label 1</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/20 p-2 text-xs" type="text" value="Cost Reduction"/>
+</div>
+</div>
+<!-- Stat 2 -->
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="text-[9px] font-label uppercase tracking-widest text-on-surface-variant/60">Value 2</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/20 p-2 text-primary font-bold" type="text" value="99.9%"/>
+</div>
+<div class="space-y-2">
+<label class="text-[9px] font-label uppercase tracking-widest text-on-surface-variant/60">Label 2</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/20 p-2 text-xs" type="text" value="Uptime Accuracy"/>
+</div>
+</div>
+<!-- Stat 3 -->
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="text-[9px] font-label uppercase tracking-widest text-on-surface-variant/60">Value 3</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/20 p-2 text-primary font-bold" type="text" value="2.5x"/>
+</div>
+<div class="space-y-2">
+<label class="text-[9px] font-label uppercase tracking-widest text-on-surface-variant/60">Label 3</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/20 p-2 text-xs" type="text" value="Speed to Market"/>
+</div>
+</div>
+<!-- Stat 4 -->
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="text-[9px] font-label uppercase tracking-widest text-on-surface-variant/60">Value 4</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/20 p-2 text-primary font-bold" type="text" value="$12M"/>
+</div>
+<div class="space-y-2">
+<label class="text-[9px] font-label uppercase tracking-widest text-on-surface-variant/60">Label 4</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/20 p-2 text-xs" type="text" value="Annual Savings"/>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. Social Proof -->
+<section class="glass-panel p-8 rounded-lg border border-outline-variant/10 space-y-6">
+<div class="flex items-center gap-3 border-b border-outline-variant/10 pb-4">
+<span class="material-symbols-outlined text-primary">format_quote</span>
+<h3 class="font-headline font-bold text-lg uppercase tracking-wider">Social Proof</h3>
+</div>
+<div class="space-y-4">
+<div class="space-y-2">
+<label class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">Client Quote</label>
+<textarea class="w-full h-24 bg-surface-container-low border border-outline-variant/20 p-3 text-sm italic text-on-surface">"Biznexa didn't just give us a tool; they gave us a strategic advantage that transformed our entire operations."</textarea>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">Client Name</label>
+<input class="w-full bg-surface-container-low border border-outline-variant/20 p-3 text-sm" type="text" value="Marcus Chen"/>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">Company/Role</label>
+<input class="w-full bg-surface-container-low border border-outline-variant/20 p-3 text-sm" type="text" value="CTO, GlobalLogistics Corp"/>
+</div>
+</div>
+</section>
+<!-- 5. Related Case Studies -->
+<section class="glass-panel p-8 rounded-lg border border-outline-variant/10 space-y-6">
+<div class="flex items-center gap-3 border-b border-outline-variant/10 pb-4">
+<span class="material-symbols-outlined text-primary">link</span>
+<h3 class="font-headline font-bold text-lg uppercase tracking-wider">Related Studies</h3>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">Selector</label>
+<div class="space-y-2">
+<div class="flex items-center gap-2 bg-surface-container-highest p-3 rounded-sm">
+<input checked="" class="rounded-sm bg-background border-outline-variant text-primary focus:ring-0" type="checkbox"/>
+<span class="text-xs">NeuralEdge Retail</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-highest p-3 rounded-sm">
+<input checked="" class="rounded-sm bg-background border-outline-variant text-primary focus:ring-0" type="checkbox"/>
+<span class="text-xs">Lumina FinTech</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-highest p-3 rounded-sm">
+<input class="rounded-sm bg-background border-outline-variant text-primary focus:ring-0" type="checkbox"/>
+<span class="text-xs">CyberGuard Infrastructure</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</div>
+<!-- Footer Info -->
+<footer class="p-8 border-t border-outline-variant/10 text-center">
+<p class="text-[10px] font-label uppercase tracking-[0.4em] text-on-surface-variant/40">Biznexa CMS Core — Internal Use Only — v2.4.0-Refined</p>
+</footer>
+</main>
+</body></html>

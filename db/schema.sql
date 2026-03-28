@@ -28,3 +28,43 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   KEY idx_blog_posts_service_line (service_line),
   KEY idx_blog_posts_region (region)
 );
+
+CREATE TABLE IF NOT EXISTS settings (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  setting_key VARCHAR(100) NOT NULL,
+  setting_value TEXT NULL,
+  setting_type VARCHAR(50) NOT NULL DEFAULT ''text'',
+  description TEXT NULL,
+  updated_by INT UNSIGNED NULL,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_settings_setting_key (setting_key),
+  KEY idx_settings_setting_key (setting_key)
+);
+CREATE TABLE IF NOT EXISTS case_studies (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  slug VARCHAR(255) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  client VARCHAR(255) NOT NULL,
+  client_role VARCHAR(255) NULL,
+  category VARCHAR(120) NOT NULL,
+  excerpt TEXT NOT NULL,
+  challenge LONGTEXT NOT NULL,
+  solution LONGTEXT NOT NULL,
+  results_json LONGTEXT NOT NULL,
+  technologies_json TEXT NOT NULL,
+  cover_image TEXT NULL,
+  cover_image_alt VARCHAR(255) NULL,
+  client_quote TEXT NULL,
+  client_image TEXT NULL,
+  related_slugs_json TEXT NULL,
+  published TINYINT(1) NOT NULL DEFAULT 1,
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_case_studies_slug (slug),
+  KEY idx_case_studies_published (published),
+  KEY idx_case_studies_category (category),
+  KEY idx_case_studies_sort_order (sort_order)
+);

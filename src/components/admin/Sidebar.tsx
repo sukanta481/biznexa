@@ -12,6 +12,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
     const pathname = usePathname();
 
     const isActive = (path: string) => pathname === path;
+    const isActivePrefix = (prefix: string) => pathname.startsWith(prefix);
 
     const handleLinkClick = () => {
         if (onClose) onClose();
@@ -91,17 +92,40 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                     </div>
                 </div>
 
-                {/* Content */}
+                {/* Content Manage */}
                 <div>
-                    <div className="px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Content</div>
+                    <div className="px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Content Manage</div>
                     <div className="space-y-1">
-                        <Link href="/admin/leads" onClick={handleLinkClick} className={`flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all ${isActive('/admin/leads') ? 'bg-gradient-to-r from-secondary/20 to-primary/10 border-r-3 border-primary text-primary' : 'text-slate-400 hover:text-white'}`}>
-                            <span className="material-symbols-outlined text-[20px]">architecture</span>
-                            <span className="text-sm font-medium">Leads App</span>
+                        <Link href="/admin/content/homepage" onClick={handleLinkClick} className={`flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all ${isActive('/admin/content/homepage') ? 'bg-gradient-to-r from-secondary/20 to-primary/10 border-r-3 border-primary text-primary' : 'text-slate-400 hover:text-white'}`}>
+                            <span className="material-symbols-outlined text-[20px]">home</span>
+                            <span className="text-sm font-medium">Homepage</span>
+                        </Link>
+                        <Link href="/admin/content/about" onClick={handleLinkClick} className={`flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all ${isActive('/admin/content/about') ? 'bg-gradient-to-r from-secondary/20 to-primary/10 border-r-3 border-primary text-primary' : 'text-slate-400 hover:text-white'}`}>
+                            <span className="material-symbols-outlined text-[20px]">info</span>
+                            <span className="text-sm font-medium">About Us</span>
+                        </Link>
+                        <Link href="/admin/content/services" onClick={handleLinkClick} className={`flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all ${isActive('/admin/content/services') ? 'bg-gradient-to-r from-secondary/20 to-primary/10 border-r-3 border-primary text-primary' : 'text-slate-400 hover:text-white'}`}>
+                            <span className="material-symbols-outlined text-[20px]">design_services</span>
+                            <span className="text-sm font-medium">Services</span>
+                        </Link>
+                        <Link href="/admin/content/case-studies" onClick={handleLinkClick} className={`flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all ${isActive('/admin/content/case-studies') ? 'bg-gradient-to-r from-secondary/20 to-primary/10 border-r-3 border-primary text-primary' : 'text-slate-400 hover:text-white'}`}>
+                            <span className="material-symbols-outlined text-[20px]">cases</span>
+                            <span className="text-sm font-medium">Case Studies</span>
                         </Link>
                         <Link href="/admin/blog" onClick={handleLinkClick} className={`flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all ${isActive('/admin/blog') ? 'bg-gradient-to-r from-secondary/20 to-primary/10 border-r-3 border-primary text-primary' : 'text-slate-400 hover:text-white'}`}>
                             <span className="material-symbols-outlined text-[20px]">article</span>
                             <span className="text-sm font-medium">Blog Posts</span>
+                        </Link>
+                    </div>
+                </div>
+
+                {/* Other */}
+                <div>
+                    <div className="px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Other</div>
+                    <div className="space-y-1">
+                        <Link href="/admin/leads" onClick={handleLinkClick} className={`flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/5 transition-all ${isActive('/admin/leads') ? 'bg-gradient-to-r from-secondary/20 to-primary/10 border-r-3 border-primary text-primary' : 'text-slate-400 hover:text-white'}`}>
+                            <span className="material-symbols-outlined text-[20px]">architecture</span>
+                            <span className="text-sm font-medium">Leads App</span>
                         </Link>
                     </div>
                 </div>

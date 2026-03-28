@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CyberArch Admin - Create New Inspection File</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed-dim": "#58e7ab",
+              "on-secondary-fixed-variant": "#3a3ac8",
+              "on-primary-fixed-variant": "#005e64",
+              "error-dim": "#d7383b",
+              "surface-container-highest": "#192540",
+              "on-primary": "#005d63",
+              "primary-fixed": "#00eefc",
+              "surface-tint": "#8ff5ff",
+              "surface-container": "#0f1930",
+              "on-secondary-fixed": "#160bae",
+              "secondary-fixed": "#cdcdff",
+              "outline": "#6d758c",
+              "on-error": "#490006",
+              "on-background": "#dee5ff",
+              "on-tertiary": "#006443",
+              "on-error-container": "#ffa8a3",
+              "inverse-surface": "#faf8ff",
+              "secondary": "#9093ff",
+              "on-primary-container": "#005359",
+              "error-container": "#9f0519",
+              "tertiary-container": "#69f6b8",
+              "surface-variant": "#192540",
+              "secondary-dim": "#6063ee",
+              "surface-dim": "#060e20",
+              "tertiary": "#9bffce",
+              "primary-container": "#00eefc",
+              "outline-variant": "#40485d",
+              "on-primary-fixed": "#003f43",
+              "surface-bright": "#1f2b49",
+              "secondary-fixed-dim": "#bdbeff",
+              "surface-container-low": "#091328",
+              "on-tertiary-fixed-variant": "#006544",
+              "secondary-container": "#2f2ebe",
+              "on-surface": "#dee5ff",
+              "background": "#060e20",
+              "tertiary-dim": "#58e7ab",
+              "surface": "#060e20",
+              "on-secondary": "#080079",
+              "surface-container-lowest": "#000000",
+              "on-tertiary-fixed": "#00452d",
+              "inverse-on-surface": "#4d556b",
+              "primary-fixed-dim": "#00deec",
+              "primary-dim": "#00deec",
+              "on-tertiary-container": "#005a3c",
+              "primary": "#8ff5ff",
+              "tertiary-fixed": "#69f6b8",
+              "inverse-primary": "#006a71",
+              "error": "#ff716c",
+              "on-surface-variant": "#a3aac4",
+              "surface-container-high": "#141f38",
+              "on-secondary-container": "#ccccff"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(25, 37, 64, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(143, 245, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body selection:bg-primary/30">
+<!-- Sidebar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full w-64 border-r border-primary/15 bg-[#000000]/60 backdrop-blur-2xl flex flex-col py-8 px-4 z-50">
+<div class="mb-10 px-2 flex items-center gap-3">
+<div class="w-10 h-10 bg-primary/10 rounded flex items-center justify-center border border-primary/20">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+</div>
+<div>
+<h1 class="font-headline font-black italic text-primary leading-none">CyberArch</h1>
+<p class="font-label uppercase text-[10px] tracking-widest text-on-surface-variant">Admin Terminal</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-3 font-label uppercase text-[11px] tracking-[0.05em] text-on-surface/50 hover:text-primary/80 hover:bg-surface-variant/50 transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span>Main</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 font-label uppercase text-[11px] tracking-[0.05em] text-on-surface/50 hover:text-primary/80 hover:bg-surface-variant/50 transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+<span>Billing</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 font-label uppercase text-[11px] tracking-[0.05em] text-primary border-r-2 border-primary bg-primary/10" href="#">
+<span class="material-symbols-outlined text-[20px]">fact_check</span>
+<span>Inspection</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 font-label uppercase text-[11px] tracking-[0.05em] text-on-surface/50 hover:text-primary/80 hover:bg-surface-variant/50 transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">article</span>
+<span>Content</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 font-label uppercase text-[11px] tracking-[0.05em] text-on-surface/50 hover:text-primary/80 hover:bg-surface-variant/50 transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<button class="mt-auto w-full py-4 px-4 bg-primary/10 border border-primary/20 text-primary font-label uppercase text-[11px] tracking-[0.1em] hover:bg-primary/20 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span>
+            New Project
+        </button>
+</aside>
+<!-- Top Navigation (Shared Component) -->
+<header class="flex justify-between items-center px-6 h-16 w-[calc(100%-16rem)] ml-64 bg-[#060e20]/80 backdrop-blur-xl fixed top-0 z-40">
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-sm">search</span>
+<input class="bg-surface-container-highest/50 border-none rounded-sm text-xs font-label uppercase tracking-wider pl-10 pr-4 py-2 w-64 focus:ring-1 focus:ring-primary/40" placeholder="Global system search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface/70 hover:text-primary transition-colors flex items-center relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute -top-1 -right-1 w-2 h-2 bg-secondary rounded-full"></span>
+</button>
+<button class="text-on-surface/70 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="flex items-center gap-3 ml-2 pl-4 border-l border-outline-variant/30">
+<div class="text-right">
+<p class="text-[11px] font-label font-bold text-on-surface uppercase tracking-tighter">S. Korolev</p>
+<p class="text-[9px] font-label text-primary/70 uppercase">Arch-Admin</p>
+</div>
+<img class="w-10 h-10 rounded-full border border-primary/20 object-cover" data-alt="close up headshot of male professional in dark tech background with cyber cyan accent lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQu_sAFhMbu8telQy1HidXlxBJNozFYHcl8F41CEDvce2NM31nOx1-ZmsrDL-E_K11sSN_DKyIBAvCDJ2xdrpCHFws6fU57IihsSTB-t2KLISUMCzu1KjIBYY3qWLd-s6kEByPjfhfOD15_apaasQiDDrpq6qWsBI_Y7J16S5R3nRKL0_VS_GgKjQJbfzyMblRPQZ-xudzCPgdyhZSqnSCSwv_r0k20L04_TkeWLLei3rTgUvuxeeUupqy91wexbJgNcAjPLtGjpCC"/>
+</div>
+</div>
+</header>
+<!-- Background Content (Blurred List View) -->
+<main class="ml-64 pt-16 min-h-screen p-8 filter blur-md">
+<div class="flex justify-between items-end mb-10">
+<div>
+<h2 class="text-4xl font-headline font-bold tracking-tight text-on-surface">Inspection Files</h2>
+<p class="text-on-surface-variant mt-2 font-body">Management and tracking of property appraisal reports.</p>
+</div>
+</div>
+<div class="grid grid-cols-4 gap-6 mb-10">
+<div class="glass-panel p-6 rounded-lg">
+<p class="font-label text-xs text-primary/60 uppercase tracking-widest mb-1">Total Files</p>
+<h3 class="text-3xl font-headline font-bold text-on-surface">1,284</h3>
+</div>
+<div class="glass-panel p-6 rounded-lg">
+<p class="font-label text-xs text-secondary/60 uppercase tracking-widest mb-1">Pending Review</p>
+<h3 class="text-3xl font-headline font-bold text-on-surface">42</h3>
+</div>
+<div class="glass-panel p-6 rounded-lg">
+<p class="font-label text-xs text-tertiary/60 uppercase tracking-widest mb-1">Completed Today</p>
+<h3 class="text-3xl font-headline font-bold text-on-surface">18</h3>
+</div>
+<div class="glass-panel p-6 rounded-lg">
+<p class="font-label text-xs text-error/60 uppercase tracking-widest mb-1">Overdue Files</p>
+<h3 class="text-3xl font-headline font-bold text-on-surface">7</h3>
+</div>
+</div>
+<div class="glass-panel rounded-lg overflow-hidden">
+<table class="w-full text-left font-body border-collapse">
+<thead class="bg-surface-container-highest/40 font-label text-[10px] uppercase tracking-widest text-on-surface-variant">
+<tr>
+<th class="px-6 py-4">Ref #</th>
+<th class="px-6 py-4">Client</th>
+<th class="px-6 py-4">Asset</th>
+<th class="px-6 py-4">Type</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4">Fee</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-4 font-headline text-on-surface">INS-2024-001</td>
+<td class="px-6 py-4">Nexus Core Inc.</td>
+<td class="px-6 py-4">Data Center Alpha</td>
+<td class="px-6 py-4 text-xs">Structural</td>
+<td class="px-6 py-4"><span class="bg-tertiary-container/20 text-tertiary-fixed-dim px-2 py-1 rounded-sm text-[10px] uppercase font-bold">Paid</span></td>
+<td class="px-6 py-4 font-headline">$4,200</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-4 font-headline text-on-surface">INS-2024-002</td>
+<td class="px-6 py-4">Solaris Energy</td>
+<td class="px-6 py-4">Substation 9</td>
+<td class="px-6 py-4 text-xs">Safety</td>
+<td class="px-6 py-4"><span class="bg-error-container/20 text-error px-2 py-1 rounded-sm text-[10px] uppercase font-bold">Pending</span></td>
+<td class="px-6 py-4 font-headline">$1,850</td>
+</tr>
+</tbody>
+</table>
+</div>
+</main>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md overflow-y-auto py-10">
+<div class="relative w-full max-w-6xl mx-auto glass-panel shadow-[0_0_80px_rgba(0,0,0,0.5)] rounded-xl overflow-hidden flex flex-col h-[921px]">
+<!-- Modal Header -->
+<header class="p-8 border-b border-primary/10 flex justify-between items-start bg-surface-container/40">
+<div>
+<nav class="flex items-center gap-2 mb-2">
+<span class="text-[10px] font-label uppercase text-on-surface-variant">Admin</span>
+<span class="material-symbols-outlined text-[10px] text-on-surface-variant">chevron_right</span>
+<span class="text-[10px] font-label uppercase text-on-surface-variant">Inspection</span>
+<span class="material-symbols-outlined text-[10px] text-on-surface-variant">chevron_right</span>
+<span class="text-[10px] font-label uppercase text-on-surface-variant">Files</span>
+<span class="material-symbols-outlined text-[10px] text-on-surface-variant">chevron_right</span>
+<span class="text-[10px] font-label uppercase text-primary">Create New</span>
+</nav>
+<h2 class="text-3xl font-headline font-bold text-on-surface tracking-tighter">Create New Inspection File</h2>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-2 bg-surface-variant text-on-surface font-label uppercase text-xs tracking-widest hover:bg-surface-bright transition-colors rounded-sm">Cancel</button>
+<button class="px-6 py-2 bg-tertiary text-on-tertiary font-label font-bold uppercase text-xs tracking-widest hover:shadow-[0_0_15px_rgba(155,246,184,0.4)] transition-all rounded-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">save</span>
+                        Save File
+                    </button>
+</div>
+</header>
+<!-- Modal Content (Scrollable) -->
+<div class="flex-1 overflow-y-auto p-8 bg-surface-container-low/30">
+<div class="grid grid-cols-3 gap-8">
+<!-- Left Column (2/3 width) -->
+<div class="col-span-2 space-y-8">
+<!-- Card 1: General Information -->
+<section class="glass-panel p-6 rounded-lg border-l-4 border-l-primary/40">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">info</span>
+<h3 class="font-headline font-bold uppercase tracking-widest text-sm text-on-surface">General Information</h3>
+</div>
+<div class="grid grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant block">File Reference Number</label>
+<input class="w-full bg-surface-container-highest border-none rounded-sm text-on-surface placeholder:text-on-surface-variant/40 py-3 px-4 focus:ring-1 focus:ring-primary/50 text-sm font-body" placeholder="Auto-generated or enter manually" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant block">Inspection Type</label>
+<select class="w-full bg-surface-container-highest border-none rounded-sm text-on-surface py-3 px-4 focus:ring-1 focus:ring-primary/50 text-sm font-body appearance-none">
+<option>Self</option>
+<option>Company</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant block">Date of Inspection</label>
+<div class="relative">
+<input class="w-full bg-surface-container-highest border-none rounded-sm text-on-surface py-3 px-4 focus:ring-1 focus:ring-primary/50 text-sm font-body [color-scheme:dark]" type="date"/>
+</div>
+</div>
+<div class="space-y-2 relative">
+<label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant block">Linked Client</label>
+<div class="relative">
+<input class="w-full bg-surface-container-highest border-none rounded-sm text-on-surface py-3 px-4 focus:ring-1 focus:ring-primary/50 text-sm font-body" placeholder="Search client database..." type="text"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-sm">search</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Card 2: Inspection Subject -->
+<section class="glass-panel p-6 rounded-lg border-l-4 border-l-secondary/40">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-secondary">domain</span>
+<h3 class="font-headline font-bold uppercase tracking-widest text-sm text-on-surface">Inspection Subject</h3>
+</div>
+<div class="space-y-6">
+<div class="space-y-2">
+<label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant block">Asset / Property Name</label>
+<input class="w-full bg-surface-container-highest border-none rounded-sm text-on-surface py-3 px-4 focus:ring-1 focus:ring-secondary/50 text-sm font-body" placeholder="e.g. Skyline Tower B" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant block">Location / Address</label>
+<textarea class="w-full bg-surface-container-highest border-none rounded-sm text-on-surface py-3 px-4 focus:ring-1 focus:ring-secondary/50 text-sm font-body resize-none" placeholder="Enter full geographic details..." rows="3"></textarea>
+</div>
+<div class="space-y-2">
+<label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant block">Notes / Remarks</label>
+<div class="bg-surface-container-highest rounded-sm border border-outline-variant/20 overflow-hidden">
+<div class="flex gap-2 p-2 border-b border-outline-variant/10 bg-surface-container-high/40">
+<button class="p-1 hover:bg-white/10 rounded"><span class="material-symbols-outlined text-sm">format_bold</span></button>
+<button class="p-1 hover:bg-white/10 rounded"><span class="material-symbols-outlined text-sm">format_italic</span></button>
+<button class="p-1 hover:bg-white/10 rounded"><span class="material-symbols-outlined text-sm">format_list_bulleted</span></button>
+<button class="p-1 hover:bg-white/10 rounded"><span class="material-symbols-outlined text-sm">link</span></button>
+</div>
+<textarea class="w-full bg-transparent border-none text-on-surface py-3 px-4 focus:ring-0 text-sm font-body resize-none" placeholder="Technical observations..." rows="4"></textarea>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column (Sidebar 1/3 width) -->
+<div class="space-y-8">
+<!-- Card 3: Financial & Processing -->
+<section class="glass-panel p-6 rounded-lg border-l-4 border-l-tertiary/40 h-full">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-tertiary">payments</span>
+<h3 class="font-headline font-bold uppercase tracking-widest text-sm text-on-surface">Financial &amp; Processing</h3>
+</div>
+<div class="space-y-8">
+<div class="space-y-2">
+<label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant block">Bank / Institution</label>
+<input class="w-full bg-surface-container-highest border-none rounded-sm text-on-surface py-3 px-4 focus:ring-1 focus:ring-tertiary/50 text-sm font-body" placeholder="Select institution" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant block">Branch</label>
+<input class="w-full bg-surface-container-highest border-none rounded-sm text-on-surface py-3 px-4 focus:ring-1 focus:ring-tertiary/50 text-sm font-body" placeholder="Branch location" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant block">Total Fee</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-label text-xs">$</span>
+<input class="w-full bg-surface-container-highest border-none rounded-sm text-on-surface pl-8 pr-4 py-3 focus:ring-1 focus:ring-tertiary/50 text-sm font-body" placeholder="0.00" type="number"/>
+</div>
+</div>
+<div class="space-y-4">
+<label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant block">Payment Status</label>
+<div class="space-y-2">
+<label class="flex items-center gap-3 p-3 bg-surface-container-highest/40 hover:bg-surface-container-highest/80 cursor-pointer rounded-sm group transition-colors">
+<input class="w-3 h-3 text-secondary bg-transparent border-outline-variant focus:ring-0" name="pay_status" type="radio"/>
+<span class="text-xs text-on-surface font-body flex-1">Pending / Due</span>
+<span class="w-2 h-2 rounded-full bg-yellow-400 group-hover:shadow-[0_0_8px_rgba(250,204,21,0.6)]"></span>
+</label>
+<label class="flex items-center gap-3 p-3 bg-surface-container-highest/40 hover:bg-surface-container-highest/80 cursor-pointer rounded-sm group transition-colors">
+<input class="w-3 h-3 text-secondary bg-transparent border-outline-variant focus:ring-0" name="pay_status" type="radio"/>
+<span class="text-xs text-on-surface font-body flex-1">Partial Payment</span>
+<span class="w-2 h-2 rounded-full bg-orange-500 group-hover:shadow-[0_0_8px_rgba(249,115,22,0.6)]"></span>
+</label>
+<label class="flex items-center gap-3 p-3 bg-surface-container-highest/40 hover:bg-surface-container-highest/80 cursor-pointer rounded-sm group transition-colors">
+<input checked="" class="w-3 h-3 text-secondary bg-transparent border-outline-variant focus:ring-0" name="pay_status" type="radio"/>
+<span class="text-xs text-on-surface font-body flex-1">Fully Paid</span>
+<span class="w-2 h-2 rounded-full bg-tertiary group-hover:shadow-[0_0_8px_rgba(155,246,184,0.6)]"></span>
+</label>
+</div>
+</div>
+<div class="space-y-2 pt-4">
+<label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant block">Payment Mode</label>
+<select class="w-full bg-surface-container-highest border-none rounded-sm text-on-surface py-3 px-4 focus:ring-1 focus:ring-tertiary/50 text-sm font-body appearance-none">
+<option>Wire Transfer</option>
+<option>Credit Card</option>
+<option>Crypto / Token</option>
+<option>Escrow Account</option>
+</select>
+</div>
+</div>
+</section>
+</div>
+</div>
+</div>
+<!-- Sticky Footer -->
+<footer class="p-6 bg-surface-container-highest/90 border-t border-primary/10 flex justify-end gap-4">
+<button class="px-6 py-3 border border-outline-variant/30 text-on-surface font-label uppercase text-[11px] tracking-[0.1em] hover:bg-surface-variant transition-all rounded-sm">
+                    Save &amp; Add Another
+                </button>
+<button class="px-8 py-3 bg-tertiary text-on-tertiary font-headline font-black uppercase text-[11px] tracking-[0.2em] hover:shadow-[0_0_20px_rgba(155,246,184,0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all rounded-sm flex items-center gap-3">
+                    Save &amp; View File
+                    <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</footer>
+<!-- Background Aesthetic Decal -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[120px] -z-10 pointer-events-none"></div>
+<div class="absolute bottom-0 left-0 w-64 h-64 bg-secondary/5 blur-[120px] -z-10 pointer-events-none"></div>
+</div>
+</div>
+</body></html>

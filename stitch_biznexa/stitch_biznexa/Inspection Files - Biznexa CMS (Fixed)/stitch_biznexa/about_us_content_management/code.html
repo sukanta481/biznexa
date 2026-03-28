@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Biznexa CMS - About Us Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed-variant": "#3a3ac8",
+                        "surface-container-highest": "#192540",
+                        "error": "#ff716c",
+                        "surface-variant": "#192540",
+                        "secondary-fixed": "#cdcdff",
+                        "on-secondary-fixed": "#160bae",
+                        "surface-container-low": "#091328",
+                        "outline": "#6d758c",
+                        "tertiary": "#9bffce",
+                        "on-tertiary-fixed": "#00452d",
+                        "primary-fixed": "#00eefc",
+                        "on-secondary-container": "#ccccff",
+                        "outline-variant": "#40485d",
+                        "on-error-container": "#ffa8a3",
+                        "secondary-dim": "#6063ee",
+                        "secondary-container": "#2f2ebe",
+                        "on-background": "#dee5ff",
+                        "inverse-surface": "#faf8ff",
+                        "on-secondary": "#080079",
+                        "on-primary-container": "#005359",
+                        "surface-tint": "#8ff5ff",
+                        "on-tertiary-fixed-variant": "#006544",
+                        "surface": "#060e20",
+                        "primary-dim": "#00deec",
+                        "surface-container-high": "#141f38",
+                        "on-primary-fixed": "#003f43",
+                        "primary-container": "#00eefc",
+                        "on-surface": "#dee5ff",
+                        "tertiary-fixed": "#69f6b8",
+                        "primary": "#8ff5ff",
+                        "on-primary-fixed-variant": "#005e64",
+                        "secondary": "#9093ff",
+                        "secondary-fixed-dim": "#bdbeff",
+                        "primary-fixed-dim": "#00deec",
+                        "on-surface-variant": "#a3aac4",
+                        "background": "#060e20",
+                        "tertiary-container": "#69f6b8",
+                        "on-error": "#490006",
+                        "on-tertiary-container": "#005a3c",
+                        "error-dim": "#d7383b",
+                        "surface-bright": "#1f2b49",
+                        "surface-container": "#0f1930",
+                        "tertiary-fixed-dim": "#58e7ab",
+                        "on-tertiary": "#006443",
+                        "tertiary-dim": "#58e7ab",
+                        "error-container": "#9f0519",
+                        "on-primary": "#005d63",
+                        "surface-container-lowest": "#000000",
+                        "surface-dim": "#060e20",
+                        "inverse-primary": "#006a71",
+                        "inverse-on-surface": "#4d556b"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Manrope"],
+                        "label": ["Space Grotesk"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Manrope', sans-serif; background-color: #060e20; color: #dee5ff; }
+        .glass-card {
+            background: rgba(25, 37, 64, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(143, 245, 255, 0.05);
+        }
+        .sidebar-active {
+            background-color: #192540;
+            border-right: 2px solid #8ff5ff;
+            color: #8ff5ff;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface overflow-x-hidden">
+<!-- SideNavBar Component -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#060e20]/60 backdrop-blur-xl shadow-[0_0_40px_rgba(0,0,0,0.5)] flex flex-col py-6 px-4 z-50 overflow-y-auto">
+<div class="mb-10 px-2 flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">cloud_done</span>
+</div>
+<div>
+<h1 class="text-xl font-headline font-bold tracking-tighter text-[#8ff5ff]">Biznexa CMS</h1>
+<p class="text-[10px] font-headline uppercase tracking-[0.1em] text-on-surface-variant/60">Management Portal</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<div class="px-2 pb-2 text-[10px] font-headline font-bold uppercase tracking-widest text-on-surface-variant/40">General</div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#dee5ff]/60 hover:bg-[#192540]/50 hover:text-[#dee5ff] transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span class="font-headline text-xs font-medium uppercase tracking-wider">Main</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#dee5ff]/60 hover:bg-[#192540]/50 hover:text-[#dee5ff] transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined text-xl">payments</span>
+<span class="font-headline text-xs font-medium uppercase tracking-wider">Billing</span>
+</a>
+<div class="px-2 pt-6 pb-2 text-[10px] font-headline font-bold uppercase tracking-widest text-primary/60">Content Manage</div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md sidebar-active transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined text-xl">article</span>
+<span class="font-headline text-xs font-medium uppercase tracking-wider">Content</span>
+</a>
+<div class="ml-9 mt-1 space-y-1 border-l border-outline-variant/30">
+<a class="block px-4 py-2 text-xs text-primary font-medium transition-colors" href="#">About Us</a>
+<a class="block px-4 py-2 text-xs text-on-surface-variant hover:text-primary transition-colors" href="#">Services</a>
+<a class="block px-4 py-2 text-xs text-on-surface-variant hover:text-primary transition-colors" href="#">Case Studies</a>
+</div>
+<div class="px-2 pt-6 pb-2 text-[10px] font-headline font-bold uppercase tracking-widest text-on-surface-variant/40">Systems</div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#dee5ff]/60 hover:bg-[#192540]/50 hover:text-[#dee5ff] transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined text-xl">fact_check</span>
+<span class="font-headline text-xs font-medium uppercase tracking-wider">Inspection</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-[#dee5ff]/60 hover:bg-[#192540]/50 hover:text-[#dee5ff] transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span class="font-headline text-xs font-medium uppercase tracking-wider">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-outline-variant/10 flex items-center gap-3 px-2">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="Close-up professional portrait of a business executive with a modern tech background and soft ambient lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpOqKJUysMtqB0loQEioi1XoELpCXFiHI8VWnowAn_QFfmmFTvbEEB65ePMYlg9xLtsnELOZlz93zASXRBPsHCtaH_Xax0UWuWGDLIWNtx4GTLbn5fgq2skFUz9hD0Ch8pxWRFDoG4mzmsVa6jtZoIJiUMJSwuIGiP_fICjCtDFbu141JNSbrqtHGyxBGAHKDnpacyVIe0Zxq7f6Ez8oC0VxW_AkzKf_-GNbGnP3yrDNJOzU5Jdhux6-oS5zq_eQBBEJHL7L_r-8rx"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-bold truncate">Sukanta Saha</p>
+<p class="text-[10px] text-on-surface-variant truncate">Administrator</p>
+</div>
+<button class="text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined text-lg">logout</span>
+</button>
+</div>
+</aside>
+<!-- TopNavBar Component -->
+<header class="w-[calc(100%-16rem)] ml-64 bg-[#060e20]/40 backdrop-blur-md sticky top-0 z-40 flex justify-between items-center px-8 h-16 transition-all duration-300">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg group-focus-within:text-primary">search</span>
+<input class="w-full bg-surface-container-highest border-none rounded-md py-2 pl-10 pr-4 text-sm focus:ring-1 focus:ring-primary/30 placeholder:text-on-surface-variant/50" placeholder="Search pages, components, media..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="relative p-2 text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border border-surface"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+<div class="h-8 w-px bg-outline-variant/20"></div>
+<div class="flex items-center gap-3 cursor-pointer group">
+<span class="text-xs font-headline font-bold tracking-wider text-on-surface uppercase group-hover:text-primary transition-colors">Preview Site</span>
+<span class="material-symbols-outlined text-lg text-primary">open_in_new</span>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 p-8 min-h-screen">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-10">
+<div>
+<nav class="flex items-center gap-2 mb-2 text-[10px] font-headline uppercase tracking-[0.2em] text-on-surface-variant">
+<span>Content Manage</span>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-primary">About Us</span>
+</nav>
+<h2 class="text-4xl font-headline font-bold tracking-tight text-on-surface">Manage About Us Content</h2>
+</div>
+<div class="flex gap-4">
+<button class="px-5 py-2.5 rounded-md glass-card text-sm font-headline font-bold uppercase tracking-widest hover:bg-surface-container-highest transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">visibility</span>
+                    Preview Website
+                </button>
+<button class="px-6 py-2.5 rounded-md bg-gradient-to-r from-primary to-primary-dim text-on-primary-fixed text-sm font-headline font-bold uppercase tracking-widest hover:shadow-[0_0_20px_rgba(143,245,255,0.3)] transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">publish</span>
+                    Publish Changes
+                </button>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-6">
+<!-- Section 1: Hero Section (Managing Main Identity) -->
+<section class="col-span-12 lg:col-span-8 glass-card p-8 rounded-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-20 -mt-20"></div>
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">view_quilt</span>
+<h3 class="font-headline text-lg font-bold uppercase tracking-wider">Hero Section</h3>
+</div>
+<div class="space-y-6 relative z-10">
+<div>
+<label class="block text-[10px] font-headline uppercase tracking-widest text-on-surface-variant mb-2">Main Headline</label>
+<input class="w-full bg-surface-container-highest/50 border-none rounded-md py-3 px-4 text-xl font-headline font-bold text-on-surface focus:ring-1 focus:ring-primary/30" type="text" value="We build things that last"/>
+</div>
+<div>
+<label class="block text-[10px] font-headline uppercase tracking-widest text-on-surface-variant mb-2">Subtitle / Lead Paragraph</label>
+<textarea class="w-full bg-surface-container-highest/50 border-none rounded-md py-3 px-4 text-sm text-[#b0b8c8] leading-relaxed focus:ring-1 focus:ring-primary/30" rows="3">From scalable architecture to seamless digital growth, we empower visionaries with high-performance solutions that redefine digital excellence.</textarea>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-[10px] font-headline uppercase tracking-widest text-on-surface-variant mb-2">Primary CTA Label</label>
+<input class="w-full bg-surface-container-highest/50 border-none rounded-md py-2 px-4 text-sm text-on-surface focus:ring-1 focus:ring-primary/30" type="text" value="Start a Project"/>
+</div>
+<div>
+<label class="block text-[10px] font-headline uppercase tracking-widest text-on-surface-variant mb-2">Secondary CTA Label</label>
+<input class="w-full bg-surface-container-highest/50 border-none rounded-md py-2 px-4 text-sm text-on-surface focus:ring-1 focus:ring-primary/30" type="text" value="Our Portfolio"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Vision & Quote (Condensed/Asymmetric) -->
+<section class="col-span-12 lg:col-span-4 glass-card p-8 rounded-xl flex flex-col justify-between border-l-2 border-primary/20">
+<div>
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-tertiary">format_quote</span>
+<h3 class="font-headline text-lg font-bold uppercase tracking-wider">Human Vision</h3>
+</div>
+<label class="block text-[10px] font-headline uppercase tracking-widest text-on-surface-variant mb-2">The Humanized Quote</label>
+<textarea class="w-full bg-surface-container-lowest border-none rounded-md py-4 px-5 text-lg font-headline font-medium italic text-on-surface leading-snug focus:ring-1 focus:ring-primary/30" rows="4">"We build things that last. This isn't just code; it's the digital legacy of our clients."</textarea>
+</div>
+<div class="mt-4 pt-4 border-t border-outline-variant/10 text-[10px] font-headline text-on-surface-variant/60 uppercase tracking-tighter italic">
+                    Displayed in the featured quote block on Homepage &amp; About.
+                </div>
+</section>
+<!-- Section 2: Founder Profile -->
+<section class="col-span-12 lg:col-span-5 glass-card p-8 rounded-xl">
+<div class="flex items-center gap-2 mb-8">
+<span class="material-symbols-outlined text-secondary">person_pin</span>
+<h3 class="font-headline text-lg font-bold uppercase tracking-wider">Founder Profile</h3>
+</div>
+<div class="flex flex-col gap-6">
+<div class="flex items-center gap-6 p-4 rounded-lg bg-surface-container-lowest">
+<div class="relative w-24 h-24 rounded-full overflow-hidden border-2 border-primary/20 group cursor-pointer">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform" data-alt="High-resolution professional photo of a technology founder with a confident, honest expression and soft blue studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOlYVvJJg3NyDhxmm0WaiMWuHoHpYwjdGvTEsA330SRnWrblZAS7s9yVbt-LIWonxnsi_WKb7Vbk_Hm0iO_5TA6HcHyGXXn2m2rxfNcT0V5s6fWATTuu1WQWIYguCrhTnZkfTMaPpQK98m73UTge2QEGh4D2jSKgW36DqImfiplnEPgbudkrhWgppGXTZeRGvie-kM8k6JQtb341q3bV6OKBCWKOthPfkgia4s8eWZKgkrhxi7BOr6dD2AVgADUhbpDXBxXRJlEqaa"/>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white">upload</span>
+</div>
+</div>
+<div class="flex-1 space-y-3">
+<div>
+<label class="block text-[10px] font-headline uppercase tracking-widest text-on-surface-variant mb-1">Full Name</label>
+<input class="w-full bg-surface-container-highest/30 border-none rounded py-1 px-2 text-sm text-on-surface focus:ring-1 focus:ring-primary/30" type="text" value="Sukanta Saha"/>
+</div>
+<div>
+<label class="block text-[10px] font-headline uppercase tracking-widest text-on-surface-variant mb-1">Professional Title</label>
+<input class="w-full bg-surface-container-highest/30 border-none rounded py-1 px-2 text-xs text-secondary focus:ring-1 focus:ring-primary/30" type="text" value="CEO &amp; Founder"/>
+</div>
+</div>
+</div>
+<div>
+<label class="block text-[10px] font-headline uppercase tracking-widest text-on-surface-variant mb-2">Conversational Bio</label>
+<textarea class="w-full bg-surface-container-highest/50 border-none rounded-md py-4 px-4 text-sm text-[#b0b8c8] leading-relaxed focus:ring-1 focus:ring-primary/30" rows="8">My journey started with a simple question: why do most digital products feel temporary? 
+
+Over the last 5 years, I've focused on building Biznexa to solve this. We don't just deliver projects; we engineer foundations. Every line of code and every strategic growth plan is designed with longevity in mind. I believe in honest communication, radical transparency, and results that speak for themselves.</textarea>
+</div>
+</div>
+</section>
+<!-- Section 4: Strategic Pillars -->
+<section class="col-span-12 lg:col-span-7 glass-card p-8 rounded-xl">
+<div class="flex justify-between items-center mb-8">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">architecture</span>
+<h3 class="font-headline text-lg font-bold uppercase tracking-wider">Strategic Pillars</h3>
+</div>
+<button class="text-[10px] font-headline uppercase tracking-widest text-primary hover:underline">+ Add Pillar</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="p-4 rounded-lg bg-surface-container-high border border-outline-variant/10 group">
+<div class="flex items-center gap-3 mb-3">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">layers</span>
+<input class="bg-transparent border-none p-0 text-sm font-bold text-on-surface focus:ring-0 w-full" type="text" value="Scalable Web Architecture"/>
+</div>
+<textarea class="w-full bg-transparent border-none p-0 text-xs text-[#b0b8c8] leading-snug focus:ring-0 resize-none">High-performance systems built to handle millions of requests without compromise.</textarea>
+</div>
+<div class="p-4 rounded-lg bg-surface-container-high border border-outline-variant/10 group">
+<div class="flex items-center gap-3 mb-3">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">smart_toy</span>
+<input class="bg-transparent border-none p-0 text-sm font-bold text-on-surface focus:ring-0 w-full" type="text" value="AI-Driven Automation"/>
+</div>
+<textarea class="w-full bg-transparent border-none p-0 text-xs text-[#b0b8c8] leading-snug focus:ring-0 resize-none">Integrating intelligent algorithms to streamline complex business workflows.</textarea>
+</div>
+<div class="p-4 rounded-lg bg-surface-container-high border border-outline-variant/10 group">
+<div class="flex items-center gap-3 mb-3">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">trending_up</span>
+<input class="bg-transparent border-none p-0 text-sm font-bold text-on-surface focus:ring-0 w-full" type="text" value="Strategic Digital Growth"/>
+</div>
+<textarea class="w-full bg-transparent border-none p-0 text-xs text-[#b0b8c8] leading-snug focus:ring-0 resize-none">Data-backed strategies that convert visitors into loyal long-term advocates.</textarea>
+</div>
+<div class="p-4 rounded-lg bg-surface-container-high border border-outline-variant/10 group">
+<div class="flex items-center gap-3 mb-3">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">api</span>
+<input class="bg-transparent border-none p-0 text-sm font-bold text-on-surface focus:ring-0 w-full" type="text" value="Seamless API Integration"/>
+</div>
+<textarea class="w-full bg-transparent border-none p-0 text-xs text-[#b0b8c8] leading-snug focus:ring-0 resize-none">Connecting your ecosystem with robust, secure, and lightning-fast API layers.</textarea>
+</div>
+</div>
+</section>
+<!-- Section 5: Impact Metrics -->
+<section class="col-span-12 glass-card p-8 rounded-xl">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-tertiary">query_stats</span>
+<h3 class="font-headline text-lg font-bold uppercase tracking-wider">Impact Metrics</h3>
+</div>
+<div class="flex flex-wrap gap-8 items-center">
+<div class="flex-1 min-w-[200px] p-6 rounded-lg bg-surface-container-lowest border-t-2 border-tertiary/20 flex items-center justify-between group">
+<div>
+<label class="block text-[10px] font-headline uppercase tracking-widest text-on-surface-variant mb-2">Metric Label</label>
+<input class="bg-transparent border-none p-0 text-sm text-[#b0b8c8] focus:ring-0 w-full" type="text" value="Projects Completed"/>
+</div>
+<div class="text-right">
+<label class="block text-[10px] font-headline uppercase tracking-widest text-on-surface-variant mb-2">Value</label>
+<input class="bg-transparent border-none p-0 text-4xl font-headline font-bold text-tertiary focus:ring-0 text-right w-20" type="text" value="15+"/>
+</div>
+</div>
+<div class="flex-1 min-w-[200px] p-6 rounded-lg bg-surface-container-lowest border-t-2 border-primary/20 flex items-center justify-between group">
+<div>
+<label class="block text-[10px] font-headline uppercase tracking-widest text-on-surface-variant mb-2">Metric Label</label>
+<input class="bg-transparent border-none p-0 text-sm text-[#b0b8c8] focus:ring-0 w-full" type="text" value="Happy Clients"/>
+</div>
+<div class="text-right">
+<label class="block text-[10px] font-headline uppercase tracking-widest text-on-surface-variant mb-2">Value</label>
+<input class="bg-transparent border-none p-0 text-4xl font-headline font-bold text-primary focus:ring-0 text-right w-20" type="text" value="10+"/>
+</div>
+</div>
+<div class="flex-1 min-w-[200px] p-6 rounded-lg bg-surface-container-lowest border-t-2 border-secondary/20 flex items-center justify-between group">
+<div>
+<label class="block text-[10px] font-headline uppercase tracking-widest text-on-surface-variant mb-2">Metric Label</label>
+<input class="bg-transparent border-none p-0 text-sm text-[#b0b8c8] focus:ring-0 w-full" type="text" value="Expert Developers"/>
+</div>
+<div class="text-right">
+<label class="block text-[10px] font-headline uppercase tracking-widest text-on-surface-variant mb-2">Value</label>
+<input class="bg-transparent border-none p-0 text-4xl font-headline font-bold text-secondary focus:ring-0 text-right w-20" type="text" value="08"/>
+</div>
+</div>
+<button class="w-16 h-16 rounded-full border border-dashed border-outline-variant flex items-center justify-center hover:bg-surface-container-high transition-colors group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">add</span>
+</button>
+</div>
+</section>
+</div>
+<!-- Footer / Status Bar -->
+<footer class="mt-12 py-6 border-t border-outline-variant/10 flex justify-between items-center text-[10px] font-headline uppercase tracking-[0.2em] text-on-surface-variant/40">
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> System Online</span>
+<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Version 2.4.0-Cyber</span>
+</div>
+<div>Last Auto-Save: 12:45:11 PM</div>
+</footer>
+</main>
+<!-- FAB Suppression Rule: Not rendered for Content Management screens -->
+</body></html>

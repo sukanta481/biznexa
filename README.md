@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Biznexa
 
-## Getting Started
+### Local development
 
-First, run the development server:
+Start the project:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### When localhost starts throwing random Next.js errors
 
-## Learn More
+This project has occasionally hit stale `.next` cache issues during local development, especially after switching between `next dev` and `next build`.
 
-To learn more about Next.js, take a look at the following resources:
+Common symptoms:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `Internal Server Error` on routes that were working before
+- missing generated module errors such as `Cannot find module './873.js'`
+- broken admin styling because `/_next/static/css/...` returns `404`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Use this one-command reset:
 
-## Deploy on Vercel
+```bash
+npm run dev:reset
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+If you only want to clear the cache:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run clean:next
+```
+
+### Homepage content database sync
+
+Homepage content is stored in the `settings` table using JSON-based keys such as:
+
+- `homepage_hero`
+- `homepage_stats`
+- `homepage_services_intro`
+- `homepage_services`
+- `homepage_global_reach`
+- `homepage_testimonials_intro`
+- `homepage_testimonials`
+- `homepage_faq_intro`
+- `homepage_faqs`
+- `homepage_cta`
+
+Run the homepage setup SQL before using the admin homepage editor:
+
+```text
+db/homepage-settings-alignment.sql
+```

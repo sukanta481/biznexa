@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "clean:next": "node scripts/reset-next-cache.js",
+    "dev:reset": "node scripts/reset-next-cache.js && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -18,6 +20,7 @@
     "framer-motion": "^12.38.0",
     "gray-matter": "^4.0.3",
     "lucide-react": "^1.6.0",
+    "motion": "^12.38.0",
     "mysql2": "^3.20.0",
     "next": "^15.5.14",
     "next-mdx-remote": "^6.0.0",

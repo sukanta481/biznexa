@@ -28,6 +28,9 @@ function readConfig(target: DatabaseTarget): PoolOptions {
     );
   }
 
+  const defaultConnectTimeoutMs = target === "local" ? 1500 : 10_000;
+  const connectTimeout = Number(process.env.DB_CONNECT_TIMEOUT_MS ?? `${defaultConnectTimeoutMs}`);
+
   return {
     host,
     port,
@@ -38,7 +41,7 @@ function readConfig(target: DatabaseTarget): PoolOptions {
     connectionLimit: 10,
     queueLimit: 0,
     enableKeepAlive: true,
-    connectTimeout: 10_000,
+    connectTimeout,
   };
 }
 

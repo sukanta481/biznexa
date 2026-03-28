@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Biznexa Icon — Digital Stack + AI Spark -->
+  <!-- Three stacked parallelogram layers (Web, AI, Marketing) + AI spark -->
+
+  <!-- Layer 1 (bottom) — Digital Marketing -->
+  <path d="M96,340 L156,280 L416,280 L356,340 Z" fill="#00ff88" opacity="0.35"/>
+
+  <!-- Layer 2 (middle) — AI Automation -->
+  <path d="M96,280 L156,220 L416,220 L356,280 Z" fill="#00ff88" opacity="0.6"/>
+
+  <!-- Layer 3 (top) — Web Development -->
+  <path d="M96,220 L156,160 L416,160 L356,220 Z" fill="#00ff88" opacity="0.9"/>
+
+  <!-- AI Spark — glowing core -->
+  <circle cx="370" cy="120" r="28" fill="#00e5ff"/>
+
+  <!-- Spark rays — cross pattern -->
+  <line x1="370" y1="72" x2="370" y2="86" stroke="#00e5ff" stroke-width="8" stroke-linecap="round"/>
+  <line x1="370" y1="154" x2="370" y2="140" stroke="#00e5ff" stroke-width="8" stroke-linecap="round"/>
+  <line x1="322" y1="120" x2="336" y2="120" stroke="#00e5ff" stroke-width="8" stroke-linecap="round"/>
+  <line x1="404" y1="120" x2="418" y2="120" stroke="#00e5ff" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Spark rays — diagonal -->
+  <line x1="336" y1="86" x2="346" y2="96" stroke="#00e5ff" stroke-width="5" stroke-linecap="round" opacity="0.6"/>
+  <line x1="404" y1="86" x2="394" y2="96" stroke="#00e5ff" stroke-width="5" stroke-linecap="round" opacity="0.6"/>
+  <line x1="336" y1="154" x2="346" y2="144" stroke="#00e5ff" stroke-width="5" stroke-linecap="round" opacity="0.5"/>
+  <line x1="404" y1="154" x2="394" y2="144" stroke="#00e5ff" stroke-width="5" stroke-linecap="round" opacity="0.5"/>
+</svg>

@@ -1,7 +1,93 @@
 import Link from "next/link";
-import { COMPANY, FOOTER_NAV } from "@/lib/constants";
 
-export default function Footer() {
+import { COMPANY, FOOTER_NAV } from "@/lib/constants";
+import { getSiteSettings } from "@/lib/site-settings";
+
+interface SocialIconProps {
+  className?: string;
+}
+
+function WhatsAppIcon({ className }: SocialIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.16 1.6 5.98L0 24l6.3-1.65a11.8 11.8 0 0 0 5.76 1.47h.01c6.55 0 11.9-5.34 11.9-11.91 0-3.18-1.24-6.17-3.45-8.43Zm-8.46 18.33h-.01a9.84 9.84 0 0 1-5.01-1.37l-.36-.22-3.74.98 1-3.65-.24-.37a9.82 9.82 0 0 1-1.52-5.27c0-5.43 4.42-9.85 9.87-9.85 2.63 0 5.09 1.02 6.94 2.88a9.78 9.78 0 0 1 2.89 6.97c0 5.44-4.43 9.86-9.82 9.86Zm5.4-7.39c-.3-.15-1.78-.88-2.05-.98-.28-.1-.48-.15-.68.15-.2.3-.78.98-.95 1.18-.18.2-.35.23-.65.08-.3-.15-1.28-.47-2.44-1.5-.9-.8-1.51-1.78-1.69-2.08-.18-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.03-.53-.07-.15-.67-1.61-.92-2.21-.24-.57-.49-.49-.68-.5h-.58c-.2 0-.53.08-.81.38-.28.3-1.07 1.05-1.07 2.56 0 1.5 1.1 2.96 1.25 3.16.15.2 2.13 3.26 5.15 4.56.72.31 1.28.49 1.72.62.72.23 1.38.2 1.9.12.58-.09 1.78-.73 2.03-1.44.25-.7.25-1.3.18-1.43-.08-.13-.28-.2-.58-.35Z" />
+    </svg>
+  );
+}
+
+function LinkedInIcon({ className }: SocialIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M19 0H5C2.24 0 0 2.24 0 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5V5c0-2.76-2.24-5-5-5ZM8 19H5V9h3v10ZM6.5 7.73a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5ZM19 19h-3v-5.4c0-3.23-4-2.99-4 0V19H9V9h3v1.6c1.4-2.58 7-2.77 7 2.37V19Z" />
+    </svg>
+  );
+}
+
+function XIcon({ className }: SocialIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M18.9 2H22l-6.77 7.74L23.2 22h-6.25l-4.9-6.42L6.43 22H3.33l7.24-8.28L.8 2h6.4l4.43 5.84L18.9 2Zm-1.1 18h1.73L6.26 3.9H4.4L17.8 20Z" />
+    </svg>
+  );
+}
+
+function FacebookIcon({ className }: SocialIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M24 12a12 12 0 1 0-13.88 11.85v-8.39H7.08V12h3.04V9.36c0-3 1.8-4.66 4.54-4.66 1.31 0 2.68.24 2.68.24v2.95h-1.51c-1.49 0-1.95.92-1.95 1.87V12h3.32l-.53 3.46h-2.79v8.39A12 12 0 0 0 24 12Z" />
+    </svg>
+  );
+}
+
+function InstagramIcon({ className }: SocialIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm8.5 1.8h-8.5A3.95 3.95 0 0 0 3.8 7.75v8.5a3.95 3.95 0 0 0 3.95 3.95h8.5a3.95 3.95 0 0 0 3.95-3.95v-8.5a3.95 3.95 0 0 0-3.95-3.95ZM12 7.35A4.65 4.65 0 1 1 7.35 12 4.65 4.65 0 0 1 12 7.35Zm0 1.8A2.85 2.85 0 1 0 14.85 12 2.85 2.85 0 0 0 12 9.15Zm4.9-2.9a1.1 1.1 0 1 1-1.1 1.1 1.1 1.1 0 0 1 1.1-1.1Z" />
+    </svg>
+  );
+}
+
+function YouTubeIcon({ className }: SocialIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M23.5 6.2a3 3 0 0 0-2.11-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.58A3 3 0 0 0 .5 6.2 31.3 31.3 0 0 0 0 12a31.3 31.3 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.58a3 3 0 0 0 2.11-2.12A31.3 31.3 0 0 0 24 12a31.3 31.3 0 0 0-.5-5.8ZM9.6 15.69V8.31L15.85 12 9.6 15.69Z" />
+    </svg>
+  );
+}
+
+function GitHubIcon({ className }: SocialIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 .5A12 12 0 0 0 8.2 23.9c.6.1.82-.26.82-.58v-2.04c-3.34.73-4.04-1.41-4.04-1.41-.55-1.37-1.33-1.73-1.33-1.73-1.09-.74.08-.72.08-.72 1.2.09 1.84 1.23 1.84 1.23 1.08 1.83 2.82 1.3 3.5 1 .11-.76.42-1.3.77-1.6-2.67-.3-5.47-1.31-5.47-5.86 0-1.3.47-2.37 1.23-3.2-.12-.3-.53-1.55.12-3.22 0 0 1-.32 3.3 1.22a11.6 11.6 0 0 1 6 0c2.3-1.54 3.3-1.22 3.3-1.22.65 1.67.24 2.92.12 3.22.77.83 1.23 1.9 1.23 3.2 0 4.56-2.8 5.56-5.48 5.85.43.36.82 1.09.82 2.22v3.29c0 .32.22.69.83.57A12 12 0 0 0 12 .5Z" />
+    </svg>
+  );
+}
+
+function TelegramIcon({ className }: SocialIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M21.94 4.64a1.5 1.5 0 0 0-1.7-.24L2.3 11.86a1.5 1.5 0 0 0 .16 2.82l4.39 1.45 1.62 5.19a1.5 1.5 0 0 0 2.56.58l2.45-2.5 4.8 3.56a1.5 1.5 0 0 0 2.36-.9l3.2-15.8a1.5 1.5 0 0 0-.9-1.62ZM8.03 15.42l9.85-6.04-7.4 7.55-.34 1.87-2.11-3.38Zm3.56 2.85.4-2.2 1.54 1.14-1.94 1.06Z" />
+    </svg>
+  );
+}
+
+const SOCIAL_ICON_MAP = {
+  whatsapp: WhatsAppIcon,
+  linkedin: LinkedInIcon,
+  twitter: XIcon,
+  facebook: FacebookIcon,
+  instagram: InstagramIcon,
+  youtube: YouTubeIcon,
+  github: GitHubIcon,
+  telegram: TelegramIcon,
+} as const;
+
+type SocialKey = keyof typeof SOCIAL_ICON_MAP;
+
+export default async function Footer() {
+  const settings = await getSiteSettings();
+  const socialLinks = (Object.entries(settings.social) as Array<[SocialKey, string]>).filter(([, href]) => href.trim().length > 0);
+
   return (
     <footer className="bg-[#091328] md:bg-background w-full md:border-t md:border-white/10 relative overflow-hidden">
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent hidden md:block"></div>
@@ -21,40 +107,26 @@ export default function Footer() {
               {COMPANY.description}
             </p>
             
-            <div className="hidden md:flex gap-4">
-              <a
-                className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary/10 hover:border-primary/40 transition-all text-on-surface-variant group"
-                href={`https://wa.me/${COMPANY.phone.replace(/[\s+]/g, "")}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  alt="WhatsApp"
-                  className="w-5 h-5 grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8ppuzdwIHxUBZFwZtvnmDnQWsYOAXiKg6ERUIwLsavL7-fBNcI3FbkOjfRc_G_d-qYbHm5M5FzD8fisbIkfdHUassEBg9AHFQLdwxqCi2fMUBtRV2ZEZiMPKmKwYt-oiVAU3hS2ihfHUn_r4a1z7RatbM-YhR090s8qENRn3BY_SmlUDzv9cRC2Rnn0Y7vUIoGVG12lrHXfgxByih9B1Mst7_M7hw6SWvgboJHuuc-pH8AWDgFOv2qSbicu9TTRC0ZKQk34tlQEUa"
-                />
-              </a>
-              <a
-                className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary/10 hover:border-primary/40 transition-all text-on-surface-variant hover:text-primary"
-                href={COMPANY.social.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                </svg>
-              </a>
-              <a
-                className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary/10 hover:border-primary/40 transition-all text-on-surface-variant hover:text-primary"
-                href={COMPANY.social.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                  <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
-                </svg>
-              </a>
-            </div>
+            {socialLinks.length > 0 ? (
+              <div className="hidden md:flex gap-4">
+                {socialLinks.map(([platform, href]) => {
+                  const Icon = SOCIAL_ICON_MAP[platform];
+
+                  return (
+                    <a
+                      key={platform}
+                      className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary/10 hover:border-primary/40 transition-all text-on-surface-variant hover:text-primary"
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={platform}
+                    >
+                      <Icon className="w-[18px] h-[18px] fill-current" />
+                    </a>
+                  );
+                })}
+              </div>
+            ) : null}
           </div>
 
           {/* Links Columns */}
