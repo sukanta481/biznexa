@@ -380,6 +380,10 @@ export async function getHomepageContent(): Promise<HomepageContent> {
 }
 
 export async function saveHomepageContent(content: HomepageContent) {
+  if (!(await hasSettingsTable())) {
+    throw new Error("Settings table does not exist. Please run the database migration first.");
+  }
+
   const entries = toSettingEntries(content);
   const columns = await query<ColumnRow[]>("SHOW COLUMNS FROM settings");
   const hasUpdatedBy = columns.some((column) => column.Field === "updated_by");
