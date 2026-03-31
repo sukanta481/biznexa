@@ -3,6 +3,9 @@
     "allow": [
       "Bash(npx next:*)",
       "Bash(ls c:/xampp/htdocs/biznexaN/src/app/admin/\\\\\\(dashboard\\\\\\)/inspections/masters/management/)"
+    ],
+    "additionalDirectories": [
+      "C:\\xampp\\htdocs\\biznexaN\\src\\app\\api\\admin\\inspection\\masters"
     ]
   }
 }
