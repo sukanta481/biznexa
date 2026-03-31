@@ -1,0 +1,24 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+    build:
+      commands:
+        # Write Amplify env vars into .env.production so they're available at SSR runtime
+        - echo "DB_TARGET=$DB_TARGET" >> .env.production
+        - echo "DB_LIVE_HOST=$DB_LIVE_HOST" >> .env.production
+        - echo "DB_LIVE_PORT=$DB_LIVE_PORT" >> .env.production
+        - echo "DB_LIVE_NAME=$DB_LIVE_NAME" >> .env.production
+        - echo "DB_LIVE_USER=$DB_LIVE_USER" >> .env.production
+        - echo "DB_LIVE_PASSWORD=$DB_LIVE_PASSWORD" >> .env.production
+        - npm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - 'node_modules/**/*'
+      - '.next/cache/**/*'
