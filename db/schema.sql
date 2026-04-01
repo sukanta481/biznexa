@@ -41,6 +41,60 @@ CREATE TABLE IF NOT EXISTS settings (
   UNIQUE KEY uq_settings_setting_key (setting_key),
   KEY idx_settings_setting_key (setting_key)
 );
+CREATE TABLE IF NOT EXISTS inspection_banks (
+  id INT NOT NULL AUTO_INCREMENT,
+  bank_name VARCHAR(150) NOT NULL,
+  status ENUM('active','inactive') DEFAULT 'active',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_inspection_banks_name (bank_name)
+);
+
+CREATE TABLE IF NOT EXISTS inspection_branches (
+  id INT NOT NULL AUTO_INCREMENT,
+  bank_id INT NOT NULL,
+  branch_name VARCHAR(150) NOT NULL,
+  status ENUM('active','inactive') DEFAULT 'active',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_inspection_branches_bank_id (bank_id)
+);
+
+CREATE TABLE IF NOT EXISTS inspection_sources (
+  id INT NOT NULL AUTO_INCREMENT,
+  source_name VARCHAR(150) NOT NULL,
+  phone VARCHAR(20) NULL,
+  status ENUM('active','inactive') DEFAULT 'active',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_inspection_sources_name (source_name)
+);
+
+CREATE TABLE IF NOT EXISTS inspection_payment_modes (
+  id INT NOT NULL AUTO_INCREMENT,
+  mode_name VARCHAR(100) NOT NULL,
+  status ENUM('active','inactive') DEFAULT 'active',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_inspection_payment_modes_name (mode_name)
+);
+
+CREATE TABLE IF NOT EXISTS inspection_my_accounts (
+  id INT NOT NULL AUTO_INCREMENT,
+  account_name VARCHAR(150) NOT NULL,
+  bank_name VARCHAR(150) NOT NULL,
+  account_number VARCHAR(50) NOT NULL,
+  ifsc_code VARCHAR(20) NULL,
+  status ENUM('active','inactive') DEFAULT 'active',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+);
+
 CREATE TABLE IF NOT EXISTS case_studies (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   slug VARCHAR(255) NOT NULL,
