@@ -7,6 +7,7 @@ import Link from 'next/link';
 interface Stats {
     total_fees: number;
     office_earned: number;
+    expenditure: number;
     pending_amount: number;
     total_files: number;
     total_earnings: number;
@@ -366,13 +367,13 @@ export default function InspectionDashboard() {
                             <p className="text-2xl font-bold font-headline text-primary cyber-glow-cyan">{loading ? '—' : fmtMoney(stats?.total_earnings ?? 0)}</p>
                         </div>
                         <div className="border-t border-white/5 pt-5">
-                            <p className="text-[10px] text-slate-500 font-label uppercase tracking-widest mb-1">Office Expenditure</p>
-                            <p className="text-2xl font-bold font-headline text-secondary">{loading ? '—' : fmtMoney(stats?.office_earned ?? 0)}</p>
+                            <p className="text-[10px] text-slate-500 font-label uppercase tracking-widest mb-1">Expenditure</p>
+                            <p className="text-2xl font-bold font-headline text-secondary">{loading ? '—' : fmtMoney(stats?.expenditure ?? 0)}</p>
                         </div>
                         <div className="border-t border-white/5 pt-5">
                             <p className="text-[10px] text-slate-500 font-label uppercase tracking-widest mb-1">Net Commission</p>
                             <p className="text-2xl font-bold font-headline text-tertiary">
-                                {loading ? '—' : fmtMoney((stats?.total_earnings ?? 0) - (stats?.office_earned ?? 0))}
+                                {loading ? '—' : fmtMoney((stats?.total_earnings ?? 0) - (stats?.expenditure ?? 0))}
                             </p>
                         </div>
                         <div className="border-t border-white/5 pt-5">

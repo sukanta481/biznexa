@@ -48,6 +48,14 @@ export async function GET(request: NextRequest) {
     values.push(fileType);
   }
 
+  const parsedMonth = month ? parseInt(month, 10) : NaN;
+  const parsedYear = year ? parseInt(year, 10) : NaN;
+  const hasPeriodFilter =
+    !isNaN(parsedMonth) &&
+    !isNaN(parsedYear) &&
+    parsedMonth >= 1 &&
+    parsedMonth <= 12;
+
   const where = conditions.length
     ? `WHERE ${conditions.join(" AND ")}`
     : "";
@@ -82,8 +90,49 @@ export async function GET(request: NextRequest) {
     values
   );
 
+  // ── Expenditure from expenses table (Period Summary) ───────────────────────
+  const expenseConditions: string[] = [];
+  const expenseValues: unknown[] = [];
+
+  const hasExpenseCategory = await columnExists("expenses", "category");
+  const hasExpenseType = await columnExists("expenses", "type");
+
+  if (hasExpenseCategory) {
+    expenseConditions.push("e.category = ?");
+    expenseValues.push("inspection");
+
+    // In the current schema, type separates income/expense.
+    if (hasExpenseType) {
+      expenseConditions.push("e.type = ?");
+      expenseValues.push("expense");
+    }
+  } else if (hasExpenseType) {
+    // Fallback for deployments where type stores section names.
+    expenseConditions.push("e.type = ?");
+    expenseValues.push("inspection");
+  }
+
+  if (hasPeriodFilter) {
+    const lastDay = new Date(parsedYear, parsedMonth, 0).getDate();
+    const first = `${parsedYear}-${String(parsedMonth).padStart(2, "0")}-01`;
+    const last = `${parsedYear}-${String(parsedMonth).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`;
+    expenseConditions.push("e.expense_date BETWEEN ? AND ?");
+    expenseValues.push(first, last);
+  }
+
+  const expenseWhere = expenseConditions.length
+    ? `WHERE ${expenseConditions.join(" AND ")}`
+    : "";
+
+  const expenseRows = await query<RowDataPacket[]>(
+    `SELECT COALESCE(SUM(e.amount), 0) AS expenditure
+     FROM expenses e
+     ${expenseWhere}`,
+    expenseValues
+  );
+
   // ── Monthly chart data (always for the selected/current year) ───────────────
-  const chartYear = year ? parseInt(year, 10) : new Date().getFullYear();
+  const chartYear = !isNaN(parsedYear) ? parsedYear : new Date().getFullYear();
 
   const chartConds: string[] = ["YEAR(f.file_date) = ?"];
   const chartVals: unknown[] = [chartYear];
@@ -93,11 +142,10 @@ export async function GET(request: NextRequest) {
     chartVals.push(fileType);
   }
 
-  const chartRows = await query<RowDataPacket[]>(
+  const incomeRows = await query<RowDataPacket[]>(
     `SELECT
        MONTH(f.file_date)            AS month,
-       COALESCE(SUM(f.gross_amount), 0)  AS income,
-       COALESCE(SUM(f.office_amount), 0) AS expenditure
+       COALESCE(SUM(f.gross_amount), 0)  AS income
      FROM inspection_files f
      WHERE ${chartConds.join(" AND ")}
      GROUP BY MONTH(f.file_date)
@@ -105,17 +153,46 @@ export async function GET(request: NextRequest) {
     chartVals
   );
 
-  const monthlyMap: Record<number, { income: number; expenditure: number }> = {};
-  for (const r of chartRows) {
-    monthlyMap[Number(r.month)] = {
-      income: Number(r.income),
-      expenditure: Number(r.expenditure),
-    };
+  const expenseChartConds: string[] = ["YEAR(e.expense_date) = ?"];
+  const expenseChartVals: unknown[] = [chartYear];
+
+  if (hasExpenseCategory) {
+    expenseChartConds.push("e.category = ?");
+    expenseChartVals.push("inspection");
+    if (hasExpenseType) {
+      expenseChartConds.push("e.type = ?");
+      expenseChartVals.push("expense");
+    }
+  } else if (hasExpenseType) {
+    expenseChartConds.push("e.type = ?");
+    expenseChartVals.push("inspection");
   }
+
+  const expenseChartRows = await query<RowDataPacket[]>(
+    `SELECT
+       MONTH(e.expense_date)         AS month,
+       COALESCE(SUM(e.amount), 0)    AS expenditure
+     FROM expenses e
+     WHERE ${expenseChartConds.join(" AND ")}
+     GROUP BY MONTH(e.expense_date)
+     ORDER BY month ASC`,
+    expenseChartVals
+  );
+
+  const incomeByMonth: Record<number, number> = {};
+  for (const r of incomeRows) {
+    incomeByMonth[Number(r.month)] = Number(r.income);
+  }
+
+  const expenditureByMonth: Record<number, number> = {};
+  for (const r of expenseChartRows) {
+    expenditureByMonth[Number(r.month)] = Number(r.expenditure);
+  }
+
   const chartData = Array.from({ length: 12 }, (_, i) => ({
     month: i + 1,
-    income: monthlyMap[i + 1]?.income ?? 0,
-    expenditure: monthlyMap[i + 1]?.expenditure ?? 0,
+    income: incomeByMonth[i + 1] ?? 0,
+    expenditure: expenditureByMonth[i + 1] ?? 0,
   }));
 
   // ── Source-wise summary ──────────────────────────────────────────────────────
@@ -154,11 +231,13 @@ export async function GET(request: NextRequest) {
   );
 
   const s = statsRows[0] ?? {};
+  const expenseSummary = expenseRows[0] ?? {};
 
   return NextResponse.json({
     stats: {
       total_fees: Number(s.total_fees),
       office_earned: Number(s.office_earned),
+      expenditure: Number(expenseSummary.expenditure),
       pending_amount: Number(s.pending_amount),
       total_files: Number(s.total_files),
       total_earnings: Number(s.total_earnings),
