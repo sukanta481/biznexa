@@ -14,6 +14,7 @@ export interface CaseStudy {
   slug: string;
   title: string;
   client: string;
+  clientName: string;
   clientRole: string;
   category: string;
   excerpt: string;

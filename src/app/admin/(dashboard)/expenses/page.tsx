@@ -1,372 +1,638 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
-export default function ExpensesManagement() {
-    const [dateRange, setDateRange] = useState('Last 30 Days');
-    const [category, setCategory] = useState('All Categories');
-    const [regionFilter, setRegionFilter] = useState('All Regions');
-    const [currentPage, setCurrentPage] = useState(1);
-    const totalPages = 3;
+// ── Types ─────────────────────────────────────────────────────────────────────
+interface Expense {
+    id: number;
+    category: 'biznexa' | 'inspection' | 'general';
+    type: 'income' | 'expense';
+    title: string;
+    description: string | null;
+    amount: number;
+    expense_date: string;
+    created_at: string;
+}
 
-    const resetFilters = () => {
-        setDateRange('Last 30 Days');
-        setCategory('All Categories');
-        setRegionFilter('All Regions');
-    };
+interface Stats {
+    total_income: number;
+    total_expense: number;
+    biznexa_expense: number;
+    inspection_expense: number;
+    general_income: number;
+    general_expense: number;
+}
+
+interface FormState {
+    type: string;
+    category: string;
+    title: string;
+    amount: string;
+    expense_date: string;
+    description: string;
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function fmtDate(val: string): string {
+    const [y, m, d] = val.split('T')[0].split('-').map(Number);
+    return `${MONTHS[m - 1]} ${String(d).padStart(2, '0')}, ${y}`;
+}
+
+function fmtMoney(v: number): string {
+    return `₹${v.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function today(): string {
+    return new Date().toISOString().split('T')[0];
+}
+
+const BLANK_FORM: FormState = {
+    type: 'expense',
+    category: '',
+    title: '',
+    amount: '',
+    expense_date: today(),
+    description: '',
+};
+
+// ── Badge helpers ─────────────────────────────────────────────────────────────
+function TypeBadge({ type }: { type: string }) {
+    return type === 'income'
+        ? <span className="px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-widest bg-tertiary/10 text-tertiary border border-tertiary/20">Income</span>
+        : <span className="px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-widest bg-rose-500/10 text-rose-400 border border-rose-500/20">Expense</span>;
+}
+
+function CatBadge({ category }: { category: string }) {
+    if (category === 'biznexa')
+        return <span className="px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-widest bg-secondary/10 text-secondary border border-secondary/20">BizNexa</span>;
+    if (category === 'inspection')
+        return <span className="px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-widest bg-amber-400/10 text-amber-400 border border-amber-400/20">Inspection</span>;
+    return <span className="px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-widest bg-purple-500/10 text-purple-400 border border-purple-500/20">General</span>;
+}
+
+// ── Shared form fields ────────────────────────────────────────────────────────
+function ExpenseFormFields({ form, setForm }: { form: FormState; setForm: (f: FormState) => void }) {
+    const inp = 'w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-2.5 text-sm text-white outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition font-body placeholder:text-slate-600';
+    const lbl = 'block text-[10px] font-bold font-label uppercase tracking-widest text-slate-500 mb-1.5';
+    const sel = `${inp} appearance-none cursor-pointer`;
 
     return (
-        <section className="max-w-[1600px] mx-auto space-y-8">
-            {/* Header Title */}
+        <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+                <div>
+                    <label className={lbl}>Type *</label>
+                    <select value={form.type} onChange={e => setForm({ ...form, type: e.target.value })} className={sel}>
+                        <option value="expense">Expense</option>
+                        <option value="income">Income</option>
+                    </select>
+                </div>
+                <div>
+                    <label className={lbl}>Category *</label>
+                    <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} className={sel}>
+                        <option value="" disabled>Select Category</option>
+                        <option value="biznexa">BizNexa</option>
+                        <option value="inspection">Inspection</option>
+                        <option value="general">General</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label className={lbl}>Title *</label>
+                <input
+                    type="text"
+                    value={form.title}
+                    onChange={e => setForm({ ...form, title: e.target.value })}
+                    placeholder="e.g. Freelance Payment, Fuel Cost"
+                    className={inp}
+                />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+                <div>
+                    <label className={lbl}>Amount (₹) *</label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={form.amount}
+                        onChange={e => setForm({ ...form, amount: e.target.value })}
+                        placeholder="0.00"
+                        className={inp}
+                    />
+                </div>
+                <div>
+                    <label className={lbl}>Date *</label>
+                    <input
+                        type="date"
+                        value={form.expense_date}
+                        onChange={e => setForm({ ...form, expense_date: e.target.value })}
+                        className={`${inp} [color-scheme:dark]`}
+                    />
+                </div>
+            </div>
+            <div>
+                <label className={lbl}>Description</label>
+                <textarea
+                    rows={2}
+                    value={form.description}
+                    onChange={e => setForm({ ...form, description: e.target.value })}
+                    placeholder="Optional details..."
+                    className={`${inp} resize-none`}
+                />
+            </div>
+        </div>
+    );
+}
+
+// ── Modal wrapper ─────────────────────────────────────────────────────────────
+function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+            <div className="relative w-full max-w-lg bg-[#0f1c2e] border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.02]">
+                    <h3 className="text-sm font-black font-headline uppercase tracking-[0.15em] text-white">{title}</h3>
+                    <button onClick={onClose} className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-500 hover:text-white hover:bg-white/10 transition-all">
+                        <span className="material-symbols-outlined text-lg">close</span>
+                    </button>
+                </div>
+                <div className="p-6">{children}</div>
+            </div>
+        </div>
+    );
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
+export default function ExpensesPage() {
+    // Filters
+    const [search, setSearch]     = useState('');
+    const [category, setCategory] = useState('');
+    const [type, setType]         = useState('');
+    const [dateFrom, setDateFrom] = useState('');
+    const [dateTo, setDateTo]     = useState('');
+    const [page, setPage]         = useState(1);
+
+    // Data
+    const [records, setRecords]   = useState<Expense[]>([]);
+    const [stats, setStats]       = useState<Stats | null>(null);
+    const [total, setTotal]       = useState(0);
+    const [loading, setLoading]   = useState(true);
+
+    // Modals
+    const [modal, setModal]       = useState<'add' | 'edit' | 'delete' | null>(null);
+    const [active, setActive]     = useState<Expense | null>(null);
+    const [form, setForm]         = useState<FormState>(BLANK_FORM);
+    const [saving, setSaving]     = useState(false);
+    const [formError, setFormError] = useState('');
+
+    const LIMIT = 20;
+    const totalPages = Math.max(1, Math.ceil(total / LIMIT));
+
+    // ── Fetch ─────────────────────────────────────────────────────────────────
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        try {
+            const p = new URLSearchParams();
+            if (search)   p.set('search', search);
+            if (category) p.set('category', category);
+            if (type)     p.set('type', type);
+            if (dateFrom) p.set('date_from', dateFrom);
+            if (dateTo)   p.set('date_to', dateTo);
+            p.set('page', String(page));
+            const res = await fetch(`/api/admin/expenses?${p}`);
+            if (res.ok) {
+                const data = await res.json();
+                setRecords(data.records ?? []);
+                setStats(data.stats ?? null);
+                setTotal(data.total ?? 0);
+            }
+        } finally {
+            setLoading(false);
+        }
+    }, [search, category, type, dateFrom, dateTo, page]);
+
+    useEffect(() => { fetchData(); }, [fetchData]);
+    useEffect(() => { setPage(1); }, [search, category, type, dateFrom, dateTo]);
+
+    // ── Modal helpers ─────────────────────────────────────────────────────────
+    function openAdd() {
+        setForm(BLANK_FORM);
+        setFormError('');
+        setModal('add');
+    }
+
+    function openEdit(r: Expense) {
+        setActive(r);
+        setForm({
+            type: r.type,
+            category: r.category,
+            title: r.title,
+            amount: String(r.amount),
+            expense_date: r.expense_date.split('T')[0],
+            description: r.description ?? '',
+        });
+        setFormError('');
+        setModal('edit');
+    }
+
+    function openDelete(r: Expense) {
+        setActive(r);
+        setModal('delete');
+    }
+
+    function closeModal() {
+        setModal(null);
+        setActive(null);
+        setSaving(false);
+        setFormError('');
+    }
+
+    // ── CRUD ──────────────────────────────────────────────────────────────────
+    async function handleAdd() {
+        setFormError('');
+        if (!form.category || !form.type || !form.title.trim() || !form.amount || !form.expense_date) {
+            setFormError('Please fill all required fields.');
+            return;
+        }
+        setSaving(true);
+        try {
+            const res = await fetch('/api/admin/expenses', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(form),
+            });
+            const json = await res.json();
+            if (!res.ok) { setFormError(json.error ?? 'Failed to add record.'); return; }
+            closeModal();
+            fetchData();
+        } catch {
+            setFormError('Network error. Please try again.');
+        } finally {
+            setSaving(false);
+        }
+    }
+
+    async function handleEdit() {
+        if (!active) return;
+        setFormError('');
+        if (!form.category || !form.type || !form.title.trim() || !form.amount || !form.expense_date) {
+            setFormError('Please fill all required fields.');
+            return;
+        }
+        setSaving(true);
+        try {
+            const res = await fetch(`/api/admin/expenses/${active.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(form),
+            });
+            const json = await res.json();
+            if (!res.ok) { setFormError(json.error ?? 'Failed to update record.'); return; }
+            closeModal();
+            fetchData();
+        } catch {
+            setFormError('Network error. Please try again.');
+        } finally {
+            setSaving(false);
+        }
+    }
+
+    async function handleDelete() {
+        if (!active) return;
+        setSaving(true);
+        try {
+            await fetch(`/api/admin/expenses/${active.id}`, { method: 'DELETE' });
+            closeModal();
+            fetchData();
+        } catch {
+            /* silent */
+        } finally {
+            setSaving(false);
+        }
+    }
+
+    function handleReset() {
+        setSearch(''); setCategory(''); setType('');
+        setDateFrom(''); setDateTo(''); setPage(1);
+    }
+
+    // ── Stat card ─────────────────────────────────────────────────────────────
+    function StatCard({ label, value, borderColor, valueColor, children }: {
+        label: string; value?: string; borderColor: string; valueColor: string; children?: React.ReactNode;
+    }) {
+        return (
+            <div className={`bg-[#1e293b]/40 backdrop-blur-[8px] border border-white/5 border-l-4 ${borderColor} p-5 rounded-xl`}>
+                <p className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 mb-2">{label}</p>
+                {value !== undefined
+                    ? <p className={`text-xl font-headline font-bold ${valueColor}`}>{value}</p>
+                    : children
+                }
+            </div>
+        );
+    }
+
+    const s = stats;
+
+    return (
+        <div className="max-w-[1400px] mx-auto space-y-8">
+
+            {/* ── Header ──────────────────────────────────────────────────── */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
                 <div>
-                    <h2 className="text-3xl font-bold font-headline tracking-tight text-emerald-500 shadow-emerald-500/40 drop-shadow-[0_0_15px_rgba(16,185,129,0.4)]">Expense Tracking</h2>
-                    <p className="text-slate-400 font-body mt-1">Real-time fiscal monitoring and overhead management.</p>
+                    <h2 className="text-3xl font-bold font-headline tracking-tight text-on-surface cyber-glow-cyan uppercase">Expenses & Income</h2>
+                    <p className="text-slate-400 font-body mt-1">Track all income and expenses — BizNexa, Inspection & General</p>
                 </div>
-                <button onClick={() => alert('Record New Expense dialog would open here.')} className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-6 py-2.5 rounded-lg font-label font-bold text-[11px] uppercase tracking-wider shadow-lg shadow-emerald-500/20 transition-all active:scale-95">
-                    Record New Expense
+                <button
+                    onClick={openAdd}
+                    className="bg-primary hover:bg-primary/80 text-slate-950 font-label text-[11px] font-black px-6 py-2.5 rounded-lg flex items-center gap-2 transition-all uppercase tracking-tighter shadow-lg shadow-primary/20 active:scale-95"
+                >
+                    <span className="material-symbols-outlined text-sm">add</span>
+                    Add Record
                 </button>
             </div>
 
-            {/* Metric Cards Bento Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-[#1e293b]/40 backdrop-blur-[8px] border border-white/5 p-6 rounded-2xl group relative overflow-hidden transition-all hover:-translate-y-1 hover:border-emerald-500/20">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-2.5 bg-emerald-500/10 rounded-xl">
-                            <span className="material-symbols-outlined text-emerald-500">account_balance_wallet</span>
+            {/* ── Stat Cards ──────────────────────────────────────────────── */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <StatCard
+                    label="Total Income"
+                    value={loading ? '—' : fmtMoney(s?.total_income ?? 0)}
+                    borderColor="border-l-tertiary"
+                    valueColor="text-tertiary"
+                />
+                <StatCard
+                    label="Total Expenses"
+                    value={loading ? '—' : fmtMoney(s?.total_expense ?? 0)}
+                    borderColor="border-l-rose-500"
+                    valueColor="text-rose-400"
+                />
+                <StatCard
+                    label="BizNexa Expenses"
+                    value={loading ? '—' : fmtMoney(s?.biznexa_expense ?? 0)}
+                    borderColor="border-l-secondary"
+                    valueColor="text-secondary"
+                />
+                <StatCard
+                    label="Inspection Expenses"
+                    value={loading ? '—' : fmtMoney(s?.inspection_expense ?? 0)}
+                    borderColor="border-l-amber-400"
+                    valueColor="text-amber-400"
+                />
+                <StatCard
+                    label="General (Inc / Exp)"
+                    borderColor="border-l-purple-500"
+                    valueColor=""
+                >
+                    {loading ? (
+                        <p className="text-xl font-headline font-bold text-slate-500">—</p>
+                    ) : (
+                        <div className="space-y-0.5">
+                            <p className="text-sm font-bold font-headline text-tertiary">+{fmtMoney(s?.general_income ?? 0)}</p>
+                            <p className="text-sm font-bold font-headline text-rose-400">-{fmtMoney(s?.general_expense ?? 0)}</p>
                         </div>
-                        <span className="text-emerald-500 text-xs font-label font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">+2.4%</span>
-                    </div>
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-slate-500 font-label mb-1">Total Expenses</p>
-                    <h3 className="text-2xl font-bold font-headline text-white">$142,850.00</h3>
-                </div>
-
-                <div className="bg-[#1e293b]/40 backdrop-blur-[8px] border border-white/5 p-6 rounded-2xl group relative overflow-hidden transition-all hover:-translate-y-1 hover:border-secondary/20">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-2.5 bg-secondary/10 rounded-xl">
-                            <span className="material-symbols-outlined text-secondary">factory</span>
-                        </div>
-                        <span className="text-slate-400 text-xs font-label font-bold bg-white/5 px-2 py-0.5 rounded-full">Stable</span>
-                    </div>
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-slate-500 font-label mb-1">Operating Costs</p>
-                    <h3 className="text-2xl font-bold font-headline text-white">$58,200.45</h3>
-                </div>
-
-                <div className="bg-[#1e293b]/40 backdrop-blur-[8px] border border-white/5 p-6 rounded-2xl group relative overflow-hidden transition-all hover:-translate-y-1 hover:border-rose-500/20">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-2.5 bg-emerald-500/10 rounded-xl">
-                            <span className="material-symbols-outlined text-emerald-500">campaign</span>
-                        </div>
-                        <span className="text-rose-500 text-xs font-label font-bold bg-rose-500/10 px-2 py-0.5 rounded-full">+12.8%</span>
-                    </div>
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-slate-500 font-label mb-1">Marketing Spend</p>
-                    <h3 className="text-2xl font-bold font-headline text-white">$34,110.00</h3>
-                </div>
-
-                <div className="bg-[#1e293b]/40 backdrop-blur-[8px] border border-white/5 p-6 rounded-2xl group relative overflow-hidden transition-all hover:-translate-y-1 hover:border-emerald-500/20">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-2.5 bg-emerald-500/10 rounded-xl">
-                            <span className="material-symbols-outlined text-emerald-500">cloud_done</span>
-                        </div>
-                        <span className="text-emerald-500 text-xs font-label font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">-4.1%</span>
-                    </div>
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-slate-500 font-label mb-1">SaaS Subscriptions</p>
-                    <h3 className="text-2xl font-bold font-headline text-white">$12,480.20</h3>
-                </div>
+                    )}
+                </StatCard>
             </div>
 
-            {/* Advanced Filters */}
-            <div className="bg-[#1e293b]/60 backdrop-blur-[16px] border border-white/5 p-4 rounded-2xl flex flex-wrap gap-4 items-center">
-                <div className="flex items-center gap-2 bg-white/5 px-4 py-2.5 rounded-xl border border-white/5 min-w-[200px] flex-1 hover:border-white/10 transition-colors cursor-pointer group">
-                    <span className="material-symbols-outlined text-sm text-emerald-500">calendar_today</span>
-                    <select value={dateRange} onChange={(e) => setDateRange(e.target.value)} className="bg-transparent border-none text-xs font-label font-bold text-white focus:ring-0 w-full cursor-pointer uppercase tracking-wider outline-none">
-                        <option>Last 30 Days</option>
-                        <option>Q3 FY2024</option>
-                        <option>Custom Range</option>
+            {/* ── Filters ─────────────────────────────────────────────────── */}
+            <div className="bg-[#1e293b]/40 backdrop-blur-[8px] border border-white/5 p-4 rounded-xl flex flex-wrap items-center gap-3">
+                {/* Search */}
+                <div className="relative flex-1 min-w-[180px]">
+                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-lg">search</span>
+                    <input
+                        type="text"
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
+                        placeholder="Search title or description..."
+                        className="w-full rounded-lg border border-white/10 bg-slate-950/60 pl-10 pr-3 py-2.5 text-sm text-white outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition font-body"
+                    />
+                </div>
+                {/* Category */}
+                <div className="bg-slate-900/50 px-3 py-2.5 rounded-lg flex items-center gap-2 border border-white/10">
+                    <span className="material-symbols-outlined text-primary text-sm">category</span>
+                    <select value={category} onChange={e => setCategory(e.target.value)} className="bg-transparent border-none text-xs font-label text-slate-300 focus:ring-0 p-0 pr-6 cursor-pointer uppercase tracking-wider outline-none">
+                        <option value="">All Categories</option>
+                        <option value="biznexa">BizNexa</option>
+                        <option value="inspection">Inspection</option>
+                        <option value="general">General</option>
                     </select>
                 </div>
-                <div className="flex items-center gap-2 bg-white/5 px-4 py-2.5 rounded-xl border border-white/5 min-w-[200px] flex-1 hover:border-white/10 transition-colors cursor-pointer">
-                    <span className="material-symbols-outlined text-sm text-emerald-500">category</span>
-                    <select value={category} onChange={(e) => setCategory(e.target.value)} className="bg-transparent border-none text-xs font-label font-bold text-white focus:ring-0 w-full cursor-pointer uppercase tracking-wider outline-none">
-                        <option>All Categories</option>
-                        <option>Infrastructure</option>
-                        <option>Marketing</option>
-                        <option>Payroll</option>
+                {/* Type */}
+                <div className="bg-slate-900/50 px-3 py-2.5 rounded-lg flex items-center gap-2 border border-white/10">
+                    <span className="material-symbols-outlined text-primary text-sm">swap_vert</span>
+                    <select value={type} onChange={e => setType(e.target.value)} className="bg-transparent border-none text-xs font-label text-slate-300 focus:ring-0 p-0 pr-6 cursor-pointer uppercase tracking-wider outline-none">
+                        <option value="">All Types</option>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
                     </select>
                 </div>
-                <div className="flex items-center gap-2 bg-white/5 px-4 py-2.5 rounded-xl border border-white/5 min-w-[200px] flex-1 hover:border-white/10 transition-colors cursor-pointer">
-                    <span className="material-symbols-outlined text-sm text-emerald-500">public</span>
-                    <select value={regionFilter} onChange={(e) => setRegionFilter(e.target.value)} className="bg-transparent border-none text-xs font-label font-bold text-white focus:ring-0 w-full cursor-pointer uppercase tracking-wider outline-none">
-                        <option>All Regions</option>
-                        <option>North America</option>
-                        <option>EMEA</option>
-                        <option>APAC</option>
-                    </select>
+                {/* Date range */}
+                <div className="flex items-center gap-2">
+                    <input
+                        type="date"
+                        value={dateFrom}
+                        onChange={e => setDateFrom(e.target.value)}
+                        className="rounded-lg border border-white/10 bg-slate-950/60 px-3 py-2.5 text-xs text-white outline-none focus:border-primary/50 transition [color-scheme:dark] font-body"
+                    />
+                    <span className="text-slate-500 text-xs">–</span>
+                    <input
+                        type="date"
+                        value={dateTo}
+                        onChange={e => setDateTo(e.target.value)}
+                        className="rounded-lg border border-white/10 bg-slate-950/60 px-3 py-2.5 text-xs text-white outline-none focus:border-primary/50 transition [color-scheme:dark] font-body"
+                    />
                 </div>
-                <button onClick={resetFilters} className="ml-auto w-full md:w-auto flex items-center justify-center gap-2 text-[10px] font-label font-bold text-slate-500 hover:text-emerald-500 transition-all uppercase tracking-[0.2em] group">
-                    <span className="material-symbols-outlined text-[18px] group-hover:-rotate-180 transition-transform duration-500">restart_alt</span>
-                    Reset Filters
+                {/* Reset */}
+                <button
+                    onClick={handleReset}
+                    className="ml-auto flex items-center gap-1.5 px-4 py-2.5 rounded-lg border border-white/10 text-slate-400 hover:text-white hover:border-white/20 text-xs font-label font-bold uppercase tracking-wider transition-all active:scale-95"
+                >
+                    <span className="material-symbols-outlined text-sm">restart_alt</span>
+                    Reset
                 </button>
             </div>
 
-            {/* Data Table */}
-            <div className="bg-[#1e293b]/60 backdrop-blur-[16px] rounded-2xl overflow-hidden shadow-2xl border border-white/5">
+            {/* ── Table ───────────────────────────────────────────────────── */}
+            <div className="bg-[#1e293b]/40 backdrop-blur-[8px] border border-white/5 rounded-xl overflow-hidden shadow-xl">
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse min-w-[1000px]">
+                    <table className="w-full text-left border-collapse min-w-[800px]">
                         <thead>
-                            <tr className="bg-white/[0.02] border-b border-white/5">
-                                <th className="px-6 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 font-label">Date</th>
-                                <th className="px-6 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 font-label">Description</th>
-                                <th className="px-6 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 font-label">Category</th>
-                                <th className="px-6 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 font-label">Amount</th>
-                                <th className="px-6 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 font-label">Method</th>
-                                <th className="px-6 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 font-label text-center">Status</th>
-                                <th className="px-6 py-5"></th>
+                            <tr className="bg-white/[0.03] border-b border-white/5">
+                                <th className="px-6 py-4 text-[10px] font-label font-black uppercase tracking-widest text-slate-500">Date</th>
+                                <th className="px-6 py-4 text-[10px] font-label font-black uppercase tracking-widest text-slate-500">Title</th>
+                                <th className="px-6 py-4 text-[10px] font-label font-black uppercase tracking-widest text-slate-500">Type</th>
+                                <th className="px-6 py-4 text-[10px] font-label font-black uppercase tracking-widest text-slate-500">Category</th>
+                                <th className="px-6 py-4 text-[10px] font-label font-black uppercase tracking-widest text-slate-500">Amount</th>
+                                <th className="px-6 py-4 text-[10px] font-label font-black uppercase tracking-widest text-slate-500">Description</th>
+                                <th className="px-6 py-4 text-[10px] font-label font-black uppercase tracking-widest text-slate-500 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
-                            {/* Row 1 */}
-                            <tr className="hover:bg-white/[0.03] transition-colors group">
-                                <td className="px-6 py-5">
-                                    <p className="text-sm font-semibold text-white">Oct 24, 2023</p>
-                                    <p className="text-[10px] text-slate-500 font-label">14:20 PM</p>
-                                </td>
-                                <td className="px-6 py-5">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
-                                            <span className="material-symbols-outlined text-[18px] text-emerald-500">cloud</span>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-semibold text-white">AWS Cloud Infrastructure</p>
-                                            <p className="text-[10px] text-slate-500 font-label">Invoice #INV-2023-990</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-5">
-                                    <span className="px-2.5 py-1 rounded-md bg-emerald-500/10 text-[10px] font-bold font-label uppercase tracking-wider text-emerald-500 border border-emerald-500/20">Infrastructure</span>
-                                </td>
-                                <td className="px-6 py-5 text-sm font-bold text-white">$12,450.00</td>
-                                <td className="px-6 py-5">
-                                    <div className="flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-[16px] text-slate-500">credit_card</span>
-                                        <span className="text-xs text-slate-400">Visa **** 9012</span>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-5 text-center">
-                                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase font-label text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                        Cleared
-                                    </span>
-                                </td>
-                                <td className="px-6 py-5 text-right">
-                                    <button onClick={() => alert('Actions for: AWS Cloud Infrastructure ($12,450.00)')} className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:text-white hover:bg-white/10 transition-all">
-                                        <span className="material-symbols-outlined">more_vert</span>
-                                    </button>
-                                </td>
-                            </tr>
-                            {/* Row 2 */}
-                            <tr className="hover:bg-white/[0.03] transition-colors group">
-                                <td className="px-6 py-5">
-                                    <p className="text-sm font-semibold text-white">Oct 22, 2023</p>
-                                    <p className="text-[10px] text-slate-500 font-label">09:15 AM</p>
-                                </td>
-                                <td className="px-6 py-5">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
-                                            <span className="material-symbols-outlined text-[18px] text-secondary">trending_up</span>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-semibold text-white">Global Ad Campaign Q4</p>
-                                            <p className="text-[10px] text-slate-500 font-label">Google Ads Management</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-5">
-                                    <span className="px-2.5 py-1 rounded-md bg-secondary/10 text-[10px] font-bold font-label uppercase tracking-wider text-secondary border border-secondary/20">Marketing</span>
-                                </td>
-                                <td className="px-6 py-5 text-sm font-bold text-white">$8,900.00</td>
-                                <td className="px-6 py-5">
-                                    <div className="flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-[16px] text-slate-500">account_balance</span>
-                                        <span className="text-xs text-slate-400">Wire Transfer</span>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-5 text-center">
-                                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase font-label text-slate-400 bg-white/5 px-3 py-1 rounded-full border border-white/10">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
-                                        Pending
-                                    </span>
-                                </td>
-                                <td className="px-6 py-5 text-right">
-                                    <button onClick={() => alert('Actions for: Global Ad Campaign Q4 ($8,900.00)')} className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:text-white hover:bg-white/10 transition-all">
-                                        <span className="material-symbols-outlined">more_vert</span>
-                                    </button>
-                                </td>
-                            </tr>
-                            {/* Row 3 */}
-                            <tr className="hover:bg-white/[0.03] transition-colors group">
-                                <td className="px-6 py-5">
-                                    <p className="text-sm font-semibold text-white">Oct 20, 2023</p>
-                                    <p className="text-[10px] text-slate-500 font-label">18:00 PM</p>
-                                </td>
-                                <td className="px-6 py-5">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
-                                            <span className="material-symbols-outlined text-[18px] text-emerald-500">groups</span>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-semibold text-white">October Payroll Batch</p>
-                                            <p className="text-[10px] text-slate-500 font-label">Core Team - EMEA</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-5">
-                                    <span className="px-2.5 py-1 rounded-md bg-emerald-500/10 text-[10px] font-bold font-label uppercase tracking-wider text-emerald-500 border border-emerald-500/20">Payroll</span>
-                                </td>
-                                <td className="px-6 py-5 text-sm font-bold text-white">$45,000.00</td>
-                                <td className="px-6 py-5">
-                                    <div className="flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-[16px] text-slate-500">payments</span>
-                                        <span className="text-xs text-slate-400">Direct Deposit</span>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-5 text-center">
-                                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase font-label text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                        Cleared
-                                    </span>
-                                </td>
-                                <td className="px-6 py-5 text-right">
-                                    <button onClick={() => alert('Actions for: October Payroll Batch ($45,000.00)')} className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:text-white hover:bg-white/10 transition-all">
-                                        <span className="material-symbols-outlined">more_vert</span>
-                                    </button>
-                                </td>
-                            </tr>
-                            {/* Row 4 */}
-                            <tr className="hover:bg-white/[0.03] transition-colors group">
-                                <td className="px-6 py-5">
-                                    <p className="text-sm font-semibold text-white">Oct 18, 2023</p>
-                                    <p className="text-[10px] text-slate-500 font-label">11:05 AM</p>
-                                </td>
-                                <td className="px-6 py-5">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
-                                            <span className="material-symbols-outlined text-[18px] text-rose-500">warning</span>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-semibold text-white">Data Center Cooling Repair</p>
-                                            <p className="text-[10px] text-slate-500 font-label">Emergency Maintenance</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-5">
-                                    <span className="px-2.5 py-1 rounded-md bg-white/5 text-[10px] font-bold font-label uppercase tracking-wider text-slate-400 border border-white/10">Operations</span>
-                                </td>
-                                <td className="px-6 py-5 text-sm font-bold text-white">$2,150.75</td>
-                                <td className="px-6 py-5">
-                                    <div className="flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-[16px] text-slate-500">credit_card</span>
-                                        <span className="text-xs text-slate-400">Visa **** 2284</span>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-5 text-center">
-                                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase font-label text-rose-500 bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
-                                        Flagged
-                                    </span>
-                                </td>
-                                <td className="px-6 py-5 text-right">
-                                    <button onClick={() => alert('Actions for: Data Center Cooling Repair ($2,150.75)')} className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:text-white hover:bg-white/10 transition-all">
-                                        <span className="material-symbols-outlined">more_vert</span>
-                                    </button>
-                                </td>
-                            </tr>
+                            {loading ? (
+                                <tr>
+                                    <td colSpan={7} className="px-6 py-12 text-center">
+                                        <span className="material-symbols-outlined text-4xl text-slate-600 animate-spin block mb-2">progress_activity</span>
+                                        <span className="text-slate-500 text-xs font-label uppercase tracking-widest">Loading...</span>
+                                    </td>
+                                </tr>
+                            ) : records.length === 0 ? (
+                                <tr>
+                                    <td colSpan={7} className="px-6 py-12 text-center">
+                                        <span className="material-symbols-outlined text-4xl text-slate-700 block mb-2">receipt_long</span>
+                                        <span className="text-slate-500 text-xs font-label uppercase tracking-widest">No records yet</span>
+                                    </td>
+                                </tr>
+                            ) : (
+                                records.map(r => (
+                                    <tr key={r.id} className="hover:bg-white/[0.025] transition-colors group">
+                                        <td className="px-6 py-4 text-sm text-slate-300 whitespace-nowrap">{fmtDate(r.expense_date)}</td>
+                                        <td className="px-6 py-4">
+                                            <span className="font-bold text-sm text-white">{r.title}</span>
+                                        </td>
+                                        <td className="px-6 py-4"><TypeBadge type={r.type} /></td>
+                                        <td className="px-6 py-4"><CatBadge category={r.category} /></td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            {r.type === 'income'
+                                                ? <span className="font-bold text-sm text-tertiary">+{fmtMoney(Number(r.amount))}</span>
+                                                : <span className="font-bold text-sm text-rose-400">-{fmtMoney(Number(r.amount))}</span>
+                                            }
+                                        </td>
+                                        <td className="px-6 py-4 text-xs text-slate-500 max-w-[200px] truncate">
+                                            {r.description || <span className="text-slate-700">—</span>}
+                                        </td>
+                                        <td className="px-6 py-4 text-right">
+                                            <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button
+                                                    onClick={() => openEdit(r)}
+                                                    className="px-3 py-1.5 rounded-lg border border-primary/30 text-primary hover:bg-primary/10 text-[10px] font-black font-label uppercase tracking-wider transition-all"
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    onClick={() => openDelete(r)}
+                                                    className="px-3 py-1.5 rounded-lg border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 text-[10px] font-black font-label uppercase tracking-wider transition-all"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>
-                <div className="bg-white/[0.02] px-6 py-4 flex flex-col md:flex-row gap-4 justify-between items-center border-t border-white/5">
-                    <p className="text-[10px] font-label font-bold uppercase tracking-[0.2em] text-slate-500">Showing 1-10 of 248 Transactions</p>
-                    <div className="flex gap-2">
-                        <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} className="w-8 h-8 rounded-lg border border-white/10 flex items-center justify-center text-slate-500 hover:bg-white/5 hover:text-white transition-all">
-                            <span className="material-symbols-outlined text-lg">chevron_left</span>
-                        </button>
-                        {[1, 2, 3].map((page) => (
-                            <button
-                                key={page}
-                                onClick={() => setCurrentPage(page)}
-                                className={`w-8 h-8 rounded-lg text-xs font-bold font-label ${
-                                    currentPage === page
-                                        ? 'bg-emerald-500 text-slate-950'
-                                        : 'border border-white/10 flex items-center justify-center text-slate-500 hover:bg-white/5 hover:text-white transition-all'
-                                }`}
-                            >
-                                {page}
-                            </button>
-                        ))}
-                        <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} className="w-8 h-8 rounded-lg border border-white/10 flex items-center justify-center text-slate-500 hover:bg-white/5 hover:text-white transition-all">
-                            <span className="material-symbols-outlined text-lg">chevron_right</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
 
-            {/* Contextual Insights Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-12">
-                <div className="bg-[#1e293b]/60 backdrop-blur-[16px] p-8 rounded-2xl lg:col-span-2 border-l-4 border-l-emerald-500 relative overflow-hidden group shadow-lg">
-                    <div className="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <span className="material-symbols-outlined text-[120px] text-emerald-500">analytics</span>
-                    </div>
-                    <div className="flex items-center gap-3 mb-4">
-                        <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-                            <span className="material-symbols-outlined text-emerald-500">analytics</span>
-                        </div>
-                        <h4 className="text-lg font-headline font-bold text-white tracking-tight">Spending Anomaly Detected</h4>
-                    </div>
-                    <p className="text-sm text-slate-400 leading-relaxed max-w-2xl">
-                        Marketing spend in the <span className="text-emerald-500 font-bold">APAC region</span> has increased by 45% compared to previous monthly projections. This correlates with the new product launch phase, but exceeds the allocated buffer by <span className="text-rose-500 font-bold">$4,200</span>.
+                {/* Pagination */}
+                <div className="px-6 py-4 bg-white/[0.01] border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <p className="text-[11px] font-label font-bold uppercase tracking-widest text-slate-500">
+                        Showing {records.length} of {total} records
                     </p>
-                    <div className="mt-8 flex flex-wrap gap-4">
-                        <button onClick={() => alert('Opening allocation review for APAC marketing spend anomaly.')} className="text-[10px] font-label font-bold uppercase tracking-[0.2em] px-6 py-2.5 bg-emerald-500 text-slate-950 rounded-lg hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-emerald-500/10">Review Allocations</button>
-                        <button onClick={() => alert('Anomaly alert dismissed.')} className="text-[10px] font-label font-bold uppercase tracking-[0.2em] px-6 py-2.5 border border-white/10 text-slate-400 rounded-lg hover:bg-white/5 transition-all">Dismiss</button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setPage(p => Math.max(1, p - 1))}
+                            disabled={page === 1}
+                            className="w-8 h-8 rounded-lg border border-white/10 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-white/5 disabled:opacity-30 transition-all"
+                        >
+                            <span className="material-symbols-outlined text-sm">chevron_left</span>
+                        </button>
+                        {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                            const pg = totalPages <= 5 ? i + 1
+                                : page <= 3 ? i + 1
+                                : page >= totalPages - 2 ? totalPages - 4 + i
+                                : page - 2 + i;
+                            return (
+                                <button
+                                    key={pg}
+                                    onClick={() => setPage(pg)}
+                                    className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${pg === page ? 'bg-primary text-slate-950 shadow-[0_0_12px_rgba(0,242,255,0.2)]' : 'border border-white/10 text-slate-500 hover:text-primary hover:bg-white/5'}`}
+                                >
+                                    {pg}
+                                </button>
+                            );
+                        })}
+                        <button
+                            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                            disabled={page === totalPages}
+                            className="w-8 h-8 rounded-lg border border-white/10 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-white/5 disabled:opacity-30 transition-all"
+                        >
+                            <span className="material-symbols-outlined text-sm">chevron_right</span>
+                        </button>
                     </div>
-                </div>
-
-                <div className="bg-[#1e293b]/60 backdrop-blur-[16px] p-8 rounded-2xl flex flex-col border border-white/10 shadow-lg">
-                    <div className="flex justify-between items-center mb-6">
-                        <h4 className="font-headline font-bold text-white tracking-tight">Upcoming Renewals</h4>
-                        <span className="material-symbols-outlined text-slate-500 text-sm">schedule</span>
-                    </div>
-                    <div className="space-y-6 flex-1">
-                        <div className="flex items-center justify-between p-3 rounded-xl hover:bg-white/[0.03] transition-colors cursor-pointer group">
-                            <div className="flex items-center gap-3">
-                                <div className="w-2.5 h-2.5 rounded-full bg-secondary shadow-[0_0_8px_rgba(144,147,255,0.5)]"></div>
-                                <p className="text-xs font-semibold group-hover:text-secondary transition-colors text-slate-300">Salesforce Enterprise</p>
-                            </div>
-                            <p className="text-[10px] font-label font-bold text-slate-500 uppercase tracking-widest">In 3 days</p>
-                        </div>
-                        <div className="flex items-center justify-between p-3 rounded-xl hover:bg-white/[0.03] transition-colors cursor-pointer group">
-                            <div className="flex items-center gap-3">
-                                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
-                                <p className="text-xs font-semibold group-hover:text-emerald-500 transition-colors text-slate-300">GitHub Co-Pilot</p>
-                            </div>
-                            <p className="text-[10px] font-label font-bold text-slate-500 uppercase tracking-widest">In 8 days</p>
-                        </div>
-                        <div className="flex items-center justify-between p-3 rounded-xl hover:bg-white/[0.03] transition-colors cursor-pointer group">
-                            <div className="flex items-center gap-3">
-                                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
-                                <p className="text-xs font-semibold group-hover:text-emerald-500 transition-colors text-slate-300">Zoom Pro Plan</p>
-                            </div>
-                            <p className="text-[10px] font-label font-bold text-slate-500 uppercase tracking-widest">In 14 days</p>
-                        </div>
-                    </div>
-                    <button onClick={() => alert('Navigating to full subscriptions management view.')} className="mt-8 w-full text-center text-[10px] font-label font-bold uppercase tracking-[0.2em] py-3 text-emerald-500 border border-emerald-500/20 rounded-xl hover:bg-emerald-500/5 transition-all">View All Subscriptions</button>
                 </div>
             </div>
 
-            {/* Floating Action Button */}
-            <button onClick={() => alert('Quick action menu: Record expense, Upload receipt, Create report.')} className="fixed bottom-8 right-8 w-14 h-14 bg-emerald-500 rounded-2xl shadow-[0_8px_30px_rgba(16,185,129,0.3)] flex items-center justify-center text-slate-950 hover:scale-105 active:scale-95 transition-all z-50 group border border-emerald-500/50">
-                <span className="material-symbols-outlined font-black text-2xl group-hover:rotate-90 transition-transform duration-300">add</span>
-            </button>
-        </section>
+            {/* ── Add Modal ───────────────────────────────────────────────── */}
+            {modal === 'add' && (
+                <Modal title="Add Record" onClose={closeModal}>
+                    <ExpenseFormFields form={form} setForm={setForm} />
+                    {formError && <p className="mt-3 text-xs text-rose-400 font-medium">{formError}</p>}
+                    <div className="flex justify-end gap-3 mt-6">
+                        <button onClick={closeModal} className="px-5 py-2.5 rounded-lg border border-white/10 text-slate-400 hover:text-white text-xs font-label font-bold uppercase tracking-wider transition-all">
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleAdd}
+                            disabled={saving}
+                            className="px-6 py-2.5 rounded-lg bg-primary text-slate-950 text-xs font-label font-black uppercase tracking-wider hover:bg-primary/80 disabled:opacity-50 transition-all flex items-center gap-2"
+                        >
+                            {saving && <span className="material-symbols-outlined text-sm animate-spin">progress_activity</span>}
+                            Add Record
+                        </button>
+                    </div>
+                </Modal>
+            )}
+
+            {/* ── Edit Modal ──────────────────────────────────────────────── */}
+            {modal === 'edit' && active && (
+                <Modal title="Edit Record" onClose={closeModal}>
+                    <ExpenseFormFields form={form} setForm={setForm} />
+                    {formError && <p className="mt-3 text-xs text-rose-400 font-medium">{formError}</p>}
+                    <div className="flex justify-end gap-3 mt-6">
+                        <button onClick={closeModal} className="px-5 py-2.5 rounded-lg border border-white/10 text-slate-400 hover:text-white text-xs font-label font-bold uppercase tracking-wider transition-all">
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleEdit}
+                            disabled={saving}
+                            className="px-6 py-2.5 rounded-lg bg-primary text-slate-950 text-xs font-label font-black uppercase tracking-wider hover:bg-primary/80 disabled:opacity-50 transition-all flex items-center gap-2"
+                        >
+                            {saving && <span className="material-symbols-outlined text-sm animate-spin">progress_activity</span>}
+                            Save Changes
+                        </button>
+                    </div>
+                </Modal>
+            )}
+
+            {/* ── Delete Modal ─────────────────────────────────────────────── */}
+            {modal === 'delete' && active && (
+                <Modal title="Delete Record" onClose={closeModal}>
+                    <div className="flex gap-4 items-start">
+                        <div className="shrink-0 w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center">
+                            <span className="material-symbols-outlined text-rose-500">warning</span>
+                        </div>
+                        <div>
+                            <p className="text-sm font-bold text-white">Are you sure you want to delete this record?</p>
+                            <p className="text-sm text-slate-400 mt-1">
+                                <span className="text-white font-semibold">&ldquo;{active.title}&rdquo;</span> will be permanently removed.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex justify-end gap-3 mt-6">
+                        <button onClick={closeModal} className="px-5 py-2.5 rounded-lg border border-white/10 text-slate-400 hover:text-white text-xs font-label font-bold uppercase tracking-wider transition-all">
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleDelete}
+                            disabled={saving}
+                            className="px-6 py-2.5 rounded-lg bg-rose-500 text-white text-xs font-label font-black uppercase tracking-wider hover:bg-rose-600 disabled:opacity-50 transition-all flex items-center gap-2"
+                        >
+                            {saving && <span className="material-symbols-outlined text-sm animate-spin">progress_activity</span>}
+                            Delete
+                        </button>
+                    </div>
+                </Modal>
+            )}
+        </div>
     );
 }

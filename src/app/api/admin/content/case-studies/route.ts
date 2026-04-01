@@ -18,17 +18,17 @@ const caseStudySchema = z.object({
   results: z
     .array(
       z.object({
-        metric: z.string().trim().min(1),
-        label: z.string().trim().min(1),
+        metric: z.string().trim(),
+        label: z.string().trim(),
       }),
     )
     .length(4),
-  technologies: z.array(z.string().trim().min(1)).min(1),
-  coverImage: z.string().trim().min(1),
-  coverImageAlt: z.string().trim().min(1),
-  clientQuote: z.string().trim().min(1),
-  clientImage: z.string().trim().min(1),
-  relatedSlugs: z.array(z.string().trim().min(1)),
+  technologies: z.array(z.string().trim()).min(1),
+  coverImage: z.string().trim(),
+  coverImageAlt: z.string().trim(),
+  clientQuote: z.string().trim(),
+  clientImage: z.string().trim(),
+  relatedSlugs: z.array(z.string().trim()),
   published: z.boolean(),
   sortOrder: z.number(),
 });
