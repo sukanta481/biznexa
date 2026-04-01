@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import CreateInspectionFileModal from '@/components/admin/CreateInspectionFileModal';
 import ViewInspectionFileModal from '@/components/admin/ViewInspectionFileModal';
 
@@ -28,13 +29,36 @@ const statusStyles: Record<string, string> = {
 
 const LIMIT = 20;
 
-export default function InspectionFiles() {
+const PAYMENT_STATUS_LABELS: Record<string, string> = {
+    pending_payment: 'Payment Pending (Due / Partial)',
+    paid: 'Paid',
+    due: 'Due',
+    partially: 'Partially Paid',
+};
+
+const PAID_TO_OFFICE_LABELS: Record<string, string> = {
+    due: 'Not Paid to Office',
+    paid: 'Paid to Office',
+};
+
+function InspectionFilesInner() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+
+    // Normal visible filters
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
-    const [typeFilter, setTypeFilter] = useState('');
-    const [dateFrom, setDateFrom] = useState('');
-    const [dateTo, setDateTo] = useState('');
+    const [typeFilter, setTypeFilter] = useState(() => searchParams.get('type') ?? '');
+    const [dateFrom, setDateFrom] = useState(() => searchParams.get('dateFrom') ?? '');
+    const [dateTo, setDateTo] = useState(() => searchParams.get('dateTo') ?? '');
     const [currentPage, setCurrentPage] = useState(1);
+
+    // Hidden deep-link filters (from dashboard cards)
+    const [paymentStatusFilter] = useState(() => searchParams.get('payment_status') ?? '');
+    const [paidToOfficeFilter] = useState(() => searchParams.get('paid_to_office') ?? '');
+
+    const hasDashboardFilter = !!(paymentStatusFilter || paidToOfficeFilter || searchParams.get('dateFrom') || searchParams.get('dateTo'));
+
     const [showModal, setShowModal] = useState(false);
     const [editFileId, setEditFileId] = useState<number | null>(null);
     const [viewFileId, setViewFileId] = useState<number | null>(null);
@@ -55,6 +79,8 @@ export default function InspectionFiles() {
             if (typeFilter) params.set('type', typeFilter);
             if (dateFrom) params.set('dateFrom', dateFrom);
             if (dateTo) params.set('dateTo', dateTo);
+            if (paymentStatusFilter) params.set('payment_status', paymentStatusFilter);
+            if (paidToOfficeFilter) params.set('paid_to_office', paidToOfficeFilter);
             params.set('page', String(currentPage));
             params.set('limit', String(LIMIT));
 
@@ -69,7 +95,7 @@ export default function InspectionFiles() {
         } finally {
             setLoading(false);
         }
-    }, [searchQuery, statusFilter, typeFilter, dateFrom, dateTo, currentPage]);
+    }, [searchQuery, statusFilter, typeFilter, dateFrom, dateTo, paymentStatusFilter, paidToOfficeFilter, currentPage]);
 
     useEffect(() => {
         fetchFiles();
@@ -93,10 +119,7 @@ export default function InspectionFiles() {
         }
     }, [fetchFiles]);
 
-    // Reset to page 1 when filters change
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [searchQuery, statusFilter, typeFilter, dateFrom, dateTo]);
+    useEffect(() => { setCurrentPage(1); }, [searchQuery, statusFilter, typeFilter, dateFrom, dateTo]);
 
     const formatDate = (dateStr: string | null) => {
         if (!dateStr) return '—';
@@ -117,6 +140,15 @@ export default function InspectionFiles() {
     const statusLabel = (status: string | null) => status ?? '—';
     const statusClass = (status: string | null) =>
         statusStyles[(status ?? '').toLowerCase()] ?? 'bg-white/5 text-slate-400 border border-white/10';
+
+    // Build a human-readable summary of active dashboard filters
+    const dashFilterTags: string[] = [];
+    if (typeFilter) dashFilterTags.push(`Type: ${typeFilter.charAt(0).toUpperCase() + typeFilter.slice(1)}`);
+    if (paymentStatusFilter) dashFilterTags.push(`Payment: ${PAYMENT_STATUS_LABELS[paymentStatusFilter] ?? paymentStatusFilter}`);
+    if (paidToOfficeFilter) dashFilterTags.push(`Office: ${PAID_TO_OFFICE_LABELS[paidToOfficeFilter] ?? paidToOfficeFilter}`);
+    if (dateFrom && dateTo) dashFilterTags.push(`Date: ${formatDate(dateFrom)} – ${formatDate(dateTo)}`);
+    else if (dateFrom) dashFilterTags.push(`From: ${formatDate(dateFrom)}`);
+    else if (dateTo) dashFilterTags.push(`To: ${formatDate(dateTo)}`);
 
     return (
         <div className="max-w-[1400px] mx-auto space-y-8">
@@ -139,6 +171,27 @@ export default function InspectionFiles() {
                     + Add New File
                 </button>
             </div>
+
+            {/* Dashboard filter context banner */}
+            {hasDashboardFilter && dashFilterTags.length > 0 && (
+                <div className="flex items-center gap-3 flex-wrap bg-secondary/5 border border-secondary/20 rounded-xl px-5 py-3">
+                    <span className="material-symbols-outlined text-secondary text-lg shrink-0">filter_alt</span>
+                    <span className="text-[11px] font-headline font-bold uppercase tracking-widest text-secondary shrink-0">Dashboard Filter:</span>
+                    <div className="flex flex-wrap gap-2 flex-1">
+                        {dashFilterTags.map(tag => (
+                            <span key={tag} className="px-2.5 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 text-[11px] font-bold">{tag}</span>
+                        ))}
+                    </div>
+                    <button
+                        onClick={() => router.push('/admin/inspections/files')}
+                        className="ml-auto flex items-center gap-1.5 text-[11px] font-bold text-slate-400 hover:text-white transition-colors shrink-0"
+                        title="Clear dashboard filters"
+                    >
+                        <span className="material-symbols-outlined text-sm">close</span>
+                        Clear
+                    </button>
+                </div>
+            )}
 
             {/* Filter Bar */}
             <div className="bg-[#0f172a]/60 backdrop-blur-[16px] p-4 rounded-xl flex flex-wrap items-center gap-4 border border-white/[0.08]">
@@ -349,5 +402,13 @@ export default function InspectionFiles() {
                 />
             )}
         </div>
+    );
+}
+
+export default function InspectionFiles() {
+    return (
+        <Suspense>
+            <InspectionFilesInner />
+        </Suspense>
     );
 }

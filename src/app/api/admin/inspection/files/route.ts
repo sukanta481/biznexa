@@ -39,6 +39,23 @@ export async function GET(request: NextRequest) {
     params.push(dateTo);
   }
 
+  const paymentStatus = searchParams.get("payment_status") ?? "";
+  const paidToOffice = searchParams.get("paid_to_office") ?? "";
+
+  if (paymentStatus === "pending_payment") {
+    conditions.push("f.payment_status IN ('due', 'partially')");
+  } else if (paymentStatus) {
+    conditions.push("f.payment_status = ?");
+    params.push(paymentStatus);
+  }
+
+  if (paidToOffice === "due") {
+    conditions.push("(f.paid_to_office IS NULL OR f.paid_to_office != 'paid')");
+  } else if (paidToOffice) {
+    conditions.push("f.paid_to_office = ?");
+    params.push(paidToOffice);
+  }
+
   const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
 
   const [countRows, rows] = await Promise.all([

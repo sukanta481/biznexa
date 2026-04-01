@@ -101,11 +101,15 @@ export default function InspectionDashboard() {
 
     function filesHref(extra?: Record<string, string>) {
         const p = new URLSearchParams();
-        if (month) p.set('month', month);
-        if (year) p.set('year', year);
-        if (fileType) p.set('file_type', fileType);
-        p.set('date_basis', dateBasis);
-        p.set('sort', sort);
+        // Pass date range as dateFrom/dateTo for the files page filter
+        if (month && year) {
+            const m = parseInt(month, 10);
+            const y = parseInt(year, 10);
+            const lastDay = new Date(y, m, 0).getDate();
+            p.set('dateFrom', `${y}-${String(m).padStart(2, '0')}-01`);
+            p.set('dateTo', `${y}-${String(m).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`);
+        }
+        if (fileType) p.set('type', fileType);
         if (extra) Object.entries(extra).forEach(([k, v]) => p.set(k, v));
         return `/admin/inspections/files?${p}`;
     }
@@ -185,37 +189,40 @@ export default function InspectionDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
                 {/* 1. Total Fees Worked */}
-                <div className="bg-[#192540]/60 backdrop-blur-[16px] p-6 rounded-2xl flex flex-col justify-between border border-white/5 shadow-lg">
+                <Link href={filesHref()} className="bg-[#192540]/60 backdrop-blur-[16px] p-6 rounded-2xl flex flex-col justify-between group hover:border-secondary/30 transition-all border border-white/5 shadow-lg">
                     <div className="flex justify-between items-start">
                         <span className="material-symbols-outlined text-secondary bg-secondary/10 p-2.5 rounded-xl">receipt_long</span>
+                        <span className="material-symbols-outlined text-slate-600 group-hover:text-secondary transition-colors text-lg">open_in_new</span>
                     </div>
                     <div className="mt-6">
                         <p className="text-slate-500 text-[10px] font-label tracking-[0.15em] uppercase">Total Fees Worked</p>
                         <h3 className="text-2xl font-bold font-headline mt-1 text-white">{loading ? <Dash /> : fmtMoney(stats?.total_fees ?? 0)}</h3>
                     </div>
-                </div>
+                </Link>
 
                 {/* 2. Office Earned */}
-                <div className="bg-[#192540]/60 backdrop-blur-[16px] p-6 rounded-2xl flex flex-col justify-between border border-white/5 shadow-lg">
+                <Link href={filesHref({ type: 'self' })} className="bg-[#192540]/60 backdrop-blur-[16px] p-6 rounded-2xl flex flex-col justify-between group hover:border-primary/30 transition-all border border-white/5 shadow-lg">
                     <div className="flex justify-between items-start">
                         <span className="material-symbols-outlined text-primary bg-primary/10 p-2.5 rounded-xl">account_balance</span>
+                        <span className="material-symbols-outlined text-slate-600 group-hover:text-primary transition-colors text-lg">open_in_new</span>
                     </div>
                     <div className="mt-6">
                         <p className="text-slate-500 text-[10px] font-label tracking-[0.15em] uppercase">Office Earned</p>
                         <h3 className="text-2xl font-bold font-headline mt-1 text-white">{loading ? <Dash /> : fmtMoney(stats?.office_earned ?? 0)}</h3>
                     </div>
-                </div>
+                </Link>
 
                 {/* 3. Pending Amount */}
-                <div className="bg-[#192540]/60 backdrop-blur-[16px] p-6 rounded-2xl flex flex-col justify-between border border-white/5 shadow-lg">
+                <Link href={filesHref({ type: 'self', payment_status: 'pending_payment' })} className="bg-[#192540]/60 backdrop-blur-[16px] p-6 rounded-2xl flex flex-col justify-between group hover:border-amber-400/30 transition-all border border-white/5 shadow-lg">
                     <div className="flex justify-between items-start">
                         <span className="material-symbols-outlined text-amber-400 bg-amber-400/10 p-2.5 rounded-xl">hourglass_empty</span>
+                        <span className="material-symbols-outlined text-slate-600 group-hover:text-amber-400 transition-colors text-lg">open_in_new</span>
                     </div>
                     <div className="mt-6">
                         <p className="text-slate-500 text-[10px] font-label tracking-[0.15em] uppercase">Pending Amount</p>
                         <h3 className="text-2xl font-bold font-headline mt-1 text-amber-400">{loading ? <Dash /> : fmtMoney(stats?.pending_amount ?? 0)}</h3>
                     </div>
-                </div>
+                </Link>
 
                 {/* 4. Total Files — clickable */}
                 <Link href={filesHref({ metric: 'total_files' })} className="bg-[#192540]/60 backdrop-blur-[16px] p-6 rounded-2xl flex flex-col justify-between group hover:border-primary/30 transition-all border border-white/5 shadow-lg">
@@ -256,29 +263,30 @@ export default function InspectionDashboard() {
                 </Link>
 
                 {/* 7. Total Paid */}
-                <div className="bg-[#192540]/60 backdrop-blur-[16px] p-6 rounded-2xl flex flex-col justify-between border border-white/5 shadow-lg">
+                <Link href={filesHref({ type: 'self', payment_status: 'paid' })} className="bg-[#192540]/60 backdrop-blur-[16px] p-6 rounded-2xl flex flex-col justify-between group hover:border-tertiary/30 transition-all border border-white/5 shadow-lg">
                     <div className="flex justify-between items-start">
                         <span className="material-symbols-outlined text-tertiary bg-tertiary/10 p-2.5 rounded-xl">check_circle</span>
+                        <span className="material-symbols-outlined text-slate-600 group-hover:text-tertiary transition-colors text-lg">open_in_new</span>
                     </div>
                     <div className="mt-6">
                         <p className="text-slate-500 text-[10px] font-label tracking-[0.15em] uppercase">Total Paid</p>
                         <h3 className="text-2xl font-bold font-headline mt-1 text-tertiary">{loading ? <Dash /> : fmtMoney(stats?.total_paid ?? 0)}</h3>
                     </div>
-                </div>
+                </Link>
 
                 {/* 8. Pending Office */}
-                <div className="bg-[#192540]/60 backdrop-blur-[16px] p-6 rounded-2xl flex flex-col justify-between border border-white/5 shadow-lg">
+                <Link href={filesHref({ type: 'self', payment_status: 'paid', paid_to_office: 'due' })} className="bg-[#192540]/60 backdrop-blur-[16px] p-6 rounded-2xl flex flex-col justify-between group hover:border-orange-400/30 transition-all border border-white/5 shadow-lg">
                     <div className="flex justify-between items-start">
                         <span className="material-symbols-outlined text-orange-400 bg-orange-400/10 p-2.5 rounded-xl">account_balance</span>
                         {!loading && (stats?.pending_office ?? 0) > 0 && (
-                            <span className="bg-orange-400/20 text-orange-400 border border-orange-400/30 text-[9px] font-black font-label px-2 py-0.5 rounded-full uppercase">Pending</span>
+                            <span className="bg-orange-400/20 text-orange-400 border border-orange-400/30 text-[9px] font-black font-label px-2 py-0.5 rounded-full animate-pulse uppercase">Pending</span>
                         )}
                     </div>
                     <div className="mt-6">
                         <p className="text-slate-500 text-[10px] font-label tracking-[0.15em] uppercase">Pending Office</p>
                         <h3 className="text-2xl font-bold font-headline mt-1 text-orange-400">{loading ? <Dash /> : fmtMoney(stats?.pending_office ?? 0)}</h3>
                     </div>
-                </div>
+                </Link>
             </div>
 
             {/* ── Scan Performance Metrics + Period Summary ────────────────── */}
