@@ -32,13 +32,14 @@ const PER_PAGE = 15;
 // ─── Helper: empty form state per entity ─────────────────────────────────────
 
 function emptyForm(entity: EntityKey): Record<string, string> {
-    switch (entity) {
-        case 'banks': return { bank_name: '', status: 'active' };
-        case 'branches': return { branch_name: '', bank_id: '', status: 'active' };
-        case 'sources': return { source_name: '', phone: '', status: 'active' };
-        case 'payment-modes': return { mode_name: '', status: 'active' };
-        case 'accounts': return { account_name: '', bank_name: '', account_number: '', ifsc_code: '', status: 'active' };
-    }
+    const forms: Record<EntityKey, Record<string, string>> = {
+        'banks': { bank_name: '', status: 'active' },
+        'branches': { branch_name: '', bank_id: '', status: 'active' },
+        'sources': { source_name: '', phone: '', status: 'active' },
+        'payment-modes': { mode_name: '', status: 'active' },
+        'accounts': { account_name: '', bank_name: '', account_number: '', ifsc_code: '', status: 'active' },
+    };
+    return forms[entity];
 }
 
 // ─── Add/Edit Modal ───────────────────────────────────────────────────────────
@@ -235,7 +236,7 @@ export default function InspectionMasters() {
 
     // Modal state
     const [showModal, setShowModal] = useState(false);
-    const [editItem, setEditItem] = useState<Record<string, string> | null>(null);
+    const [editItem, setEditItem] = useState<Record<string, unknown> | null>(null);
 
     // Delete state
     const [deletingId, setDeletingId] = useState<number | null>(null);
