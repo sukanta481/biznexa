@@ -31,7 +31,7 @@ const PER_PAGE = 15;
 
 // ─── Helper: empty form state per entity ─────────────────────────────────────
 
-function emptyForm(entity: EntityKey) {
+function emptyForm(entity: EntityKey): Record<string, string> {
     switch (entity) {
         case 'banks': return { bank_name: '', status: 'active' };
         case 'branches': return { branch_name: '', bank_id: '', status: 'active' };
@@ -51,13 +51,17 @@ function MasterModal({
     onSaved,
 }: {
     entity: EntityKey;
-    initial: Record<string, string> | null;
+    initial: Record<string, unknown> | null;
     bankOptions: { id: number; bank_name: string }[];
     onClose: () => void;
     onSaved: () => void;
 }) {
     const isEdit = !!initial;
-    const [form, setForm] = useState<Record<string, string>>(initial ?? emptyForm(entity) as Record<string, string>);
+    const [form, setForm] = useState<Record<string, string>>(
+        initial
+            ? Object.fromEntries(Object.entries(initial).map(([k, v]) => [k, v == null ? '' : String(v)]))
+            : emptyForm(entity)
+    );
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState('');
 
@@ -71,7 +75,7 @@ function MasterModal({
         setError('');
         try {
             const url = isEdit
-                ? `/api/admin/inspection/masters/${entity}/${(initial as Record<string, string>).id}`
+                ? `/api/admin/inspection/masters/${entity}/${initial!.id}`
                 : `/api/admin/inspection/masters/${entity}`;
             const res = await fetch(url, {
                 method: isEdit ? 'PATCH' : 'POST',

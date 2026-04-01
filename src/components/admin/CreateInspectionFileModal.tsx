@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -25,6 +25,7 @@ interface InitData {
 interface Props {
     onClose: () => void;
     onSaved: (fileNumber: string) => void;
+    fileId?: number; // if provided, opens in edit mode
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -60,7 +61,9 @@ function Sel({ value, onChange, disabled, color, children }: {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export default function CreateInspectionFileModal({ onClose, onSaved }: Props) {
+export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: Props) {
+    const isEdit = !!fileId;
+
     // Init data
     const [initData, setInitData] = useState<InitData | null>(null);
     const [initLoading, setInitLoading] = useState(true);
@@ -69,6 +72,9 @@ export default function CreateInspectionFileModal({ onClose, onSaved }: Props) {
     // Branches (AJAX)
     const [branches, setBranches] = useState<BranchItem[]>([]);
     const [branchesLoading, setBranchesLoading] = useState(false);
+
+    // Holds branchId to restore after branch list loads (used during prefill)
+    const pendingBranchId = useRef('');
 
     // Form state
     const [fileDate, setFileDate] = useState(todayStr());
@@ -100,13 +106,49 @@ export default function CreateInspectionFileModal({ onClose, onSaved }: Props) {
     const [error, setError] = useState('');
     const [savedMsg, setSavedMsg] = useState('');
 
-    // ── Load init data ─────────────────────────────────────────────────────────
+    // ── Load init data (+ file data when editing) ─────────────────────────────
     useEffect(() => {
-        fetch('/api/admin/inspection/files/init', { signal: AbortSignal.timeout(15_000) })
-            .then(r => r.json())
-            .then((d: InitData) => { setInitData(d); setInitLoading(false); })
+        const fetches: [Promise<InitData>, Promise<Record<string, unknown> | null>] = [
+            fetch('/api/admin/inspection/files/init', { signal: AbortSignal.timeout(15_000) }).then(r => r.json()),
+            isEdit
+                ? fetch(`/api/admin/inspection/files/${fileId}`, { signal: AbortSignal.timeout(15_000) }).then(r => r.json())
+                : Promise.resolve(null),
+        ];
+
+        Promise.all(fetches)
+            .then(([init, file]) => {
+                setInitData(init);
+                if (file && isEdit) {
+                    // Prefill form fields
+                    setFileDate((file.file_date as string) ?? todayStr());
+                    setFileType((file.file_type as 'office' | 'self') ?? 'office');
+                    setLocation((file.location as string) ?? '');
+                    setCustomerName((file.customer_name as string) ?? '');
+                    setCustomerPhone((file.customer_phone as string) ?? '');
+                    setPropertyAddress((file.property_address as string) ?? '');
+                    setPropertyValue(file.property_value != null ? String(file.property_value) : '');
+                    setSourceId(file.source_id != null ? String(file.source_id) : '');
+                    setFees(file.fees != null ? String(file.fees) : '');
+                    setReportStatus((file.report_status as string) ?? '');
+                    setReportStatusDate((file.report_status_date as string) ?? '');
+                    setPaymentModeId(file.payment_mode_id != null ? String(file.payment_mode_id) : '');
+                    setPaymentStatus((file.payment_status as string) ?? 'due');
+                    setPaymentStatusDate((file.payment_status_date as string) ?? '');
+                    setPartialAmount(file.amount != null && file.payment_status === 'partially' ? String(file.amount) : '');
+                    setPaidToOffice((file.paid_to_office as string) ?? '');
+                    setPaidToOfficeDate((file.paid_to_office_date as string) ?? '');
+                    setCommissionPending((file.commission_pending as string) ?? '');
+                    setExtraAmount(file.extra_amount != null ? String(file.extra_amount) : '0');
+                    setReceivedAccountId(file.received_account_id != null ? String(file.received_account_id) : '');
+                    setNotes((file.notes as string) ?? '');
+                    // Branch: set via ref so it loads after bank branches are fetched
+                    if (file.branch_id != null) pendingBranchId.current = String(file.branch_id);
+                    setBankId(file.bank_id != null ? String(file.bank_id) : '');
+                }
+                setInitLoading(false);
+            })
             .catch(() => { setInitError('Failed to load form data. Please close and retry.'); setInitLoading(false); });
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     // ── Load branches when bank changes ────────────────────────────────────────
     useEffect(() => {
@@ -115,7 +157,14 @@ export default function CreateInspectionFileModal({ onClose, onSaved }: Props) {
         setBranchId('');
         fetch(`/api/admin/inspection/files/branches?bank_id=${bankId}`, { signal: AbortSignal.timeout(10_000) })
             .then(r => r.json())
-            .then((d: { branches: BranchItem[] }) => setBranches(d.branches ?? []))
+            .then((d: { branches: BranchItem[] }) => {
+                setBranches(d.branches ?? []);
+                // Restore branch selection after prefill
+                if (pendingBranchId.current) {
+                    setBranchId(pendingBranchId.current);
+                    pendingBranchId.current = '';
+                }
+            })
             .catch(() => setBranches([]))
             .finally(() => setBranchesLoading(false));
     }, [bankId]);
@@ -205,7 +254,7 @@ export default function CreateInspectionFileModal({ onClose, onSaved }: Props) {
         setError('');
     }
 
-    // ── Save ──────────────────────────────────────────────────────────────────
+    // ── Save / Update ─────────────────────────────────────────────────────────
     async function handleSave(andAnother: boolean) {
         setSaving(true);
         setError('');
@@ -238,8 +287,10 @@ export default function CreateInspectionFileModal({ onClose, onSaved }: Props) {
         };
 
         try {
-            const res = await fetch('/api/admin/inspection/files', {
-                method: 'POST',
+            const url = isEdit ? `/api/admin/inspection/files/${fileId}` : '/api/admin/inspection/files';
+            const method = isEdit ? 'PATCH' : 'POST';
+            const res = await fetch(url, {
+                method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
                 signal: AbortSignal.timeout(20_000),
@@ -247,7 +298,7 @@ export default function CreateInspectionFileModal({ onClose, onSaved }: Props) {
             const json = await res.json() as { id?: number; file_number?: string; error?: string };
             if (!res.ok) throw new Error(json.error ?? 'Save failed');
 
-            if (andAnother) {
+            if (!isEdit && andAnother) {
                 setSavedMsg(`Saved as ${json.file_number}. Form ready for next entry.`);
                 resetForm();
             } else {
@@ -300,9 +351,11 @@ export default function CreateInspectionFileModal({ onClose, onSaved }: Props) {
                             <span className="material-symbols-outlined text-[10px] text-slate-500">chevron_right</span>
                             <span className="text-[10px] font-headline uppercase tracking-widest text-slate-500">Files</span>
                             <span className="material-symbols-outlined text-[10px] text-slate-500">chevron_right</span>
-                            <span className="text-[10px] font-headline uppercase tracking-widest text-primary">Create New</span>
+                            <span className="text-[10px] font-headline uppercase tracking-widest text-primary">{isEdit ? 'Edit' : 'Create New'}</span>
                         </nav>
-                        <h2 className="text-2xl md:text-3xl font-headline font-bold text-white tracking-tighter">Create New Inspection File</h2>
+                        <h2 className="text-2xl md:text-3xl font-headline font-bold text-white tracking-tighter">
+                            {isEdit ? 'Edit Inspection File' : 'Create New Inspection File'}
+                        </h2>
                     </div>
                     <button type="button" onClick={onClose} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-all text-slate-400 hover:text-white shrink-0">
                         <span className="material-symbols-outlined">close</span>
@@ -657,14 +710,16 @@ export default function CreateInspectionFileModal({ onClose, onSaved }: Props) {
                     >
                         Cancel
                     </button>
-                    <button
-                        type="button"
-                        disabled={saving}
-                        onClick={() => handleSave(true)}
-                        className="px-6 py-3 border border-white/10 text-white font-headline uppercase text-[11px] tracking-[0.1em] hover:bg-[#1e293b] transition-all rounded-lg disabled:opacity-50"
-                    >
-                        {saving ? 'Saving...' : 'Save & Add Another'}
-                    </button>
+                    {!isEdit && (
+                        <button
+                            type="button"
+                            disabled={saving}
+                            onClick={() => handleSave(true)}
+                            className="px-6 py-3 border border-white/10 text-white font-headline uppercase text-[11px] tracking-[0.1em] hover:bg-[#1e293b] transition-all rounded-lg disabled:opacity-50"
+                        >
+                            {saving ? 'Saving...' : 'Save & Add Another'}
+                        </button>
+                    )}
                     <button
                         type="button"
                         disabled={saving}
@@ -675,6 +730,11 @@ export default function CreateInspectionFileModal({ onClose, onSaved }: Props) {
                             <>
                                 <span className="material-symbols-outlined text-[16px] animate-spin">progress_activity</span>
                                 Saving...
+                            </>
+                        ) : isEdit ? (
+                            <>
+                                <span className="material-symbols-outlined text-[16px]">save</span>
+                                Save Changes
                             </>
                         ) : (
                             <>

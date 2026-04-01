@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import CreateInspectionFileModal from '@/components/admin/CreateInspectionFileModal';
+import ViewInspectionFileModal from '@/components/admin/ViewInspectionFileModal';
 
 interface InspectionFile {
     id: number;
@@ -35,6 +36,9 @@ export default function InspectionFiles() {
     const [dateTo, setDateTo] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
+    const [editFileId, setEditFileId] = useState<number | null>(null);
+    const [viewFileId, setViewFileId] = useState<number | null>(null);
+    const [deletingId, setDeletingId] = useState<number | null>(null);
 
     const [files, setFiles] = useState<InspectionFile[]>([]);
     const [total, setTotal] = useState(0);
@@ -69,6 +73,24 @@ export default function InspectionFiles() {
 
     useEffect(() => {
         fetchFiles();
+    }, [fetchFiles]);
+
+    const handleDelete = useCallback(async (file: InspectionFile) => {
+        if (!confirm(`Delete file "${file.file_number}"? This cannot be undone.`)) return;
+        setDeletingId(file.id);
+        try {
+            const res = await fetch(`/api/admin/inspection/files/${file.id}`, { method: 'DELETE' });
+            if (!res.ok) {
+                const json = await res.json() as { error?: string };
+                alert(json.error ?? 'Delete failed.');
+            } else {
+                fetchFiles();
+            }
+        } catch {
+            alert('Delete failed. Please try again.');
+        } finally {
+            setDeletingId(null);
+        }
     }, [fetchFiles]);
 
     // Reset to page 1 when filters change
@@ -223,24 +245,28 @@ export default function InspectionFiles() {
                                         <td className="px-6 py-5 text-right">
                                             <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <button
-                                                    onClick={() => alert(`Edit: ${file.file_number}`)}
+                                                    onClick={() => setEditFileId(file.id)}
                                                     className="p-2 hover:bg-[#1e293b] rounded-lg text-slate-500 hover:text-primary transition-all"
+                                                    title="Edit"
                                                 >
                                                     <span className="material-symbols-outlined text-xl">edit</span>
                                                 </button>
                                                 <button
-                                                    onClick={() => alert(`View: ${file.file_number}`)}
+                                                    onClick={() => setViewFileId(file.id)}
                                                     className="p-2 hover:bg-[#1e293b] rounded-lg text-slate-500 hover:text-secondary transition-all"
+                                                    title="View"
                                                 >
                                                     <span className="material-symbols-outlined text-xl">visibility</span>
                                                 </button>
                                                 <button
-                                                    onClick={() => {
-                                                        if (confirm(`Delete "${file.file_number}"?`)) alert(`Deleted: ${file.file_number}`);
-                                                    }}
-                                                    className="p-2 hover:bg-[#1e293b] rounded-lg text-slate-500 hover:text-rose-500 transition-all"
+                                                    onClick={() => handleDelete(file)}
+                                                    disabled={deletingId === file.id}
+                                                    className="p-2 hover:bg-[#1e293b] rounded-lg text-slate-500 hover:text-rose-500 transition-all disabled:opacity-40"
+                                                    title="Delete"
                                                 >
-                                                    <span className="material-symbols-outlined text-xl">delete</span>
+                                                    <span className={`material-symbols-outlined text-xl ${deletingId === file.id ? 'animate-spin' : ''}`}>
+                                                        {deletingId === file.id ? 'progress_activity' : 'delete'}
+                                                    </span>
                                                 </button>
                                             </div>
                                         </td>
@@ -299,6 +325,27 @@ export default function InspectionFiles() {
                         setShowModal(false);
                         fetchFiles();
                     }}
+                />
+            )}
+
+            {/* Edit Inspection File Modal */}
+            {editFileId !== null && (
+                <CreateInspectionFileModal
+                    fileId={editFileId}
+                    onClose={() => setEditFileId(null)}
+                    onSaved={(fileNumber) => {
+                        alert(`File ${fileNumber} updated successfully.`);
+                        setEditFileId(null);
+                        fetchFiles();
+                    }}
+                />
+            )}
+
+            {/* View Inspection File Modal */}
+            {viewFileId !== null && (
+                <ViewInspectionFileModal
+                    fileId={viewFileId}
+                    onClose={() => setViewFileId(null)}
                 />
             )}
         </div>
