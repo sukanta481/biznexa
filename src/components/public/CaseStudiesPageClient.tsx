@@ -63,7 +63,7 @@ export default function CaseStudiesPageClient({ studies }: CaseStudiesPageClient
       <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-y-20">
         {filteredStudies.map((project, index) => (
           <article key={project.slug} className={`group relative flex flex-col space-y-6 glass-panel cyber-border rounded-2xl p-6 hover-lift border border-primary/10 bg-surface-container-high/40 shadow-[0_0_20px_rgba(0,0,0,0.2)] ${index % 3 === 1 ? "md:mt-12" : ""}`}>
-            <div className="aspect-[4/5] overflow-hidden rounded-xl relative"><img alt={project.coverImageAlt || project.title} className="object-cover w-full h-full transition-all duration-700 group-hover:scale-110" src={project.coverImage} /></div>
+            <div className="aspect-video overflow-hidden rounded-xl relative"><img alt={project.coverImageAlt || project.title} className="object-cover w-full h-full transition-all duration-700 group-hover:scale-110" src={project.coverImage} /></div>
             <div className="flex flex-col space-y-4 flex-grow">
               <div className="flex justify-between items-start"><h3 className="font-headline font-bold text-2xl tracking-tight text-white group-hover:text-primary transition-colors">{project.title}</h3><span className="text-primary font-headline font-black text-xl">{project.results[0]?.metric}</span></div>
               <p className="text-on-surface-variant text-sm leading-relaxed font-body">{project.excerpt}</p>

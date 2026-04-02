@@ -14,6 +14,7 @@ export interface CaseStudy {
   slug: string;
   title: string;
   client: string;
+  clientName: string;
   clientRole: string;
   category: string;
   excerpt: string;
@@ -35,6 +36,7 @@ interface CaseStudyRow extends RowDataPacket {
   slug: string;
   title: string;
   client: string;
+  client_name: string | null;
   client_role: string | null;
   category: string;
   excerpt: string;
@@ -56,6 +58,7 @@ const DEFAULT_CASE_STUDIES: CaseStudy[] = [
     slug: "ai-logistics-transformation",
     title: "AI-Powered Logistics Transformation",
     client: "GlobalFreight Solutions",
+    clientName: "Rajiv Mehta",
     clientRole: "Executive Sponsor",
     category: "AI Automation",
     excerpt: "How we automated route optimization and reduced delivery costs by 35% using custom AI agents.",
@@ -80,6 +83,7 @@ const DEFAULT_CASE_STUDIES: CaseStudy[] = [
     slug: "ecommerce-redesign",
     title: "E-Commerce Revenue Surge",
     client: "ArtisanCraft India",
+    clientName: "Priya Sharma",
     clientRole: "Executive Sponsor",
     category: "Web Development",
     excerpt: "A complete platform redesign that increased conversion rates by 280% and reduced cart abandonment.",
@@ -104,6 +108,7 @@ const DEFAULT_CASE_STUDIES: CaseStudy[] = [
     slug: "seo-market-dominance",
     title: "From Page 5 to Page 1",
     client: "Zenith Legal Associates",
+    clientName: "Arjun Kapoor",
     clientRole: "Executive Sponsor",
     category: "Digital Marketing",
     excerpt: "A comprehensive SEO overhaul that took a law firm from obscurity to the top of Google search results.",
@@ -153,6 +158,7 @@ function mapRow(row: CaseStudyRow): CaseStudy {
     slug: row.slug,
     title: row.title,
     client: row.client,
+    clientName: row.client_name ?? "",
     clientRole: row.client_role ?? "Executive Sponsor",
     category: row.category,
     excerpt: row.excerpt,
@@ -204,14 +210,15 @@ export async function saveCaseStudy(study: CaseStudy) {
   const relatedSlugs = study.relatedSlugs.filter((slug) => slug && slug !== study.slug);
   await query<ResultSetHeader>(`
     INSERT INTO case_studies (
-      id, slug, title, client, client_role, category, excerpt, challenge, solution,
+      id, slug, title, client, client_name, client_role, category, excerpt, challenge, solution,
       results_json, technologies_json, cover_image, cover_image_alt, client_quote, client_image,
       related_slugs_json, published, sort_order
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON DUPLICATE KEY UPDATE
       slug = VALUES(slug),
       title = VALUES(title),
       client = VALUES(client),
+      client_name = VALUES(client_name),
       client_role = VALUES(client_role),
       category = VALUES(category),
       excerpt = VALUES(excerpt),
@@ -231,6 +238,7 @@ export async function saveCaseStudy(study: CaseStudy) {
     study.slug,
     study.title,
     study.client,
+    study.clientName,
     study.clientRole,
     study.category,
     study.excerpt,

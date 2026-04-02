@@ -14,6 +14,7 @@ function createEmptyStudy(nextSortOrder: number): CaseStudy {
     slug: '',
     title: '',
     client: '',
+    clientName: '',
     clientRole: 'Executive Sponsor',
     category: 'AI Automation',
     excerpt: '',
@@ -55,6 +56,7 @@ function normalizeStudy(study: Partial<CaseStudy> | undefined, nextSortOrder = 1
     }),
     technologies: technologies.length > 0 ? technologies.filter((item): item is string => typeof item === 'string') : base.technologies,
     relatedSlugs: relatedSlugs.filter((item): item is string => typeof item === 'string'),
+    clientName: typeof study?.clientName === 'string' ? study.clientName : base.clientName,
     clientRole: typeof study?.clientRole === 'string' && study.clientRole.trim() ? study.clientRole : base.clientRole,
     coverImageAlt: typeof study?.coverImageAlt === 'string' && study.coverImageAlt.trim()
       ? study.coverImageAlt
@@ -192,7 +194,7 @@ export default function CaseStudiesContentClient({ initialStudies }: CaseStudies
               <div className="space-y-2"><label className="text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Category</label><input type="text" value={draft.category} onChange={(e) => setField('category', e.target.value)} className="w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm text-white outline-none transition focus:border-[#00f2ff]/50 focus:ring-2 focus:ring-[#00f2ff]/20" /></div>
               <div className="md:col-span-2 space-y-2"><label className="text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Excerpt</label><textarea value={draft.excerpt} onChange={(e) => setField('excerpt', e.target.value)} className="w-full h-28 rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm text-white outline-none transition focus:border-[#00f2ff]/50 focus:ring-2 focus:ring-[#00f2ff]/20 resize-y" /></div>
               <div className="md:col-span-2 space-y-2">
-                <label className="text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Hero Background Image URL</label>
+                <label className="text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Hero Background Image URL <span className="text-slate-600 normal-case tracking-normal font-body">— 1200×630px recommended</span></label>
                 <div className="flex gap-2">
                   <input type="text" value={draft.coverImage} onChange={(e) => setField('coverImage', e.target.value)} className="flex-1 rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm font-mono text-slate-400 outline-none transition focus:border-[#00f2ff]/50 focus:ring-2 focus:ring-[#00f2ff]/20" />
                   <label className="bg-[#1e293b] px-4 rounded-lg text-[#00f2ff] hover:bg-[#00f2ff]/10 transition-colors border border-white/10 flex items-center cursor-pointer">
@@ -233,7 +235,18 @@ export default function CaseStudiesContentClient({ initialStudies }: CaseStudies
 
           <section className="bg-[#0f172a]/60 backdrop-blur-[16px] border border-white/[0.08] p-6 sm:p-8 rounded-lg space-y-6">
             <div className="flex items-center gap-3 border-b border-white/[0.08] pb-4"><span className="material-symbols-outlined text-[#00f2ff]">format_quote</span><h3 className="font-headline font-bold text-lg uppercase tracking-wider text-white">Social Proof</h3></div>
-            <div className="space-y-4"><div className="space-y-2"><label className="text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Client Quote</label><textarea value={draft.clientQuote} onChange={(e) => setField('clientQuote', e.target.value)} className="w-full h-24 rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm italic text-white outline-none transition focus:border-[#00f2ff]/50 focus:ring-2 focus:ring-[#00f2ff]/20 resize-y" /></div><div className="space-y-2"><label className="text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Client Role</label><input type="text" value={draft.clientRole} onChange={(e) => setField('clientRole', e.target.value)} className="w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm text-white outline-none transition focus:border-[#00f2ff]/50 focus:ring-2 focus:ring-[#00f2ff]/20" /></div><div className="space-y-2"><label className="text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Client Portrait URL</label><div className="flex gap-2"><input type="text" value={draft.clientImage} onChange={(e) => setField('clientImage', e.target.value)} className="flex-1 rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm font-mono text-slate-400 outline-none transition focus:border-[#00f2ff]/50 focus:ring-2 focus:ring-[#00f2ff]/20" /><label className="bg-[#1e293b] px-4 rounded-lg text-[#00f2ff] hover:bg-[#00f2ff]/10 transition-colors border border-white/10 flex items-center cursor-pointer"><span className="material-symbols-outlined">upload_file</span><input type="file" accept="image/*,.svg,image/svg+xml" className="hidden" onChange={(event) => { void handleUpload(event, 'clientImage'); }} /></label></div></div></div>
+            <div className="space-y-4">
+              <div className="space-y-2"><label className="text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Client Quote</label><textarea value={draft.clientQuote} onChange={(e) => setField('clientQuote', e.target.value)} className="w-full h-24 rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm italic text-white outline-none transition focus:border-[#00f2ff]/50 focus:ring-2 focus:ring-[#00f2ff]/20 resize-y" /></div>
+              <div className="space-y-2"><label className="text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Person Name</label><input type="text" value={draft.clientName} onChange={(e) => setField('clientName', e.target.value)} placeholder="e.g. Rajiv Mehta" className="w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm text-white outline-none transition focus:border-[#00f2ff]/50 focus:ring-2 focus:ring-[#00f2ff]/20" /></div>
+              <div className="space-y-2"><label className="text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Designation / Role</label><input type="text" value={draft.clientRole} onChange={(e) => setField('clientRole', e.target.value)} className="w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm text-white outline-none transition focus:border-[#00f2ff]/50 focus:ring-2 focus:ring-[#00f2ff]/20" /></div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Portrait / Logo <span className="text-slate-600 normal-case tracking-normal font-body">— 400×400px recommended</span></label>
+                <div className="flex gap-2">
+                  <input type="text" value={draft.clientImage} onChange={(e) => setField('clientImage', e.target.value)} className="flex-1 rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm font-mono text-slate-400 outline-none transition focus:border-[#00f2ff]/50 focus:ring-2 focus:ring-[#00f2ff]/20" />
+                  <label className="bg-[#1e293b] px-4 rounded-lg text-[#00f2ff] hover:bg-[#00f2ff]/10 transition-colors border border-white/10 flex items-center cursor-pointer"><span className="material-symbols-outlined">upload_file</span><input type="file" accept="image/*,.svg,image/svg+xml" className="hidden" onChange={(event) => { void handleUpload(event, 'clientImage'); }} /></label>
+                </div>
+              </div>
+            </div>
           </section>
 
           <section className="bg-[#0f172a]/60 backdrop-blur-[16px] border border-white/[0.08] p-6 sm:p-8 rounded-lg space-y-6">

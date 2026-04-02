@@ -145,9 +145,14 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
             <span className="material-symbols-outlined text-6xl text-tertiary/20 absolute -top-8 left-1/2 -translate-x-1/2 bg-surface px-4">format_quote</span>
             <blockquote className="text-2xl md:text-3xl font-headline italic text-white mb-8 leading-snug">&ldquo;{study.clientQuote}&rdquo;</blockquote>
             <div className="flex flex-col items-center">
-              <img alt={study.client} className="w-16 h-16 rounded-full border-2 border-primary mb-4 object-cover" src={study.clientImage} />
-              <cite className="not-italic font-bold text-white font-headline tracking-wide">{study.client}</cite>
-              <span className="text-sm text-on-surface-variant font-body">{study.clientRole}</span>
+              {study.clientImage && (
+                <div className="w-16 h-16 rounded-full border-2 border-primary mb-4 overflow-hidden bg-surface-container flex items-center justify-center">
+                  <img alt={study.clientName || study.client} className="w-full h-full object-contain" src={study.clientImage} />
+                </div>
+              )}
+              <cite className="not-italic font-bold text-white font-headline tracking-wide">{study.clientName || study.client}</cite>
+              <span className="text-xs text-primary font-label uppercase tracking-wider">{study.clientRole}</span>
+              <span className="text-sm text-on-surface-variant font-body">{study.client}</span>
             </div>
           </div>
         </div>
@@ -163,7 +168,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
       </section>
 
       <section className="md:hidden px-6 py-16">
-        <div className="glass-panel p-8 rounded-2xl relative overflow-hidden"><div className="absolute top-0 right-0 p-4 opacity-10"><span className="material-symbols-outlined text-6xl">format_quote</span></div><p className="text-on-surface italic leading-relaxed mb-8 relative z-10 font-body">&ldquo;{study.clientQuote}&rdquo;</p><div className="flex items-center gap-4"><div className="w-12 h-12 rounded-full overflow-hidden border border-primary/30"><img alt={study.client} className="w-full h-full object-cover" src={study.clientImage} /></div><div><div className="text-sm font-bold font-headline text-white">{study.client}</div><div className="text-[10px] text-on-surface-variant uppercase tracking-wider">{study.clientRole}</div></div></div></div>
+        <div className="glass-panel p-8 rounded-2xl relative overflow-hidden"><div className="absolute top-0 right-0 p-4 opacity-10"><span className="material-symbols-outlined text-6xl">format_quote</span></div><p className="text-on-surface italic leading-relaxed mb-8 relative z-10 font-body">&ldquo;{study.clientQuote}&rdquo;</p><div className="flex items-center gap-4">{study.clientImage && <div className="w-12 h-12 rounded-full overflow-hidden border border-primary/30 bg-surface-container flex items-center justify-center shrink-0"><img alt={study.clientName || study.client} className="w-full h-full object-contain" src={study.clientImage} /></div>}<div><div className="text-sm font-bold font-headline text-white">{study.clientName || study.client}</div><div className="text-[10px] text-primary uppercase tracking-wider font-label">{study.clientRole}</div><div className="text-[10px] text-on-surface-variant">{study.client}</div></div></div></div>
       </section>
 
       <section className="md:hidden py-12 border-t border-primary/10">

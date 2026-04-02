@@ -10,6 +10,7 @@ const caseStudySchema = z.object({
   slug: z.string().trim().min(1),
   title: z.string().trim().min(1),
   client: z.string().trim().min(1),
+  clientName: z.string().trim(),
   clientRole: z.string().trim().min(1),
   category: z.string().trim().min(1),
   excerpt: z.string().trim().min(1),
