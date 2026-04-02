@@ -237,9 +237,44 @@ export default async function BillPDFPage({ params }: Props) {
           .print-btn:hover { background: var(--brand-primary); }
 
           @media print {
-            body { background: #fff; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+            body { background: #fff; margin: 0; padding: 0; font-size: 11px; }
             .print-btn { display: none !important; }
-            .page { margin: 0; border-radius: 0; box-shadow: none; }
+            .page { margin: 0; border-radius: 0; box-shadow: none; max-width: 100%; }
+            .accent-bar { height: 4px; }
+            .header { padding: 20px 28px 16px; }
+            .brand-logo-wrap { padding: 6px 12px; border-radius: 6px; }
+            .brand-logo { height: 36px; }
+            .brand-contact { font-size: 9px; margin-top: 6px; }
+            .invoice-title { font-size: 24px; }
+            .body { padding: 16px 28px; }
+            .meta-grid { gap: 12px; margin-bottom: 16px; }
+            .meta-box { padding: 10px 12px; }
+            .meta-label { font-size: 8px; margin-bottom: 4px; }
+            .meta-value { font-size: 11px; }
+            .meta-value strong { font-size: 12px; }
+            .items-wrap { margin-bottom: 16px; }
+            thead th { padding: 7px 10px; font-size: 8px; }
+            tbody td { padding: 6px 10px; font-size: 11px; }
+            .totals-wrapper { padding: 10px 14px; }
+            .totals-box { width: 240px; }
+            .totals-row { padding: 4px 0; font-size: 11px; }
+            .totals-row.grand { font-size: 14px; padding-top: 6px; }
+            .payment-info-section { margin-bottom: 16px; page-break-inside: avoid; }
+            .payment-info-header { padding: 8px 14px; font-size: 11px; }
+            .payment-info-body { padding: 12px 14px; }
+            .col-title { font-size: 9px; margin-bottom: 8px; }
+            .qr-box { width: 90px; height: 90px; }
+            .qr-box img { width: 65px; height: 65px; }
+            .notes-section { margin-bottom: 14px; page-break-inside: avoid; }
+            .notes-box { padding: 10px 12px; }
+            .notes-text { font-size: 10px; }
+            .sign-area { margin-bottom: 14px; page-break-inside: avoid; }
+            .sign-img { width: 120px; height: 60px; }
+            .sign-label { font-size: 8px; }
+            .thankyou-banner { padding: 10px 28px; font-size: 13px; }
+            .footer { padding: 10px 28px; }
+            .footer-text { font-size: 9px; }
           }
         `}</style>
 
