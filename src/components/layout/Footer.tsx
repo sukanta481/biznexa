@@ -2,6 +2,9 @@ import Link from "next/link";
 
 import { COMPANY, FOOTER_NAV } from "@/lib/constants";
 import { getSiteSettings } from "@/lib/site-settings";
+import { FooterBackgroundGradient, TextHoverEffect } from "@/components/ui/hover-footer";
+
+import { Mail, Phone, MapPin } from "lucide-react";
 
 interface SocialIconProps {
   className?: string;
@@ -47,39 +50,12 @@ function InstagramIcon({ className }: SocialIconProps) {
   );
 }
 
-function YouTubeIcon({ className }: SocialIconProps) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M23.5 6.2a3 3 0 0 0-2.11-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.58A3 3 0 0 0 .5 6.2 31.3 31.3 0 0 0 0 12a31.3 31.3 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.58a3 3 0 0 0 2.11-2.12A31.3 31.3 0 0 0 24 12a31.3 31.3 0 0 0-.5-5.8ZM9.6 15.69V8.31L15.85 12 9.6 15.69Z" />
-    </svg>
-  );
-}
-
-function GitHubIcon({ className }: SocialIconProps) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 .5A12 12 0 0 0 8.2 23.9c.6.1.82-.26.82-.58v-2.04c-3.34.73-4.04-1.41-4.04-1.41-.55-1.37-1.33-1.73-1.33-1.73-1.09-.74.08-.72.08-.72 1.2.09 1.84 1.23 1.84 1.23 1.08 1.83 2.82 1.3 3.5 1 .11-.76.42-1.3.77-1.6-2.67-.3-5.47-1.31-5.47-5.86 0-1.3.47-2.37 1.23-3.2-.12-.3-.53-1.55.12-3.22 0 0 1-.32 3.3 1.22a11.6 11.6 0 0 1 6 0c2.3-1.54 3.3-1.22 3.3-1.22.65 1.67.24 2.92.12 3.22.77.83 1.23 1.9 1.23 3.2 0 4.56-2.8 5.56-5.48 5.85.43.36.82 1.09.82 2.22v3.29c0 .32.22.69.83.57A12 12 0 0 0 12 .5Z" />
-    </svg>
-  );
-}
-
-function TelegramIcon({ className }: SocialIconProps) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M21.94 4.64a1.5 1.5 0 0 0-1.7-.24L2.3 11.86a1.5 1.5 0 0 0 .16 2.82l4.39 1.45 1.62 5.19a1.5 1.5 0 0 0 2.56.58l2.45-2.5 4.8 3.56a1.5 1.5 0 0 0 2.36-.9l3.2-15.8a1.5 1.5 0 0 0-.9-1.62ZM8.03 15.42l9.85-6.04-7.4 7.55-.34 1.87-2.11-3.38Zm3.56 2.85.4-2.2 1.54 1.14-1.94 1.06Z" />
-    </svg>
-  );
-}
-
 const SOCIAL_ICON_MAP = {
   whatsapp: WhatsAppIcon,
   linkedin: LinkedInIcon,
   twitter: XIcon,
   facebook: FacebookIcon,
   instagram: InstagramIcon,
-  youtube: YouTubeIcon,
-  github: GitHubIcon,
-  telegram: TelegramIcon,
 } as const;
 
 type SocialKey = keyof typeof SOCIAL_ICON_MAP;
@@ -88,14 +64,29 @@ export default async function Footer() {
   const settings = await getSiteSettings();
   const socialLinks = (Object.entries(settings.social) as Array<[SocialKey, string]>).filter(([, href]) => href.trim().length > 0);
 
+  const contactInfo = [
+    {
+      icon: <Mail size={18} className="text-[#3ca2fa] shrink-0" />,
+      text: settings.siteEmail || COMPANY.email,
+      href: `mailto:${settings.siteEmail || COMPANY.email}`,
+    },
+    {
+      icon: <Phone size={18} className="text-[#3ca2fa] shrink-0" />,
+      text: settings.sitePhone || COMPANY.phone,
+      href: `tel:${(settings.sitePhone || COMPANY.phone).replace(/\D/g, "")}`,
+    },
+    {
+      icon: <MapPin size={18} className="text-[#3ca2fa] shrink-0" />,
+      text: settings.siteAddress || COMPANY.address.full,
+    },
+  ];
+
   return (
-    <footer className="bg-[#091328] md:bg-background w-full md:border-t md:border-white/10 relative overflow-hidden">
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent hidden md:block"></div>
-      
-      <div className="max-w-7xl mx-auto px-8 py-12 md:py-20 flex flex-col md:block gap-10 md:gap-0 border-t border-white/10 md:border-none">
-        <div className="flex flex-col md:grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 lg:gap-24">
-          {/* Brand Column */}
-          <div className="md:col-span-5 flex flex-col gap-6 md:space-y-8">
+    <footer className="bg-[#091328] relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-8 py-14 z-40 relative">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-8 lg:gap-12 pb-12">
+          {/* Brand Section */}
+          <div className="flex flex-col space-y-4">
             <div className="h-8 md:h-10">
               <img
                 alt="Biznexa Logo"
@@ -103,145 +94,129 @@ export default async function Footer() {
                 src="/lightlogo.svg"
               />
             </div>
-            <p className="font-body font-light text-[#b0b8c8] text-sm md:text-base leading-relaxed md:max-w-sm">
+            <p className="text-sm leading-relaxed text-[#b0b8c8]">
               {COMPANY.description}
             </p>
-            
-            {socialLinks.length > 0 ? (
-              <div className="hidden md:flex gap-4">
+          </div>
+
+          {/* Navigation Links */}
+          <div>
+            <h4 className="text-white text-lg font-semibold mb-6 font-headline">
+              Navigation
+            </h4>
+            <ul className="space-y-3">
+              {FOOTER_NAV.navigation.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-[#b0b8c8] hover:text-[#3ca2fa] transition-colors text-sm"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Capabilities Links */}
+          <div>
+            <h4 className="text-white text-lg font-semibold mb-6 font-headline">
+              Capabilities
+            </h4>
+            <ul className="space-y-3">
+              {FOOTER_NAV.capabilities.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-[#b0b8c8] hover:text-[#3ca2fa] transition-colors text-sm"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact Section */}
+          <div>
+            <h4 className="text-white text-lg font-semibold mb-6 font-headline">
+              Contact Us
+            </h4>
+            <ul className="space-y-4">
+              {contactInfo.map((item, i) => (
+                <li key={i} className="flex items-start space-x-3">
+                  {item.icon}
+                  {item.href ? (
+                    <a
+                      href={item.href}
+                      className="text-[#b0b8c8] hover:text-[#3ca2fa] transition-colors text-sm leading-relaxed"
+                    >
+                      {item.text}
+                    </a>
+                  ) : (
+                    <span className="text-[#b0b8c8] hover:text-[#3ca2fa] transition-colors text-sm leading-relaxed">
+                      {item.text}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+
+            {/* Social Icons */}
+            {socialLinks.length > 0 && (
+              <div className="flex gap-3 mt-6">
                 {socialLinks.map(([platform, href]) => {
                   const Icon = SOCIAL_ICON_MAP[platform];
+                  if (!Icon) return null;
 
                   return (
                     <a
                       key={platform}
-                      className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary/10 hover:border-primary/40 transition-all text-on-surface-variant hover:text-primary"
+                      className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center hover:bg-[#3ca2fa]/10 hover:border-[#3ca2fa]/40 transition-all text-[#b0b8c8] hover:text-[#3ca2fa]"
                       href={href}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={platform}
                     >
-                      <Icon className="w-[18px] h-[18px] fill-current" />
+                      <Icon className="w-4 h-4 fill-current" />
                     </a>
                   );
                 })}
               </div>
-            ) : null}
-          </div>
-
-          {/* Links Columns */}
-          <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
-            <div className="flex flex-col gap-4 md:block">
-              <h5 className="font-headline font-bold text-white mb-0 md:mb-8 uppercase md:tracking-[0.2em] tracking-widest text-[10px] md:text-xs">
-                Navigation
-              </h5>
-              
-              <div className="flex flex-col gap-4 md:hidden">
-                {FOOTER_NAV.navigation.map((link) => (
-                  <Link key={link.href} href={link.href} className="text-[#b0b8c8] text-xs">
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-              
-              <ul className="hidden md:block space-y-4">
-                {FOOTER_NAV.navigation.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-[#b0b8c8] hover:text-primary transition-colors font-body text-sm"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            <div className="flex flex-col gap-4 md:block">
-              <h5 className="font-headline font-bold text-white mb-0 md:mb-8 uppercase md:tracking-[0.2em] tracking-widest text-[10px] md:text-xs">
-                Capabilities
-              </h5>
-              
-              <div className="flex flex-col gap-4 md:hidden">
-                {FOOTER_NAV.capabilities.map((link) => (
-                  <Link key={link.href} href={link.href} className="text-[#b0b8c8] text-xs">
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-              
-              <ul className="hidden md:block space-y-4">
-                {FOOTER_NAV.capabilities.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-[#b0b8c8] hover:text-primary transition-colors font-body text-sm"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            <div className="hidden sm:block col-span-2 sm:col-span-1">
-              <h5 className="font-headline font-bold text-white mb-8 uppercase tracking-[0.2em] text-xs">
-                Offices
-              </h5>
-              <p className="text-[#b0b8c8] font-body text-sm leading-relaxed mb-4">
-                {COMPANY.address.street}
-                <br />
-                {COMPANY.address.city}, {COMPANY.address.state}
-              </p>
-              <p className="text-[#b0b8c8] font-body text-xs leading-relaxed opacity-60">
-                Support: {COMPANY.phone}
-              </p>
-              <div className="mt-6 flex flex-wrap gap-4">
-                {FOOTER_NAV.legal.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="text-white hover:text-primary transition-colors text-[10px] font-label uppercase tracking-widest border-b border-white/10"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
+            )}
           </div>
         </div>
-        {/* Mobile bottom bar (T&C) */}
-        <div className="md:hidden pt-8 border-t border-white/5 flex flex-col gap-6">
+
+        <hr className="border-t border-white/10 my-8" />
+
+        {/* Footer Bottom */}
+        <div className="flex flex-col md:flex-row justify-between items-center text-sm space-y-4 md:space-y-0">
+          {/* Legal Links */}
           <div className="flex gap-4">
-            <Link href="/privacy" className="text-white hover:text-primary transition-colors text-[10px] font-label uppercase tracking-widest">Privacy</Link>
-            <Link href="/terms" className="text-white hover:text-primary transition-colors text-[10px] font-label uppercase tracking-widest">Terms</Link>
+            {FOOTER_NAV.legal.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-[#b0b8c8] hover:text-[#3ca2fa] transition-colors text-xs"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
-          <p className="text-[#b0b8c8] text-[10px] font-body uppercase tracking-tighter opacity-60">© {new Date().getFullYear()} BIZNEXA DIGITAL SOLUTIONS STUDIO.</p>
+
+          {/* Copyright */}
+          <p className="text-[#b0b8c8] text-xs">
+            &copy; {new Date().getFullYear()} {COMPANY.fullName}. All rights reserved.
+          </p>
         </div>
       </div>
 
-      {/* Desktop Bottom Footer Bar */}
-      <div className="hidden md:block border-t border-white/5 relative z-10">
-        <div className="max-w-7xl mx-auto px-8 py-8 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-[#b0b8c8] text-xs font-body font-light text-center md:text-left">
-            © {new Date().getFullYear()} {COMPANY.fullName}. All rights reserved. Architected with precision.
-          </div>
-          
-          <div className="flex items-center gap-4 bg-surface-container-low px-4 py-2 rounded-full border border-white/5">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
-              <span className="text-primary font-medium font-headline text-[10px] tracking-widest uppercase">
-                System Operational
-              </span>
-            </div>
-            <div className="w-px h-3 bg-white/10"></div>
-            <span className="text-[#b0b8c8] text-[10px] font-label uppercase tracking-widest">
-              Global Node: 0x1-KOL
-            </span>
-          </div>
-        </div>
+      {/* Text Hover Effect - Desktop Only */}
+      <div className="lg:flex hidden h-[30rem] -mt-52 -mb-36 relative z-10">
+        <TextHoverEffect text="Biznexa" className="z-50" />
       </div>
+
+      <FooterBackgroundGradient />
     </footer>
   );
 }
