@@ -34,38 +34,6 @@ function fmtMoney(v: number): string {
   return `₹${v.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
-function toPublicAssetUrl(value: unknown): string | null {
-  if (!value) return null;
-  let path = String(value).trim();
-  if (!path) return null;
-
-  // Already a full URL or data URI → return as-is
-  if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("data:")) {
-    return path;
-  }
-
-  // Normalise slashes
-  path = path.replace(/\\/g, "/");
-
-  // Strip everything up to and including "/public/"
-  const publicMarker = "/public/";
-  const publicIdx = path.toLowerCase().indexOf(publicMarker);
-  if (publicIdx >= 0) {
-    path = path.slice(publicIdx + publicMarker.length);
-  }
-
-  // Strip leading "public/"
-  if (path.toLowerCase().startsWith("public/")) {
-    path = path.slice(7);
-  }
-
-  // Ensure leading slash
-  if (!path.startsWith("/")) {
-    path = `/${path}`;
-  }
-
-  return path;
-}
 
 export default async function BillPDFPage({ params }: Props) {
   const { id: rawId } = await params;
@@ -117,10 +85,7 @@ export default async function BillPDFPage({ params }: Props) {
   const balanceDue = Math.max(0, Number(b.total_amount) - Number(b.paid_amount));
   const logoSrc = "/lightlogo.svg";
 
-  const upiId = upi?.upi_id ? String(upi.upi_id).trim() : "";
-  // Use the QR code image placed directly in /public folder.
-  // The DB qr_code_path stores an uploads/ path that may not exist,
-  // so we fall back to the manually-placed /qrcode.jpeg in public/.
+  // QR code image is placed directly in /public folder.
   const upiQrSrc = "/qrcode.jpeg";
 
   return (
@@ -141,140 +106,167 @@ export default async function BillPDFPage({ params }: Props) {
           .accent-bar { height: 5px; background: linear-gradient(90deg, var(--brand-primary-strong) 0%, var(--brand-primary) 58%, var(--brand-accent) 100%); }
 
           /* Header */
-          .header { display: flex; justify-content: space-between; align-items: flex-start; padding: 36px 40px 28px; border-bottom: 1px solid #e2e8f0; }
-          .brand-logo-wrap {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--brand-primary-strong);
-            border-radius: 10px;
-            padding: 10px 18px;
-          }
-          .brand-logo { height: 46px; width: auto; object-fit: contain; display: block; }
-          .brand-contact { font-size: 11px; color: #64748b; margin-top: 10px; line-height: 1.7; }
+          .header { display: flex; justify-content: space-between; align-items: flex-start; padding: 32px 40px 24px; border-bottom: 1px solid #e2e8f0; }
+          .brand-logo-wrap { display: inline-flex; align-items: center; justify-content: center; background: var(--brand-primary-strong); border-radius: 10px; padding: 10px 18px; }
+          .brand-logo { height: 42px; width: auto; object-fit: contain; display: block; }
+          .brand-contact { font-size: 11px; color: #64748b; margin-top: 8px; line-height: 1.6; }
           .invoice-badge { text-align: right; }
-          .invoice-title { font-size: 30px; font-weight: 800; letter-spacing: -1px; color: var(--brand-primary); }
-          .invoice-number { font-size: 13px; color: #64748b; margin-top: 4px; font-family: monospace; }
-          .status-badge { display: inline-block; margin-top: 8px; padding: 4px 14px; border-radius: 20px; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; }
+          .invoice-title { font-size: 28px; font-weight: 600; letter-spacing: -0.5px; color: var(--brand-primary); }
+          .invoice-number { font-size: 12px; color: #64748b; margin-top: 4px; font-family: monospace; }
+          .status-badge { display: inline-block; margin-top: 8px; padding: 3px 12px; border-radius: 20px; font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; }
 
-          /* Body padding */
-          .body { padding: 32px 40px; }
+          /* Body */
+          .body { padding: 24px 40px; }
 
           /* Meta grid */
-          .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
-          .meta-box { background: var(--brand-soft); border: 1px solid #d9e2f1; border-radius: 8px; padding: 16px 18px; }
-          .meta-label { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #94a3b8; margin-bottom: 8px; }
-          .meta-value { font-size: 13px; color: var(--brand-primary-strong); line-height: 1.7; }
-          .meta-value strong { font-size: 14px; font-weight: 700; display: block; margin-bottom: 2px; }
-          .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px dashed #f1f5f9; }
+          .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+          .meta-box { background: var(--brand-soft); border: 1px solid #d9e2f1; border-radius: 8px; padding: 14px 16px; }
+          .meta-label { font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; }
+          .meta-value { font-size: 12px; color: var(--brand-primary-strong); line-height: 1.65; }
+          .meta-value strong { font-size: 13px; font-weight: 600; display: block; margin-bottom: 1px; }
+          .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px dashed #f1f5f9; }
           .detail-row:last-child { border-bottom: none; }
-          .detail-key { color: #94a3b8; font-size: 11px; }
-          .detail-val { font-size: 12px; font-weight: 600; color: var(--brand-primary-strong); }
+          .detail-key { color: #94a3b8; font-size: 10.5px; }
+          .detail-val { font-size: 11px; font-weight: 500; color: var(--brand-primary-strong); }
 
           /* Table */
-          .items-wrap { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 28px; }
+          .items-wrap { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 20px; }
           table { width: 100%; border-collapse: collapse; }
-          thead th { background: var(--brand-primary-strong); color: #fff; padding: 11px 14px; text-align: left; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; }
+          thead th { background: var(--brand-primary-strong); color: #fff; padding: 9px 12px; text-align: left; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; }
           thead th.right { text-align: right; }
           thead th.center { text-align: center; }
-          tbody td { padding: 10px 14px; border-bottom: 1px solid #f1f5f9; font-size: 12.5px; color: #1e293b; vertical-align: top; }
-          tbody td.right { text-align: right; font-weight: 600; }
+          tbody td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; font-size: 12px; color: #1e293b; vertical-align: top; }
+          tbody td.right { text-align: right; font-weight: 500; }
           tbody td.center { text-align: center; }
           tbody tr:last-child td { border-bottom: none; }
 
           /* Totals */
-          .totals-wrapper { background: var(--brand-soft); padding: 16px 20px; display: flex; justify-content: flex-end; border-top: 2px solid #e2e8f0; }
-          .totals-box { width: 280px; }
-          .totals-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; font-size: 12.5px; }
+          .totals-wrapper { background: var(--brand-soft); padding: 14px 18px; display: flex; justify-content: flex-end; border-top: 2px solid #e2e8f0; }
+          .totals-box { width: 270px; }
+          .totals-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #e2e8f0; font-size: 12px; }
           .totals-row:last-child { border-bottom: none; }
-          .totals-row.grand { padding: 10px 0 0; font-weight: 800; font-size: 17px; color: var(--brand-primary-strong); }
+          .totals-row.grand { padding: 8px 0 0; font-weight: 600; font-size: 15px; color: var(--brand-primary-strong); }
           .totals-row .lbl { color: #64748b; }
           .totals-row.grand .lbl { color: var(--brand-primary-strong); }
-          .totals-row.balance { font-weight: 700; font-size: 14px; padding-top: 8px; border-top: 2px solid #e2e8f0; border-bottom: none; margin-top: 4px; }
+          .totals-row.balance { font-weight: 600; font-size: 13px; padding-top: 6px; border-top: 2px solid #e2e8f0; border-bottom: none; margin-top: 3px; }
 
-          /* Payment Information section – matches desired layout */
-          .payment-info-section { margin-bottom: 28px; border: 1px solid #d9e2f1; border-radius: 10px; overflow: hidden; }
-          .payment-info-header { display: flex; align-items: center; gap: 8px; padding: 12px 18px; font-size: 13px; font-weight: 700; color: var(--brand-primary-strong); }
-          .payment-info-header .pay-icon { font-size: 16px; }
-          .payment-info-line { height: 3px; background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%); margin: 0 18px; border-radius: 2px; }
-          .payment-info-body { display: flex; padding: 18px; gap: 0; }
+          /* Payment Information */
+          .payment-info-section { margin-bottom: 20px; border: 1px solid #d9e2f1; border-radius: 10px; overflow: hidden; }
+          .payment-info-header { display: flex; align-items: center; gap: 8px; padding: 10px 16px; font-size: 12px; font-weight: 600; color: var(--brand-primary-strong); }
+          .payment-info-header .pay-icon { font-size: 15px; }
+          .payment-info-line { height: 2px; background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%); margin: 0 16px; border-radius: 2px; }
+          .payment-info-body { display: flex; padding: 14px 16px; gap: 0; }
           .payment-bank-col { flex: 1; }
           .payment-upi-col { flex: 1; display: flex; flex-direction: column; }
-          .col-title { font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--brand-primary-strong); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-          .payment-bank-col .p-row { display: flex; gap: 8px; margin-bottom: 6px; font-size: 11px; }
+          .col-title { font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--brand-primary-strong); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+          .payment-bank-col .p-row { display: flex; gap: 8px; margin-bottom: 5px; font-size: 10.5px; }
           .payment-bank-col .p-row:last-child { margin-bottom: 0; }
-          .payment-bank-col .p-key { color: #94a3b8; min-width: 60px; font-size: 10.5px; }
-          .payment-bank-col .p-val { font-weight: 600; color: var(--brand-primary-strong); font-size: 10.5px; }
-          .upi-details { font-size: 10.5px; color: #475569; margin-bottom: 6px; }
-          .upi-details strong { font-weight: 600; color: var(--brand-primary-strong); font-family: monospace; }
-          .upi-help { font-size: 10px; color: #94a3b8; line-height: 1.5; }
-          .qr-box { width: 110px; height: 110px; border: 2px dashed #3b82f6; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px; margin-left: auto; flex-shrink: 0; }
-          .qr-box img { width: 80px; height: 80px; object-fit: contain; }
-          .qr-box .qr-label { font-size: 9px; color: #64748b; margin-top: 4px; font-weight: 600; }
+          .payment-bank-col .p-key { color: #94a3b8; min-width: 56px; font-size: 10px; }
+          .payment-bank-col .p-val { font-weight: 500; color: var(--brand-primary-strong); font-size: 10px; }
+          .upi-details { font-size: 10px; color: #475569; margin-bottom: 5px; }
+          .upi-details strong { font-weight: 500; color: var(--brand-primary-strong); font-family: monospace; }
+          .upi-help { font-size: 9.5px; color: #94a3b8; line-height: 1.5; }
+          .qr-box { width: 100px; height: 100px; border: 2px dashed #3b82f6; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5px; margin-left: auto; flex-shrink: 0; }
+          .qr-box img { width: 72px; height: 72px; object-fit: contain; }
+          .qr-box .qr-label { font-size: 8.5px; color: #64748b; margin-top: 3px; font-weight: 500; }
 
           /* Notes */
-          .notes-section { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+          .notes-section { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
           .notes-section.single { grid-template-columns: 1fr; }
-          .notes-box { background: var(--brand-soft); border: 1px solid #d9e2f1; border-radius: 8px; padding: 14px 16px; }
-          .notes-text { font-size: 11.5px; color: #475569; line-height: 1.7; white-space: pre-wrap; }
+          .notes-box { background: var(--brand-soft); border: 1px solid #d9e2f1; border-radius: 8px; padding: 12px 14px; }
+          .section-title { font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; }
+          .notes-text { font-size: 11px; color: #475569; line-height: 1.6; white-space: pre-wrap; }
 
           /* Thank-you banner */
-          .thankyou-banner { background: var(--brand-primary-strong); color: #fff; text-align: center; padding: 14px 40px; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; }
+          .thankyou-banner { background: var(--brand-primary-strong); color: #fff; text-align: center; padding: 12px 40px; font-size: 14px; font-weight: 500; letter-spacing: 0.3px; }
           .thankyou-banner span { color: var(--brand-accent); }
 
-          /* Signature / stamp area */
-          .sign-area { display: flex; justify-content: flex-end; margin-bottom: 28px; }
+          /* Signature */
+          .sign-area { display: flex; justify-content: flex-end; margin-bottom: 18px; }
           .sign-box { text-align: center; }
-          .sign-img { width: 160px; height: 80px; object-fit: contain; display: block; margin: 0 auto 6px; }
-          .sign-label { font-size: 9px; color: #94a3b8; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; border-top: 1px solid #e2e8f0; padding-top: 6px; }
+          .sign-img { width: 140px; height: 70px; object-fit: contain; display: block; margin: 0 auto 5px; }
+          .sign-label { font-size: 8.5px; color: #94a3b8; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500; border-top: 1px solid #e2e8f0; padding-top: 5px; }
 
           /* Footer */
-          .footer { background: var(--brand-soft); border-top: 1px solid #e2e8f0; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; }
+          .footer { background: var(--brand-soft); border-top: 1px solid #e2e8f0; padding: 12px 40px; display: flex; justify-content: space-between; align-items: center; }
           .footer-text { font-size: 10px; color: #94a3b8; }
 
           /* Print button */
-          .print-btn { position: fixed; top: 16px; right: 16px; padding: 10px 20px; background: var(--brand-primary-strong); color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; z-index: 999; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+          .print-btn { position: fixed; top: 16px; right: 16px; padding: 10px 20px; background: var(--brand-primary-strong); color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; z-index: 999; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
           .print-btn:hover { background: var(--brand-primary); }
 
           @media print {
+            @page { size: A4 portrait; margin: 7mm 9mm; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
-            body { background: #fff; margin: 0; padding: 0; font-size: 11px; }
+            html, body { background: #fff !important; margin: 0; padding: 0; font-size: 10px; }
             .print-btn { display: none !important; }
-            .page { margin: 0; border-radius: 0; box-shadow: none; max-width: 100%; }
-            .accent-bar { height: 4px; }
-            .header { padding: 20px 28px 16px; }
+
+            /* Remove screen chrome */
+            .page { margin: 0 !important; border-radius: 0 !important; box-shadow: none !important; max-width: 100% !important; }
+            .accent-bar { height: 3px; }
+
+            /* Header */
+            .header { padding: 12px 22px 10px; }
             .brand-logo-wrap { padding: 6px 12px; border-radius: 6px; }
-            .brand-logo { height: 36px; }
-            .brand-contact { font-size: 9px; margin-top: 6px; }
-            .invoice-title { font-size: 24px; }
-            .body { padding: 16px 28px; }
-            .meta-grid { gap: 12px; margin-bottom: 16px; }
-            .meta-box { padding: 10px 12px; }
-            .meta-label { font-size: 8px; margin-bottom: 4px; }
-            .meta-value { font-size: 11px; }
-            .meta-value strong { font-size: 12px; }
-            .items-wrap { margin-bottom: 16px; }
-            thead th { padding: 7px 10px; font-size: 8px; }
-            tbody td { padding: 6px 10px; font-size: 11px; }
-            .totals-wrapper { padding: 10px 14px; }
-            .totals-box { width: 240px; }
-            .totals-row { padding: 4px 0; font-size: 11px; }
-            .totals-row.grand { font-size: 14px; padding-top: 6px; }
-            .payment-info-section { margin-bottom: 16px; page-break-inside: avoid; }
-            .payment-info-header { padding: 8px 14px; font-size: 11px; }
-            .payment-info-body { padding: 12px 14px; }
-            .col-title { font-size: 9px; margin-bottom: 8px; }
-            .qr-box { width: 90px; height: 90px; }
-            .qr-box img { width: 65px; height: 65px; }
-            .notes-section { margin-bottom: 14px; page-break-inside: avoid; }
-            .notes-box { padding: 10px 12px; }
-            .notes-text { font-size: 10px; }
-            .sign-area { margin-bottom: 14px; page-break-inside: avoid; }
-            .sign-img { width: 120px; height: 60px; }
-            .sign-label { font-size: 8px; }
-            .thankyou-banner { padding: 10px 28px; font-size: 13px; }
-            .footer { padding: 10px 28px; }
-            .footer-text { font-size: 9px; }
+            .brand-logo { height: 30px; }
+            .brand-contact { font-size: 8.5px; margin-top: 5px; line-height: 1.5; }
+            .invoice-title { font-size: 20px; }
+            .invoice-number { font-size: 10px; }
+            .status-badge { font-size: 8px; padding: 2px 8px; margin-top: 5px; }
+
+            /* Body */
+            .body { padding: 10px 22px; }
+
+            /* Meta */
+            .meta-grid { gap: 10px; margin-bottom: 12px; }
+            .meta-box { padding: 8px 10px; border-radius: 5px; }
+            .meta-label { font-size: 7.5px; margin-bottom: 4px; }
+            .meta-value { font-size: 9.5px; line-height: 1.5; }
+            .meta-value strong { font-size: 10.5px; }
+            .detail-row { padding: 2px 0; }
+            .detail-key { font-size: 9px; }
+            .detail-val { font-size: 9.5px; }
+
+            /* Table */
+            .items-wrap { margin-bottom: 12px; border-radius: 5px; }
+            thead th { padding: 6px 9px; font-size: 7.5px; }
+            tbody td { padding: 5px 9px; font-size: 9.5px; }
+            .totals-wrapper { padding: 8px 12px; }
+            .totals-box { width: 220px; }
+            .totals-row { padding: 3px 0; font-size: 9.5px; }
+            .totals-row.grand { font-size: 12px; padding-top: 5px; }
+            .totals-row.balance { font-size: 11px; padding-top: 5px; }
+
+            /* Payment */
+            .payment-info-section { margin-bottom: 12px; page-break-inside: avoid; border-radius: 5px; }
+            .payment-info-header { padding: 7px 12px; font-size: 9.5px; }
+            .payment-info-line { margin: 0 12px; height: 2px; }
+            .payment-info-body { padding: 10px 12px; }
+            .col-title { font-size: 7.5px; margin-bottom: 7px; }
+            .payment-bank-col .p-row { font-size: 9px; margin-bottom: 3px; }
+            .payment-bank-col .p-key { font-size: 8.5px; min-width: 48px; }
+            .payment-bank-col .p-val { font-size: 8.5px; }
+            .upi-details { font-size: 8.5px; margin-bottom: 4px; }
+            .upi-help { font-size: 8px; }
+            .qr-box { width: 80px; height: 80px; }
+            .qr-box img { width: 58px; height: 58px; }
+            .qr-box .qr-label { font-size: 7.5px; }
+
+            /* Notes */
+            .notes-section { gap: 10px; margin-bottom: 10px; page-break-inside: avoid; }
+            .notes-box { padding: 8px 10px; border-radius: 5px; }
+            .section-title { font-size: 7.5px; margin-bottom: 4px; }
+            .notes-text { font-size: 8.5px; line-height: 1.55; }
+
+            /* Signature */
+            .sign-area { margin-bottom: 10px; page-break-inside: avoid; }
+            .sign-img { width: 100px; height: 50px; }
+            .sign-label { font-size: 7.5px; }
+
+            /* Banner + Footer */
+            .thankyou-banner { padding: 8px 22px; font-size: 11px; page-break-inside: avoid; }
+            .footer { padding: 7px 22px; }
+            .footer-text { font-size: 8px; }
           }
         `}</style>
 
