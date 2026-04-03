@@ -340,12 +340,14 @@ export default async function BillPDFPage({ params }: Props) {
                       {(b.payment_status as string).toUpperCase()}
                     </span>
                   </div>
-                  {Number(b.paid_amount) > 0 && (
-                    <div className="detail-row">
-                      <span className="detail-key">Amount Paid</span>
-                      <span className="detail-val" style={{ color: "#22c55e" }}>{fmtMoney(Number(b.paid_amount))}</span>
-                    </div>
-                  )}
+                  <div className="detail-row">
+                    <span className="detail-key">Advance</span>
+                    <span className="detail-val" style={{ color: "#22c55e" }}>{fmtMoney(Number(b.paid_amount))}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span className="detail-key">Due</span>
+                    <span className="detail-val" style={{ color: balanceDue > 0 ? "#ef4444" : "#22c55e" }}>{fmtMoney(balanceDue)}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -396,18 +398,14 @@ export default async function BillPDFPage({ params }: Props) {
                     <span className="lbl">Total Amount</span>
                     <span>{fmtMoney(Number(b.total_amount))}</span>
                   </div>
-                  {Number(b.paid_amount) > 0 && (
-                    <>
-                      <div className="totals-row" style={{ color: "#22c55e", fontSize: 12 }}>
-                        <span className="lbl" style={{ color: "#22c55e" }}>Amount Paid</span>
-                        <span>{fmtMoney(Number(b.paid_amount))}</span>
-                      </div>
-                      <div className="totals-row balance" style={{ color: balanceDue > 0 ? "#ef4444" : "#22c55e" }}>
-                        <span style={{ color: balanceDue > 0 ? "#ef4444" : "#22c55e" }}>Balance Due</span>
-                        <span>{fmtMoney(balanceDue)}</span>
-                      </div>
-                    </>
-                  )}
+                  <div className="totals-row" style={{ color: "#22c55e", fontSize: 12 }}>
+                    <span className="lbl" style={{ color: "#22c55e" }}>Advance</span>
+                    <span>{fmtMoney(Number(b.paid_amount))}</span>
+                  </div>
+                  <div className="totals-row balance" style={{ color: balanceDue > 0 ? "#ef4444" : "#22c55e" }}>
+                    <span style={{ color: balanceDue > 0 ? "#ef4444" : "#22c55e" }}>Due</span>
+                    <span>{fmtMoney(balanceDue)}</span>
+                  </div>
                 </div>
               </div>
             </div>

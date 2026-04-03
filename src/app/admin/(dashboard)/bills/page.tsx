@@ -229,6 +229,9 @@ function LineItemsEditor({
 // ── Totals Summary ────────────────────────────────────────────────────────────
 function TotalsSummary({ items, form, setForm }: { items: LineItem[]; form: FormState; setForm: (f: FormState) => void }) {
   const { subtotal, taxAmount, total } = computeTotals(items, form.tax_enabled, form.tax_percent, form.discount_amount);
+  const parsedAdvance = parseFloat(form.paid_amount) || 0;
+  const advance = Math.min(Math.max(parsedAdvance, 0), Math.max(total, 0));
+  const due = Math.max(0, total - advance);
   return (
     <div className="bg-slate-900/50 rounded-lg border border-white/5 p-4 space-y-2.5 text-sm">
       <div className="flex justify-between text-slate-400">
@@ -263,6 +266,21 @@ function TotalsSummary({ items, form, setForm }: { items: LineItem[]; form: Form
       <div className="flex justify-between font-bold text-white text-base pt-2 border-t border-white/10">
         <span>Total</span>
         <span className="text-primary">{fmtMoney(total)}</span>
+      </div>
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-slate-400 text-xs shrink-0">Advance ₹</span>
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          value={form.paid_amount}
+          onChange={e => setForm({ ...form, paid_amount: e.target.value })}
+          className="w-28 ml-auto rounded border border-white/10 bg-slate-950/70 px-2 py-1 text-xs text-white outline-none focus:border-primary/50 text-right"
+        />
+      </div>
+      <div className="flex justify-between text-slate-200 font-semibold">
+        <span>Due</span>
+        <span>{fmtMoney(due)}</span>
       </div>
     </div>
   );
@@ -407,11 +425,6 @@ function BillModal({
                   <option value="partial">Partial</option>
                   <option value="paid">Paid</option>
                 </select>
-              </div>
-              <div>
-                <label className={lbl}>Paid Amount ₹</label>
-                <input type="number" min="0" step="0.01" value={form.paid_amount}
-                  onChange={e => setForm({ ...form, paid_amount: e.target.value })} className={inp} />
               </div>
               <div>
                 <label className={lbl}>Payment Date</label>
@@ -889,10 +902,9 @@ function BillsInner() {
                       </span>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
-                      <div className="font-bold text-white">{fmtMoney(Number(bill.total_amount))}</div>
-                      {Number(bill.paid_amount) > 0 && bill.payment_status !== 'paid' && (
-                        <div className="text-[11px] text-green-400">Paid: {fmtMoney(Number(bill.paid_amount))}</div>
-                      )}
+                      <div className="text-[11px] text-slate-400">Total: <span className="font-bold text-white">{fmtMoney(Number(bill.total_amount))}</span></div>
+                      <div className="text-[11px] text-slate-400">Advance: <span className="font-bold text-green-400">{fmtMoney(Number(bill.paid_amount))}</span></div>
+                      <div className="text-[11px] text-slate-400">Due: <span className="font-bold text-red-400">{fmtMoney(Math.max(0, Number(bill.total_amount) - Number(bill.paid_amount)))}</span></div>
                     </td>
                     <td className="px-4 py-3"><StatusBadge status={bill.status} /></td>
                     <td className="px-4 py-3"><PayBadge status={bill.payment_status} /></td>

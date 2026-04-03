@@ -87,6 +87,7 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const {
     client_id, bill_date, due_date, status,
+    paid_amount,
     items, tax_enabled, tax_percent, discount_amount,
     notes, terms, bank_payment_method_id, upi_payment_method_id,
   } = body;
@@ -122,16 +123,21 @@ export async function POST(request: NextRequest) {
   const taxAmt   = (subtotal * taxPct) / 100;
   const discAmt  = Number(discount_amount) || 0;
   const total    = subtotal + taxAmt - discAmt;
+  const parsedAdvance = Number(paid_amount) || 0;
+  const advanceAmount = Math.min(Math.max(parsedAdvance, 0), Math.max(total, 0));
+  const paymentStatus = advanceAmount >= total && total > 0 ? "paid" : advanceAmount > 0 ? "partial" : "unpaid";
+  const billStatus = paymentStatus === "paid" ? "paid" : (status || "draft");
 
   const result = await query<ResultSetHeader>(
     `INSERT INTO bills (bill_number, client_id, bill_date, due_date, subtotal, tax_percent, tax_amount,
        discount_amount, total_amount, notes, terms, status, payment_status, paid_amount,
        bank_payment_method_id, upi_payment_method_id, created_by)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'unpaid', 0, ?, ?, NULL)`,
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)`,
     [
       bill_number, client_id, bill_date, due_date || null,
       subtotal.toFixed(2), taxPct, taxAmt.toFixed(2), discAmt.toFixed(2), total.toFixed(2),
-      notes || null, terms || null, status || "draft",
+      notes || null, terms || null, billStatus,
+      paymentStatus, advanceAmount.toFixed(2),
       bank_payment_method_id || null, upi_payment_method_id || null,
     ]
   );
