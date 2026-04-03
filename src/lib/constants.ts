@@ -17,7 +17,7 @@ export const COMPANY = {
     full: "BB Cyber Plaza, Innovation District, Salt Lake Sector V, Kolkata, West Bengal, India - 700091",
   },
   phone: "+91 89610 90050",
-  email: "hello@biznexa.com",
+  email: "info@biznexa.tech",
   website: "https://biznexa.tech",
   whatsapp: "https://wa.me/918961090050",
   social: {

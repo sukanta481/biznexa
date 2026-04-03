@@ -6,6 +6,15 @@ import type { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
 import { COMPANY } from "@/lib/constants";
 import { isMissingDatabaseConfigError, query } from "@/lib/db";
+import {
+  EMAIL_DEPARTMENT_OPTIONS,
+  PHONE_LABEL_OPTIONS,
+  type SiteEmailEntry,
+  type SitePhoneEntry,
+  type SiteSettings,
+  type SiteSettingKey,
+  type SiteSettingsUpdateInput,
+} from "@/lib/site-settings-types";
 
 interface SettingRow extends RowDataPacket {
   setting_key: string;
@@ -28,75 +37,6 @@ interface ActivityLogTableRow extends RowDataPacket {
   table_name: string;
 }
 
-export interface SitePhoneEntry {
-  label: string;
-  number: string;
-}
-
-export interface SiteEmailEntry {
-  department: string;
-  email: string;
-}
-
-export interface SiteSocialLinks {
-  whatsapp: string;
-  linkedin: string;
-  twitter: string;
-  facebook: string;
-  instagram: string;
-  youtube: string;
-  github: string;
-  telegram: string;
-}
-
-export type SiteSettingKey =
-  | "site_name"
-  | "site_email"
-  | "site_phone"
-  | "site_address"
-  | "facebook_url"
-  | "twitter_url"
-  | "linkedin_url"
-  | "instagram_url"
-  | "stat_years"
-  | "stat_projects"
-  | "stat_clients"
-  | "stat_countries"
-  | "hero_title"
-  | "hero_subtitle"
-  | "hero_image";
-
-export interface SiteSettings {
-  siteName: string;
-  siteEmail: string;
-  sitePhone: string;
-  siteAddress: string;
-  social: SiteSocialLinks;
-  stats: {
-    years: string;
-    projects: string;
-    clients: string;
-    countries: string;
-  };
-  hero: {
-    title: string;
-    subtitle: string;
-    image: string;
-  };
-  contactPhones: SitePhoneEntry[];
-  contactEmails: SiteEmailEntry[];
-  flat: Record<SiteSettingKey, string>;
-}
-
-export interface SiteSettingsUpdateInput {
-  settings: Record<SiteSettingKey, string>;
-  contactPhones: SitePhoneEntry[];
-  contactEmails: SiteEmailEntry[];
-  updatedBy?: number | null;
-  ipAddress?: string | null;
-  userAgent?: string | null;
-}
-
 const SETTING_META: Record<SiteSettingKey, { type: "text" | "email" | "url" | "number"; description: string }> = {
   site_name: { type: "text", description: "Website name" },
   site_email: { type: "email", description: "Primary contact email" },
@@ -114,9 +54,6 @@ const SETTING_META: Record<SiteSettingKey, { type: "text" | "email" | "url" | "n
   hero_subtitle: { type: "text", description: "Homepage hero subtitle" },
   hero_image: { type: "url", description: "Homepage hero image URL" },
 };
-
-export const PHONE_LABEL_OPTIONS = ["Sales", "Support", "WhatsApp", "Office", "HR", "General"] as const;
-export const EMAIL_DEPARTMENT_OPTIONS = ["Sales", "Support", "Billing", "HR", "Careers", "General"] as const;
 
 const SETTINGS_JSON_KEYS = {
   contactPhones: "contact_phones",

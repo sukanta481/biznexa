@@ -4,15 +4,17 @@ import { NextResponse } from "next/server";
 
 import {
   createCsrfToken,
-  EMAIL_DEPARTMENT_OPTIONS,
   getSiteSettings,
-  PHONE_LABEL_OPTIONS,
   saveSiteSettings,
   verifyCsrfToken,
+} from "@/lib/site-settings";
+import {
+  EMAIL_DEPARTMENT_OPTIONS,
+  PHONE_LABEL_OPTIONS,
   type SiteEmailEntry,
   type SitePhoneEntry,
   type SiteSettingKey,
-} from "@/lib/site-settings";
+} from "@/lib/site-settings-types";
 
 export const runtime = "nodejs";
 

@@ -22,7 +22,7 @@ import {
   type SitePhoneEntry,
   type SiteSettings,
   type SiteSettingKey,
-} from '@/lib/site-settings';
+} from '@/lib/site-settings-types';
 
 interface SiteSettingsClientProps {
   initialSettings: SiteSettings;
