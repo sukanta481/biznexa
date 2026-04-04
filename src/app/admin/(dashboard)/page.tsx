@@ -1,303 +1,888 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 
-function FilterButton({ icon, label, value, options, id, openDropdown, setOpenDropdown, onSelect }: { icon: string; label: string; value: string; options: string[]; id: string; openDropdown: string | null; setOpenDropdown: (v: string | null) => void; onSelect: (v: string) => void }) {
-    return (
-        <div className="relative">
-            <button
-                onClick={() => setOpenDropdown(openDropdown === id ? null : id)}
-                className={`bg-[#1e293b]/40 backdrop-blur-sm border px-4 py-2 rounded-lg flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 ${openDropdown === id ? 'border-primary/40 bg-[#1e293b]/60' : 'border-white/5 hover:border-white/20'}`}
-            >
-                <span className="material-symbols-outlined text-[16px] text-primary">{icon}</span>
-                <span className="text-slate-300">{label}: {value}</span>
-                <span className="material-symbols-outlined text-[14px] text-slate-500">expand_more</span>
-            </button>
-            {openDropdown === id && (
-                <div className="absolute top-full mt-1 left-0 w-48 bg-[#0f172a]/95 backdrop-blur-xl border border-white/10 rounded-lg shadow-2xl overflow-hidden z-50">
-                    {options.map((opt) => (
-                        <button
-                            key={opt}
-                            onClick={() => { onSelect(opt); setOpenDropdown(null); }}
-                            className={`w-full text-left px-4 py-2.5 text-xs font-medium transition-all ${opt === value ? 'text-primary bg-primary/10' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
-                        >
-                            {opt}
-                        </button>
-                    ))}
-                </div>
-            )}
-        </div>
-    );
+// ── Types ─────────────────────────────────────────────────────────────────────
+interface RecentExpense {
+  id: number;
+  title: string;
+  type: 'income' | 'expense';
+  amount: number;
+  expense_date: string;
+  category: string;
 }
 
-export default function AdminDashboard() {
-    const [dateFilter, setDateFilter] = useState('Last 30 Days');
-    const [serviceFilter, setServiceFilter] = useState('All');
-    const [regionFilter, setRegionFilter] = useState('EMEA');
-    const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-    const dropdownRef = useRef<HTMLDivElement>(null);
+interface RecentBill {
+  id: number;
+  bill_number: string;
+  total_amount: number;
+  status: string;
+  payment_status: string;
+  bill_date: string;
+  client_name: string | null;
+}
 
-    useEffect(() => {
-        function handleClickOutside(e: MouseEvent) {
-            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-                setOpenDropdown(null);
-            }
-        }
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
+interface RecentFile {
+  id: number;
+  file_number: string;
+  file_date: string | null;
+  customer_name: string | null;
+  file_type: string | null;
+  commission: number;
+  payment_status: string | null;
+  fees: number | null;
+  gross_amount: number;
+  bank_name: string | null;
+}
 
-    const dateOptions = ['Last 7 Days', 'Last 30 Days', 'Last 90 Days', 'This Year', 'All Time'];
-    const serviceOptions = ['All', 'Web Dev', 'AI Solutions', 'Marketing', 'Cloud Infra'];
-    const regionOptions = ['EMEA', 'APAC', 'Americas', 'Global'];
+interface RecentRecord {
+  id: number;
+  title: string;
+  type: 'income' | 'expense';
+  amount: number;
+  description: string | null;
+  expense_date: string;
+}
 
-    return (
-        <div className="flex flex-col gap-8">
-            {/* Dashboard Header */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-2">
-                <div>
-                    <h1 className="text-2xl md:text-3xl font-headline font-bold text-on-surface tracking-tight cyber-glow-cyan uppercase">Global Operations</h1>
-                    <p className="text-slate-400 text-sm mt-1">Network performance is stable. Growth is <span className="text-tertiary font-bold">+12.4%</span> this cycle.</p>
-                </div>
+interface DashboardData {
+  adminName: string;
+  filterLabel: string;
+  mainData: {
+    billingEarned: number;
+    inspectionEarned: number;
+    generalIncome: number;
+    totalEarnings: number;
+    totalExpenses: number;
+    netProfit: number;
+    pendingPayments: number;
+    monthlyLabels: string[];
+    monthlyEarnings: number[];
+    monthlyExpenses: number[];
+    recentExpenses: RecentExpense[];
+    biznexaEarnings: number;
+    inspEarnings: number;
+    genIncome: number;
+    biznexaExpenses: number;
+    inspectionExpenses: number;
+    generalExpenses: number;
+  };
+  biznexaData: {
+    totalBilled: number;
+    paidAmount: number;
+    unpaidAmount: number;
+    totalBills: number;
+    totalExpenses: number;
+    netProfit: number;
+    recentBills: RecentBill[];
+  };
+  inspTabData: {
+    totalFees: number;
+    totalEarnings: number;
+    pendingAmount: number;
+    totalFiles: number;
+    totalExpenses: number;
+    netProfit: number;
+    recentFiles: RecentFile[];
+  };
+  generalTabData: {
+    totalIncome: number;
+    totalExpenses: number;
+    netBalance: number;
+    totalRecords: number;
+    recentRecords: RecentRecord[];
+  };
+}
 
-                {/* Top-level filters */}
-                <div className="flex flex-wrap items-center gap-3" ref={dropdownRef}>
-                    <FilterButton icon="calendar_today" label="" value={dateFilter} options={dateOptions} id="date" openDropdown={openDropdown} setOpenDropdown={setOpenDropdown} onSelect={setDateFilter} />
-                    <FilterButton icon="filter_list" label="Service" value={serviceFilter} options={serviceOptions} id="service" openDropdown={openDropdown} setOpenDropdown={setOpenDropdown} onSelect={setServiceFilter} />
-                    <FilterButton icon="public" label="Region" value={regionFilter} options={regionOptions} id="region" openDropdown={openDropdown} setOpenDropdown={setOpenDropdown} onSelect={setRegionFilter} />
-                </div>
-            </div>
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-            {/* Metric cards with trend indicators */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                <div className="bg-[#1e293b]/40 backdrop-blur-sm border border-white/5 p-5 md:p-6 rounded-xl relative overflow-hidden group hover:bg-[#1e293b]/60 hover:border-primary/30 transition-all">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <span className="material-symbols-outlined text-5xl">payments</span>
-                    </div>
-                    <div className="text-[10px] font-headline font-bold uppercase tracking-widest text-slate-500 mb-1">Total Earnings</div>
-                    <div className="text-3xl font-headline font-bold text-on-surface">$248,390</div>
-                    <div className="mt-3 flex items-center gap-1.5 text-[11px] font-bold">
-                        <span className="text-tertiary">+18.2%</span>
-                        <span className="text-slate-500 uppercase tracking-tighter">vs last month</span>
-                    </div>
-                </div>
+function fmtMoney(v: number): string {
+  return `₹${Number(v).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
 
-                <div className="bg-[#1e293b]/40 backdrop-blur-sm border border-white/5 p-5 md:p-6 rounded-xl relative overflow-hidden group hover:bg-[#1e293b]/60 hover:border-primary/30 transition-all">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <span className="material-symbols-outlined text-5xl">account_balance_wallet</span>
-                    </div>
-                    <div className="text-[10px] font-headline font-bold uppercase tracking-widest text-slate-500 mb-1">Total Expenses</div>
-                    <div className="text-3xl font-headline font-bold text-on-surface">$52,140</div>
-                    <div className="mt-3 flex items-center gap-1.5 text-[11px] font-bold">
-                        <span className="text-rose-400">-4.1%</span>
-                        <span className="text-slate-500 uppercase tracking-tighter">optimization gain</span>
-                    </div>
-                </div>
+function fmtMoneyShort(v: number): string {
+  if (v >= 100000) return `₹${(v / 100000).toFixed(1)}L`;
+  if (v >= 1000) return `₹${(v / 1000).toFixed(1)}K`;
+  return `₹${v.toFixed(0)}`;
+}
 
-                <div className="bg-[#1e293b]/40 backdrop-blur-sm border border-white/5 p-5 md:p-6 rounded-xl relative overflow-hidden group hover:bg-[#1e293b]/60 hover:border-primary/30 transition-all">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <span className="material-symbols-outlined text-5xl">bolt</span>
-                    </div>
-                    <div className="text-[10px] font-headline font-bold uppercase tracking-widest text-slate-500 mb-1">Active Leads</div>
-                    <div className="text-3xl font-headline font-bold text-on-surface">42</div>
-                    <div className="mt-3 flex items-center gap-1.5 text-[11px] font-bold">
-                        <span className="text-tertiary">+5</span>
-                        <span className="text-slate-500 uppercase tracking-tighter">since Monday</span>
-                    </div>
-                </div>
+function fmtDate(v: string | null): string {
+  if (!v) return '—';
+  const datePart = v.split('T')[0];
+  const parts = datePart.split('-').map(Number);
+  const [y, m, d] = parts;
+  if (!y || !m || !d) return v;
+  return `${MONTHS[m - 1]} ${String(d).padStart(2, '0')}, ${y}`;
+}
 
-                <div className="bg-[#1e293b]/40 backdrop-blur-sm border border-white/5 p-5 md:p-6 rounded-xl relative overflow-hidden group hover:bg-[#1e293b]/60 hover:border-primary/30 transition-all">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <span className="material-symbols-outlined text-5xl">star</span>
-                    </div>
-                    <div className="text-[10px] font-headline font-bold uppercase tracking-widest text-slate-500 mb-1">Retention Rate</div>
-                    <div className="text-3xl font-headline font-bold text-on-surface">94.8%</div>
-                    <div className="mt-3 flex items-center gap-1.5 text-[11px] font-bold">
-                        <span className="text-tertiary">+0.5%</span>
-                        <span className="text-slate-500 uppercase tracking-tighter">industry lead</span>
-                    </div>
-                </div>
-            </div>
+const TABS = [
+  { id: 'main', label: 'Main Dashboard', icon: 'space_dashboard' },
+  { id: 'biznexa', label: 'BizNexa Agency', icon: 'business' },
+  { id: 'inspection', label: 'Inspection', icon: 'verified' },
+  { id: 'general', label: 'General', icon: 'account_balance_wallet' },
+] as const;
 
-            {/* Main Content Area Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-                {/* Revenue Velocity projection chart */}
-                <div className="lg:col-span-2 bg-[#1e293b]/40 backdrop-blur-sm border border-white/5 rounded-xl p-5 md:p-8 relative hover:border-primary/30 transition-all">
-                    <div className="flex justify-between items-start mb-8 md:mb-10">
-                        <div>
-                            <h3 className="text-lg font-headline font-bold text-on-surface">Revenue Velocity</h3>
-                            <p className="text-xs text-slate-500 uppercase tracking-tighter mt-1">Real-time fiscal throughput (USD/Day)</p>
-                        </div>
-                        <div className="flex gap-2">
-                            <button className="text-[10px] font-bold px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded uppercase tracking-widest hover:bg-primary/20 transition-all active:scale-95">PROJECTION</button>
-                        </div>
-                    </div>
+const PRESETS = [
+  { id: '7d', label: 'Last 7 Days' },
+  { id: '30d', label: 'Last 30 Days' },
+  { id: '60d', label: 'Last 60 Days' },
+  { id: 'this_month', label: 'This Month' },
+  { id: 'last_month', label: 'Last Month' },
+  { id: '1y', label: 'Last Year' },
+] as const;
 
-                    {/* Mock Projection Chart */}
-                    <div className="h-48 md:h-64 flex items-end justify-between gap-2 md:gap-4 px-2">
-                        {[40, 55, 35, 70, 85, 95, 90].map((h, i) => (
-                            <div key={i} className="flex-1 bg-gradient-to-t from-primary/20 to-transparent relative group rounded-t-sm hover:from-primary/30 transition-all cursor-pointer" style={{ height: `${h}%` }}>
-                                <div className="absolute top-0 left-0 w-full h-0.5 bg-primary shadow-[0_0_10px_#00f2ff]"></div>
-                                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#0f172a]/90 border border-white/10 rounded px-2 py-1 text-[10px] font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                                    ${Math.round(h * 280)}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="flex justify-between mt-4 md:mt-6 px-2 text-[10px] font-headline font-bold text-slate-600 uppercase tracking-widest">
-                        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-                    </div>
-                </div>
-
-                {/* Expense Categories card with donut/pie chart */}
-                <div className="bg-[#1e293b]/40 backdrop-blur-sm border border-white/5 rounded-xl p-5 md:p-8 flex flex-col items-center hover:border-primary/30 transition-all">
-                    <h3 className="text-lg font-headline font-bold text-on-surface self-start mb-8">Expense Categories</h3>
-
-                    <div className="relative w-40 h-40 md:w-48 md:h-48 mb-8 flex items-center justify-center">
-                        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" fill="transparent" r="40" stroke="rgba(30, 41, 59, 1)" strokeWidth="12"></circle>
-                            <circle className="drop-shadow-[0_0_8px_rgba(0,242,255,0.4)]" cx="50" cy="50" fill="transparent" r="40" stroke="#00f2ff" strokeDasharray="251.2" strokeDashoffset="138.16" strokeWidth="12"></circle>
-                            <circle className="transform rotate-[162deg] origin-center" cx="50" cy="50" fill="transparent" r="40" stroke="#6366f1" strokeDasharray="251.2" strokeDashoffset="188.4" strokeWidth="12"></circle>
-                            <circle className="transform rotate-[270deg] origin-center" cx="50" cy="50" fill="transparent" r="40" stroke="#10b981" strokeDasharray="251.2" strokeDashoffset="188.4" strokeWidth="12"></circle>
-                        </svg>
-                        <div className="absolute text-center">
-                            <span className="block text-2xl font-headline font-bold text-on-surface">$52K</span>
-                            <span className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Spent</span>
-                        </div>
-                    </div>
-
-                    <div className="w-full space-y-4">
-                        <div className="flex justify-between items-center text-xs">
-                            <div className="flex items-center gap-2">
-                                <div className="w-3 h-3 rounded-sm bg-primary shadow-[0_0_5px_rgba(0,242,255,0.5)]"></div>
-                                <span className="text-slate-400 font-medium">Infrastructure</span>
-                            </div>
-                            <span className="font-bold text-on-surface">45%</span>
-                        </div>
-                        <div className="flex justify-between items-center text-xs">
-                            <div className="flex items-center gap-2">
-                                <div className="w-3 h-3 rounded-sm bg-secondary shadow-[0_0_5px_rgba(99,102,241,0.5)]"></div>
-                                <span className="text-slate-400 font-medium">SaaS Subs</span>
-                            </div>
-                            <span className="font-bold text-on-surface">30%</span>
-                        </div>
-                        <div className="flex justify-between items-center text-xs">
-                            <div className="flex items-center gap-2">
-                                <div className="w-3 h-3 rounded-sm bg-tertiary shadow-[0_0_5px_rgba(16,185,129,0.5)]"></div>
-                                <span className="text-slate-400 font-medium">Outsourcing</span>
-                            </div>
-                            <span className="font-bold text-on-surface">25%</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Bottom Grid Section */}
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8">
-                {/* Recent Intelligence vertical feed */}
-                <div className="bg-[#1e293b]/40 backdrop-blur-sm border border-white/5 rounded-xl overflow-hidden flex flex-col hover:border-primary/30 transition-all">
-                    <div className="p-5 md:p-6 border-b border-white/5 flex justify-between items-center bg-white/5">
-                        <h3 className="text-lg font-headline font-bold text-on-surface">Recent Intelligence</h3>
-                        <button className="material-symbols-outlined text-slate-500 cursor-pointer hover:text-primary transition-colors">more_vert</button>
-                    </div>
-                    <div className="flex-1">
-                        <div className="p-5 md:p-6 flex items-start gap-4 hover:bg-white/5 transition-colors border-b border-white/5 cursor-pointer">
-                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
-                                <span className="material-symbols-outlined">mail</span>
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <div className="flex justify-between mb-1 gap-2">
-                                    <span className="font-bold text-sm text-on-surface truncate">New Inquiry: Quantum Systems</span>
-                                    <span className="text-[10px] text-slate-500 font-headline font-bold uppercase whitespace-nowrap">12M AGO</span>
-                                </div>
-                                <p className="text-xs text-[#b0b8c8]">Potential architecture audit for EU-based data center.</p>
-                            </div>
-                        </div>
-                        <div className="p-5 md:p-6 flex items-start gap-4 hover:bg-white/5 transition-colors border-b border-white/5 cursor-pointer">
-                            <div className="w-10 h-10 rounded-full bg-tertiary/10 flex items-center justify-center text-tertiary flex-shrink-0">
-                                <span className="material-symbols-outlined">check_circle</span>
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <div className="flex justify-between mb-1 gap-2">
-                                    <span className="font-bold text-sm text-on-surface truncate">Milestone: AI Implementation Phase 1</span>
-                                    <span className="text-[10px] text-slate-500 font-headline font-bold uppercase whitespace-nowrap">2H AGO</span>
-                                </div>
-                                <p className="text-xs text-[#b0b8c8]">Completed for Client: NexGen Financial. Billing generated.</p>
-                            </div>
-                        </div>
-                        <div className="p-5 md:p-6 flex items-start gap-4 hover:bg-white/5 transition-colors cursor-pointer">
-                            <div className="w-10 h-10 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-400 flex-shrink-0">
-                                <span className="material-symbols-outlined">pending</span>
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <div className="flex justify-between mb-1 gap-2">
-                                    <span className="font-bold text-sm text-on-surface truncate">Pending Bill: AWS Core Infrastructure</span>
-                                    <span className="text-[10px] text-slate-500 font-headline font-bold uppercase whitespace-nowrap">5H AGO</span>
-                                </div>
-                                <p className="text-xs text-[#b0b8c8]">Invoice #UX-902 requires executive approval.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <button className="p-4 text-center text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-primary border-t border-white/5 hover:bg-primary/5 transition-colors w-full active:scale-[0.98]">
-                        View Comprehensive Audit Log
-                    </button>
-                </div>
-
-                {/* Right side of bottom grid */}
-                <div className="flex flex-col gap-6">
-                    {/* Project Status cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="bg-[#1e293b]/40 backdrop-blur-sm border border-white/5 p-5 md:p-6 rounded-xl relative hover:border-primary/30 transition-all cursor-pointer group">
-                            <div className="flex justify-between items-start mb-4">
-                                <div className="w-12 h-12 rounded bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-primary/30 transition-all">
-                                    <span className="material-symbols-outlined text-primary">rocket_launch</span>
-                                </div>
-                                <span className="text-[9px] font-headline font-bold text-tertiary bg-tertiary/10 px-2 py-0.5 rounded border border-tertiary/20 uppercase tracking-widest">ON TRACK</span>
-                            </div>
-                            <h4 className="font-bold text-on-surface mb-1 text-sm font-headline">Project Apollo</h4>
-                            <p className="text-[11px] text-[#b0b8c8] mb-5 leading-relaxed">Enterprise-grade CMS overhaul for Global Logistics.</p>
-                            <div className="w-full bg-white/5 h-1.5 rounded-full mb-2">
-                                <div className="bg-primary h-full rounded-full shadow-[0_0_8px_#00f2ff]" style={{ width: '75%' }}></div>
-                            </div>
-                            <div className="flex justify-between text-[9px] font-bold text-slate-500 uppercase tracking-tighter">
-                                <span>75% Complete</span>
-                                <span>$12,400 due</span>
-                            </div>
-                        </div>
-
-                        <div className="bg-[#1e293b]/40 backdrop-blur-sm border border-white/5 p-5 md:p-6 rounded-xl relative hover:border-primary/30 transition-all cursor-pointer group">
-                            <div className="flex justify-between items-start mb-4">
-                                <div className="w-12 h-12 rounded bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-secondary/30 transition-all">
-                                    <span className="material-symbols-outlined text-secondary">memory</span>
-                                </div>
-                                <span className="text-[9px] font-headline font-bold text-secondary bg-secondary/10 px-2 py-0.5 rounded border border-secondary/20 uppercase tracking-widest">RESEARCH</span>
-                            </div>
-                            <h4 className="font-bold text-on-surface mb-1 text-sm font-headline">AI Middleware</h4>
-                            <p className="text-[11px] text-[#b0b8c8] mb-5 leading-relaxed">Building autonomous lead qualification agent.</p>
-                            <div className="w-full bg-white/5 h-1.5 rounded-full mb-2">
-                                <div className="bg-secondary h-full rounded-full shadow-[0_0_8px_#6366f1]" style={{ width: '32%' }}></div>
-                            </div>
-                            <div className="flex justify-between text-[9px] font-bold text-slate-500 uppercase tracking-tighter">
-                                <span>32% Complete</span>
-                                <span>Lab phase</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Global Milestone card */}
-                    <div className="bg-gradient-to-br from-primary/5 to-transparent border border-white/5 p-5 md:p-6 rounded-xl flex gap-6 items-center flex-1 hover:border-primary/30 transition-all">
-                        <div className="hidden sm:flex w-28 h-28 rounded-lg bg-white/5 border border-white/10 flex-shrink-0 items-center justify-center relative group">
-                            <span className="material-symbols-outlined text-4xl text-primary transition-transform group-hover:scale-110">emoji_events</span>
-                            <div className="absolute inset-0 bg-primary/5 blur-xl rounded-full"></div>
-                        </div>
-                        <div>
-                            <div className="text-[10px] font-headline font-bold text-primary mb-1 uppercase tracking-[0.2em]">Global Milestone</div>
-                            <h4 className="font-headline font-bold text-lg text-on-surface">Top Architecture Agency 2024</h4>
-                            <p className="text-xs text-[#b0b8c8] mt-2 leading-relaxed">Biznexa has been recognized as the most innovative tech architecture firm in the tri-state area.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+// ── Stat Card Component ────────────────────────────────────────────────────────
+function StatCard({ icon, iconColor, iconBg, label, value, valueColor = 'text-white', subtitle, accentGradient }: {
+  icon: string; iconColor: string; iconBg: string;
+  label: string; value: string; valueColor?: string;
+  subtitle?: string; accentGradient?: string;
+}) {
+  return (
+    <div className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-br from-white/[0.04] to-transparent p-5 transition-all duration-300 hover:border-white/[0.12] hover:shadow-lg hover:shadow-black/20">
+      {/* Subtle accent glow */}
+      {accentGradient && (
+        <div className={`absolute -top-12 -right-12 w-32 h-32 rounded-full opacity-[0.07] blur-2xl transition-opacity duration-500 group-hover:opacity-[0.15] ${accentGradient}`} />
+      )}
+      <div className="relative z-10">
+        <div className="flex items-center gap-3 mb-4">
+          <div className={`w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center ring-1 ring-white/[0.06]`}>
+            <span className={`material-symbols-outlined text-xl ${iconColor}`}>{icon}</span>
+          </div>
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">{label}</span>
         </div>
+        <div className={`text-[1.625rem] font-bold tracking-tight leading-none ${valueColor}`}>{value}</div>
+        {subtitle && <div className="text-[11px] text-slate-500 mt-2">{subtitle}</div>}
+      </div>
+    </div>
+  );
+}
+
+// ── Bar Chart Component ────────────────────────────────────────────────────────
+function BarChart({ labels, earnings, expenses }: { labels: string[]; earnings: number[]; expenses: number[] }) {
+  const maxVal = Math.max(...earnings, ...expenses, 1);
+  // Create 4 horizontal grid lines
+  const gridValues = [0.25, 0.5, 0.75, 1].map(f => maxVal * f);
+
+  return (
+    <div className="relative">
+      {/* Y-axis grid lines */}
+      <div className="absolute inset-0 flex flex-col justify-between pointer-events-none pb-8 pt-2">
+        {gridValues.reverse().map((val, i) => (
+          <div key={i} className="flex items-center gap-2">
+            <span className="text-[9px] text-slate-600 w-10 text-right shrink-0 tabular-nums">{fmtMoneyShort(val)}</span>
+            <div className="flex-1 border-b border-dashed border-white/[0.04]" />
+          </div>
+        ))}
+        <div className="flex items-center gap-2">
+          <span className="text-[9px] text-slate-600 w-10 text-right shrink-0">₹0</span>
+          <div className="flex-1 border-b border-white/[0.06]" />
+        </div>
+      </div>
+
+      {/* Bars */}
+      <div className="flex items-end gap-2 sm:gap-3 h-56 pl-12 pt-2 pb-8 relative z-10">
+        {labels.map((label, i) => {
+          const earnH = Math.max((earnings[i] / maxVal) * 100, 1.5);
+          const expH = Math.max((expenses[i] / maxVal) * 100, 1.5);
+          return (
+            <div key={i} className="flex-1 flex flex-col items-center gap-1 h-full justify-end min-w-0">
+              <div className="flex gap-[3px] items-end w-full justify-center h-full">
+                <div className="group relative w-2/5 max-w-5 transition-all duration-300">
+                  <div
+                    className="w-full rounded-t-md bg-gradient-to-t from-emerald-600 to-emerald-400 opacity-80 hover:opacity-100 transition-all duration-200 cursor-default"
+                    style={{ height: `${earnH}%` }}
+                  />
+                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-emerald-400 text-[9px] px-1.5 py-0.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg border border-white/10">
+                    {fmtMoneyShort(earnings[i])}
+                  </div>
+                </div>
+                <div className="group relative w-2/5 max-w-5 transition-all duration-300">
+                  <div
+                    className="w-full rounded-t-md bg-gradient-to-t from-rose-600 to-rose-400 opacity-80 hover:opacity-100 transition-all duration-200 cursor-default"
+                    style={{ height: `${expH}%` }}
+                  />
+                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-rose-400 text-[9px] px-1.5 py-0.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg border border-white/10">
+                    {fmtMoneyShort(expenses[i])}
+                  </div>
+                </div>
+              </div>
+              <span className="text-[10px] text-slate-500 mt-1 font-medium truncate w-full text-center">{label}</span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Legend */}
+      <div className="flex items-center justify-center gap-6 mt-2">
+        <div className="flex items-center gap-2">
+          <div className="w-2.5 h-2.5 rounded-sm bg-gradient-to-t from-emerald-600 to-emerald-400" />
+          <span className="text-[11px] text-slate-400 font-medium">Earnings</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-2.5 h-2.5 rounded-sm bg-gradient-to-t from-rose-600 to-rose-400" />
+          <span className="text-[11px] text-slate-400 font-medium">Expenses</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Breakdown Row ──────────────────────────────────────────────────────────────
+function BreakdownRow({ label, amount, total, color, isExpense }: {
+  label: string; amount: number; total: number; color: string; isExpense?: boolean;
+}) {
+  const pct = total > 0 ? (amount / total) * 100 : 0;
+  return (
+    <div className="space-y-1.5">
+      <div className="flex justify-between items-center text-sm">
+        <span className="text-slate-300 font-medium">{label}</span>
+        <span className={`font-semibold tabular-nums ${isExpense ? 'text-rose-400' : 'text-white'}`}>{fmtMoney(amount)}</span>
+      </div>
+      <div className="h-1.5 w-full rounded-full bg-white/[0.04] overflow-hidden">
+        <div className={`h-full rounded-full transition-all duration-700 ${color}`} style={{ width: `${Math.max(pct, 1)}%` }} />
+      </div>
+    </div>
+  );
+}
+
+// ── Section Card ───────────────────────────────────────────────────────────────
+function SectionCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`rounded-2xl border border-white/[0.06] bg-gradient-to-br from-white/[0.03] to-transparent backdrop-blur-sm ${className}`}>
+      {children}
+    </div>
+  );
+}
+
+// ── Inner component ───────────────────────────────────────────────────────────
+function DashboardInner() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('main');
+
+  const [preset, setPreset] = useState(searchParams.get('preset') ?? '');
+  const [dateFrom, setDateFrom] = useState(searchParams.get('date_from') ?? '');
+  const [dateTo, setDateTo] = useState(searchParams.get('date_to') ?? '');
+
+  const hasFilter = preset !== '' || (dateFrom !== '' && dateTo !== '');
+
+  useEffect(() => {
+    const hash = window.location.hash.replace('#', '');
+    const tabFromHash = TABS.find(t => t.id === hash)?.id;
+    const tabFromQuery = searchParams.get('tab');
+    if (tabFromHash) setActiveTab(tabFromHash);
+    else if (tabFromQuery && TABS.find(t => t.id === tabFromQuery)) setActiveTab(tabFromQuery);
+  }, [searchParams]);
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const qs = new URLSearchParams();
+      if (preset) qs.set('preset', preset);
+      if (dateFrom) qs.set('date_from', dateFrom);
+      if (dateTo) qs.set('date_to', dateTo);
+      const res = await fetch(`/api/admin/dashboard?${qs.toString()}`);
+      const json = await res.json();
+      setData(json);
+    } catch {
+      // silent
+    } finally {
+      setLoading(false);
+    }
+  }, [preset, dateFrom, dateTo]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  function switchTab(name: string) {
+    setActiveTab(name);
+    window.location.hash = name;
+  }
+
+  function applyDateFilter(e: React.FormEvent) {
+    e.preventDefault();
+    setPreset('');
+    const qs = new URLSearchParams();
+    if (dateFrom) qs.set('date_from', dateFrom);
+    if (dateTo) qs.set('date_to', dateTo);
+    if (activeTab !== 'main') qs.set('tab', activeTab);
+    router.push(`/admin?${qs.toString()}${activeTab !== 'main' ? `#${activeTab}` : ''}`);
+  }
+
+  function clearFilter() {
+    setPreset('');
+    setDateFrom('');
+    setDateTo('');
+    router.push(`/admin${activeTab !== 'main' ? `#${activeTab}` : ''}`);
+  }
+
+  function handlePresetClick(p: string) {
+    setPreset(p);
+    setDateFrom('');
+    setDateTo('');
+    const qs = new URLSearchParams();
+    qs.set('preset', p);
+    if (activeTab !== 'main') qs.set('tab', activeTab);
+    router.push(`/admin?${qs.toString()}${activeTab !== 'main' ? `#${activeTab}` : ''}`);
+  }
+
+  if (loading || !data) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 gap-4">
+        <div className="w-10 h-10 rounded-full border-2 border-white/10 border-t-cyan-400 animate-spin" />
+        <span className="text-sm text-slate-500 font-medium">Loading dashboard…</span>
+      </div>
     );
+  }
+
+  return (
+    <>
+      {/* ── Page Header ────────────────────────────────────────────────────── */}
+      <header className="mb-8">
+        <h1 className="text-[1.75rem] font-bold text-white tracking-tight">Dashboard</h1>
+        <p className="text-sm text-slate-400 mt-1">Welcome back, <span className="text-white font-medium">{data.adminName}</span>!</p>
+      </header>
+
+      {/* ── Tab Bar ────────────────────────────────────────────────────────── */}
+      <div className="flex flex-wrap gap-1.5 mb-6 p-1 rounded-xl bg-white/[0.03] border border-white/[0.05] w-fit">
+        {TABS.map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => switchTab(tab.id)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+              activeTab === tab.id
+                ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/15 text-cyan-400 shadow-inner shadow-cyan-500/10 ring-1 ring-cyan-500/20'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[18px]">{tab.icon}</span>
+            <span className="hidden sm:inline">{tab.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* ── Date Filter Bar ────────────────────────────────────────────────── */}
+      <SectionCard className="p-4 mb-8">
+        <div className="flex flex-col lg:flex-row lg:items-center gap-3">
+          {/* Presets */}
+          <div className="flex flex-wrap gap-1.5">
+            {PRESETS.map(p => (
+              <button
+                key={p.id}
+                onClick={() => handlePresetClick(p.id)}
+                className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-all duration-200 ${
+                  preset === p.id
+                    ? 'text-cyan-400 bg-cyan-500/10 ring-1 ring-cyan-500/20'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.05]'
+                }`}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="hidden lg:block w-px h-6 bg-white/[0.08]" />
+
+          {/* Custom date range */}
+          <form onSubmit={applyDateFilter} className="flex items-center gap-2 flex-wrap">
+            <input
+              type="date"
+              className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-xs text-white outline-none focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/20 transition-all w-auto"
+              value={dateFrom}
+              onChange={e => setDateFrom(e.target.value)}
+            />
+            <span className="text-slate-500 text-xs font-medium">to</span>
+            <input
+              type="date"
+              className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-xs text-white outline-none focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/20 transition-all w-auto"
+              value={dateTo}
+              onChange={e => setDateTo(e.target.value)}
+            />
+            <button type="submit" className="bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-1.5 rounded-lg text-xs font-bold text-white hover:shadow-lg hover:shadow-cyan-500/20 transition-all duration-200 active:scale-95">
+              Apply
+            </button>
+          </form>
+        </div>
+
+        {/* Active filter indicator */}
+        {hasFilter && (
+          <div className="flex items-center gap-3 mt-3 pt-3 border-t border-white/[0.05]">
+            <span className="material-symbols-outlined text-sm text-cyan-400">filter_alt</span>
+            {data.filterLabel && (
+              <span className="text-xs font-medium text-cyan-400 bg-cyan-500/10 px-3 py-1 rounded-full ring-1 ring-cyan-500/20">
+                {data.filterLabel}
+              </span>
+            )}
+            {dateFrom && dateTo && !preset && (
+              <span className="text-xs font-medium text-cyan-400 bg-cyan-500/10 px-3 py-1 rounded-full ring-1 ring-cyan-500/20">
+                {fmtDate(dateFrom)} — {fmtDate(dateTo)}
+              </span>
+            )}
+            <button onClick={clearFilter} className="text-xs font-medium text-rose-400 hover:text-rose-300 transition flex items-center gap-1">
+              <span className="material-symbols-outlined text-sm">close</span>
+              Clear
+            </button>
+          </div>
+        )}
+      </SectionCard>
+
+      {/* ══ MAIN TAB ══════════════════════════════════════════════════════════ */}
+      {activeTab === 'main' && (
+        <div className="space-y-8">
+          {/* Stat Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatCard
+              icon="trending_up" iconColor="text-emerald-400" iconBg="bg-emerald-500/10"
+              label="Total Earnings" value={fmtMoney(data.mainData.totalEarnings)}
+              accentGradient="bg-emerald-500"
+              subtitle={data.filterLabel || undefined}
+            />
+            <StatCard
+              icon="trending_down" iconColor="text-rose-400" iconBg="bg-rose-500/10"
+              label="Total Expenses" value={fmtMoney(data.mainData.totalExpenses)}
+              accentGradient="bg-rose-500"
+              subtitle={data.filterLabel || undefined}
+            />
+            <StatCard
+              icon="account_balance" iconColor={data.mainData.netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}
+              iconBg={data.mainData.netProfit >= 0 ? 'bg-emerald-500/10' : 'bg-rose-500/10'}
+              label="Net Profit" value={fmtMoney(data.mainData.netProfit)}
+              valueColor={data.mainData.netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}
+              accentGradient={data.mainData.netProfit >= 0 ? 'bg-emerald-500' : 'bg-rose-500'}
+            />
+            <StatCard
+              icon="schedule" iconColor="text-amber-400" iconBg="bg-amber-500/10"
+              label="Pending" value={fmtMoney(data.mainData.pendingPayments)}
+              accentGradient="bg-amber-500"
+              subtitle="Bills + Inspection due"
+            />
+          </div>
+
+          {/* Chart + Recent Records */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <SectionCard className="lg:col-span-2 p-6">
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                  <span className="material-symbols-outlined text-cyan-400 text-lg">bar_chart</span>
+                  Earnings vs Expenses
+                </h3>
+                <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">Last 6 Months</span>
+              </div>
+              <BarChart labels={data.mainData.monthlyLabels} earnings={data.mainData.monthlyEarnings} expenses={data.mainData.monthlyExpenses} />
+            </SectionCard>
+
+            <SectionCard className="overflow-hidden flex flex-col">
+              <div className="px-5 py-4 border-b border-white/[0.06] flex justify-between items-center">
+                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                  <span className="material-symbols-outlined text-cyan-400 text-lg">receipt</span>
+                  Recent Records
+                </h3>
+                <Link href="/admin/expenses" className="text-[10px] text-cyan-400 hover:text-cyan-300 font-semibold uppercase tracking-wider transition">View All</Link>
+              </div>
+              <div className="divide-y divide-white/[0.04] flex-1 overflow-y-auto">
+                {data.mainData.recentExpenses.length === 0 ? (
+                  <div className="px-5 py-12 text-center text-slate-500 text-xs">
+                    <span className="material-symbols-outlined text-3xl text-slate-700 mb-2 block">inbox</span>
+                    No records yet
+                  </div>
+                ) : (
+                  data.mainData.recentExpenses.map(exp => (
+                    <div key={exp.id} className="px-5 py-3.5 flex justify-between items-center hover:bg-white/[0.02] transition-colors group">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${exp.type === 'income' ? 'bg-emerald-500/10' : 'bg-rose-500/10'}`}>
+                          <span className={`material-symbols-outlined text-sm ${exp.type === 'income' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                            {exp.type === 'income' ? 'arrow_downward' : 'arrow_upward'}
+                          </span>
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-sm font-semibold text-slate-200 truncate group-hover:text-white transition-colors">{exp.title}</div>
+                          <div className="text-[10px] text-slate-500 mt-0.5">{fmtDate(exp.expense_date)} · <span className="uppercase">{exp.category}</span></div>
+                        </div>
+                      </div>
+                      <div className={`text-sm font-bold tabular-nums shrink-0 ml-3 ${exp.type === 'income' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                        {exp.type === 'income' ? '+' : '−'}{fmtMoney(Number(exp.amount))}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </SectionCard>
+          </div>
+
+          {/* Breakdowns */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <SectionCard className="p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <span className="material-symbols-outlined text-emerald-400 text-lg">pie_chart</span>
+                <h3 className="text-sm font-bold text-white">Earnings Breakdown</h3>
+              </div>
+              <div className="space-y-4">
+                <BreakdownRow label="BizNexa Agency" amount={data.mainData.biznexaEarnings} total={data.mainData.totalEarnings} color="bg-gradient-to-r from-cyan-500 to-blue-500" />
+                <BreakdownRow label="Inspection" amount={data.mainData.inspEarnings} total={data.mainData.totalEarnings} color="bg-gradient-to-r from-violet-500 to-purple-500" />
+                <BreakdownRow label="General Income" amount={data.mainData.genIncome} total={data.mainData.totalEarnings} color="bg-gradient-to-r from-emerald-500 to-teal-500" />
+                <div className="flex justify-between text-sm pt-4 border-t border-white/[0.06]">
+                  <span className="text-white font-bold">Total</span>
+                  <span className="text-white font-bold tabular-nums">{fmtMoney(data.mainData.totalEarnings)}</span>
+                </div>
+              </div>
+            </SectionCard>
+
+            <SectionCard className="p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <span className="material-symbols-outlined text-rose-400 text-lg">donut_small</span>
+                <h3 className="text-sm font-bold text-white">Expense Breakdown</h3>
+              </div>
+              <div className="space-y-4">
+                <BreakdownRow label="BizNexa" amount={data.mainData.biznexaExpenses} total={data.mainData.totalExpenses} color="bg-gradient-to-r from-rose-500 to-pink-500" isExpense />
+                <BreakdownRow label="Inspection" amount={data.mainData.inspectionExpenses} total={data.mainData.totalExpenses} color="bg-gradient-to-r from-orange-500 to-amber-500" isExpense />
+                <BreakdownRow label="General" amount={data.mainData.generalExpenses} total={data.mainData.totalExpenses} color="bg-gradient-to-r from-red-500 to-rose-500" isExpense />
+                <div className="flex justify-between text-sm pt-4 border-t border-white/[0.06]">
+                  <span className="text-white font-bold">Total</span>
+                  <span className="text-rose-400 font-bold tabular-nums">{fmtMoney(data.mainData.totalExpenses)}</span>
+                </div>
+              </div>
+            </SectionCard>
+          </div>
+        </div>
+      )}
+
+      {/* ══ BIZNEXA TAB ═══════════════════════════════════════════════════════ */}
+      {activeTab === 'biznexa' && (
+        <div className="space-y-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatCard icon="request_quote" iconColor="text-cyan-400" iconBg="bg-cyan-500/10" label="Total Billed" value={fmtMoney(data.biznexaData.totalBilled)} accentGradient="bg-cyan-500" />
+            <StatCard icon="check_circle" iconColor="text-emerald-400" iconBg="bg-emerald-500/10" label="Paid Amount" value={fmtMoney(data.biznexaData.paidAmount)} valueColor="text-emerald-400" accentGradient="bg-emerald-500" />
+            <StatCard icon="pending" iconColor="text-rose-400" iconBg="bg-rose-500/10" label="Unpaid Amount" value={fmtMoney(data.biznexaData.unpaidAmount)} valueColor="text-rose-400" accentGradient="bg-rose-500" />
+            <StatCard icon="description" iconColor="text-blue-400" iconBg="bg-blue-500/10" label="Total Bills" value={String(data.biznexaData.totalBills)} accentGradient="bg-blue-500" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Profit highlight */}
+            <div className="relative overflow-hidden rounded-2xl border border-cyan-500/20 bg-gradient-to-br from-cyan-500/[0.08] via-blue-500/[0.04] to-transparent p-6">
+              <div className="absolute -top-20 -right-20 w-48 h-48 bg-cyan-500 rounded-full opacity-[0.04] blur-3xl" />
+              <div className="relative z-10">
+                <div className="text-[11px] font-semibold uppercase tracking-wider text-cyan-400 mb-2">BizNexa Profit</div>
+                <div className={`text-3xl font-bold tracking-tight ${data.biznexaData.netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>{fmtMoney(data.biznexaData.netProfit)}</div>
+                <div className="text-xs text-slate-400 mt-2 flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm">info</span>
+                  Paid − Expenses
+                </div>
+              </div>
+            </div>
+
+            <SectionCard className="p-6">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">BizNexa Expenses</div>
+              <div className="text-2xl font-bold text-rose-400 tracking-tight">{fmtMoney(data.biznexaData.totalExpenses)}</div>
+              <Link href="/admin/expenses?category=biznexa" className="inline-flex items-center gap-1 text-xs text-cyan-400 hover:text-cyan-300 font-medium mt-3 transition group">
+                View All <span className="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+              </Link>
+            </SectionCard>
+
+            <SectionCard className="p-6">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-3">Quick Actions</div>
+              <div className="space-y-2">
+                <Link href="/admin/bills?action=new" className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-xs font-bold py-2.5 rounded-xl hover:shadow-lg hover:shadow-cyan-500/20 transition-all active:scale-[0.98]">
+                  <span className="material-symbols-outlined text-sm">add</span> New Bill
+                </Link>
+                <Link href="/admin/clients" className="flex items-center justify-center gap-2 w-full border border-white/[0.08] text-slate-300 text-xs font-bold py-2.5 rounded-xl hover:bg-white/[0.04] hover:border-white/[0.12] transition-all">
+                  <span className="material-symbols-outlined text-sm">group</span> Manage Clients
+                </Link>
+                <Link href="/admin/expenses" className="flex items-center justify-center gap-2 w-full border border-white/[0.08] text-slate-300 text-xs font-bold py-2.5 rounded-xl hover:bg-white/[0.04] hover:border-white/[0.12] transition-all">
+                  <span className="material-symbols-outlined text-sm">add_card</span> Add Expense
+                </Link>
+              </div>
+            </SectionCard>
+          </div>
+
+          {/* Recent Bills Table */}
+          <SectionCard className="overflow-hidden">
+            <div className="px-6 py-4 border-b border-white/[0.06] flex justify-between items-center">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <span className="material-symbols-outlined text-cyan-400 text-lg">receipt_long</span>
+                Recent Bills
+              </h3>
+              <Link href="/admin/bills" className="text-[10px] text-cyan-400 hover:text-cyan-300 font-semibold uppercase tracking-wider transition">View All</Link>
+            </div>
+            {data.biznexaData.recentBills.length === 0 ? (
+              <div className="px-6 py-12 text-center text-slate-500 text-xs">
+                <span className="material-symbols-outlined text-3xl text-slate-700 mb-2 block">inbox</span>
+                No bills yet
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 border-b border-white/[0.04]">
+                      <th className="text-left px-6 py-3">Bill #</th>
+                      <th className="text-left px-6 py-3">Client</th>
+                      <th className="text-right px-6 py-3">Amount</th>
+                      <th className="text-center px-6 py-3">Status</th>
+                      <th className="text-center px-6 py-3">Payment</th>
+                      <th className="text-left px-6 py-3">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.biznexaData.recentBills.map(bill => (
+                      <tr key={bill.id} className="border-b border-white/[0.03] hover:bg-white/[0.02] group transition">
+                        <td className="px-6 py-3.5 text-sm font-mono text-cyan-400 font-semibold">{bill.bill_number}</td>
+                        <td className="px-6 py-3.5 text-sm text-slate-200">{bill.client_name || '—'}</td>
+                        <td className="px-6 py-3.5 text-sm text-white font-semibold text-right tabular-nums">{fmtMoney(Number(bill.total_amount))}</td>
+                        <td className="px-6 py-3.5 text-center">
+                          <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
+                            bill.status === 'paid' ? 'bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20' :
+                            bill.status === 'sent' ? 'bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20' :
+                            'bg-slate-500/10 text-slate-400 ring-1 ring-slate-500/20'
+                          }`}>{bill.status}</span>
+                        </td>
+                        <td className="px-6 py-3.5 text-center">
+                          <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
+                            bill.payment_status === 'paid' ? 'bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20' :
+                            bill.payment_status === 'partial' ? 'bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/20' :
+                            'bg-rose-500/10 text-rose-400 ring-1 ring-rose-500/20'
+                          }`}>{bill.payment_status}</span>
+                        </td>
+                        <td className="px-6 py-3.5 text-sm text-slate-400">{fmtDate(bill.bill_date)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </SectionCard>
+        </div>
+      )}
+
+      {/* ══ INSPECTION TAB ════════════════════════════════════════════════════ */}
+      {activeTab === 'inspection' && (
+        <div className="space-y-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatCard icon="engineering" iconColor="text-violet-400" iconBg="bg-violet-500/10" label="Total Fees Worked" value={fmtMoney(data.inspTabData.totalFees)} accentGradient="bg-violet-500" />
+            <StatCard icon="savings" iconColor="text-emerald-400" iconBg="bg-emerald-500/10" label="Total Earnings" value={fmtMoney(data.inspTabData.totalEarnings)} valueColor="text-emerald-400" accentGradient="bg-emerald-500" />
+            <StatCard icon="hourglass_top" iconColor="text-rose-400" iconBg="bg-rose-500/10" label="Pending Amount" value={fmtMoney(data.inspTabData.pendingAmount)} valueColor="text-rose-400" accentGradient="bg-rose-500" />
+            <StatCard icon="folder_open" iconColor="text-blue-400" iconBg="bg-blue-500/10" label="Total Files" value={String(data.inspTabData.totalFiles)} accentGradient="bg-blue-500" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="relative overflow-hidden rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-500/[0.08] via-orange-500/[0.04] to-transparent p-6">
+              <div className="absolute -top-20 -right-20 w-48 h-48 bg-amber-500 rounded-full opacity-[0.04] blur-3xl" />
+              <div className="relative z-10">
+                <div className="text-[11px] font-semibold uppercase tracking-wider text-amber-400 mb-2">Inspection Profit</div>
+                <div className={`text-3xl font-bold tracking-tight ${data.inspTabData.netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>{fmtMoney(data.inspTabData.netProfit)}</div>
+                <div className="text-xs text-slate-400 mt-2 flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm">info</span>
+                  Earned − Expenses
+                </div>
+              </div>
+            </div>
+
+            <SectionCard className="p-6">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Inspection Expenses</div>
+              <div className="text-2xl font-bold text-rose-400 tracking-tight">{fmtMoney(data.inspTabData.totalExpenses)}</div>
+              <Link href="/admin/expenses?category=inspection" className="inline-flex items-center gap-1 text-xs text-cyan-400 hover:text-cyan-300 font-medium mt-3 transition group">
+                View All <span className="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+              </Link>
+            </SectionCard>
+
+            <SectionCard className="p-6">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-3">Quick Actions</div>
+              <div className="space-y-2">
+                <Link href="/admin/inspections/files?action=new" className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold py-2.5 rounded-xl hover:shadow-lg hover:shadow-amber-500/20 transition-all active:scale-[0.98]">
+                  <span className="material-symbols-outlined text-sm">add</span> New File
+                </Link>
+                <Link href="/admin/inspections/dashboard" className="flex items-center justify-center gap-2 w-full border border-white/[0.08] text-slate-300 text-xs font-bold py-2.5 rounded-xl hover:bg-white/[0.04] hover:border-white/[0.12] transition-all">
+                  <span className="material-symbols-outlined text-sm">space_dashboard</span> Full Dashboard
+                </Link>
+                <Link href="/admin/expenses" className="flex items-center justify-center gap-2 w-full border border-white/[0.08] text-slate-300 text-xs font-bold py-2.5 rounded-xl hover:bg-white/[0.04] hover:border-white/[0.12] transition-all">
+                  <span className="material-symbols-outlined text-sm">add_card</span> Add Expense
+                </Link>
+              </div>
+            </SectionCard>
+          </div>
+
+          {/* Recent Files Table */}
+          <SectionCard className="overflow-hidden">
+            <div className="px-6 py-4 border-b border-white/[0.06] flex justify-between items-center">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <span className="material-symbols-outlined text-amber-400 text-lg">folder_special</span>
+                Recent Inspection Files
+              </h3>
+              <Link href="/admin/inspections/files" className="text-[10px] text-cyan-400 hover:text-cyan-300 font-semibold uppercase tracking-wider transition">View All</Link>
+            </div>
+            {data.inspTabData.recentFiles.length === 0 ? (
+              <div className="px-6 py-12 text-center text-slate-500 text-xs">
+                <span className="material-symbols-outlined text-3xl text-slate-700 mb-2 block">inbox</span>
+                No files yet
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 border-b border-white/[0.04]">
+                      <th className="text-left px-6 py-3">File #</th>
+                      <th className="text-left px-6 py-3">Date</th>
+                      <th className="text-left px-6 py-3">Customer</th>
+                      <th className="text-left px-6 py-3">Bank</th>
+                      <th className="text-center px-6 py-3">Type</th>
+                      <th className="text-right px-6 py-3">Commission</th>
+                      <th className="text-center px-6 py-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.inspTabData.recentFiles.map(file => (
+                      <tr key={file.id} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition">
+                        <td className="px-6 py-3.5 text-sm font-mono text-cyan-400 font-semibold">{file.file_number}</td>
+                        <td className="px-6 py-3.5 text-sm text-slate-400">{fmtDate(file.file_date)}</td>
+                        <td className="px-6 py-3.5 text-sm text-slate-200">{file.customer_name || '—'}</td>
+                        <td className="px-6 py-3.5 text-sm text-slate-400">{file.bank_name || '—'}</td>
+                        <td className="px-6 py-3.5 text-center">
+                          <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
+                            file.file_type === 'office' ? 'bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20' :
+                            'bg-violet-500/10 text-violet-400 ring-1 ring-violet-500/20'
+                          }`}>{file.file_type || '—'}</span>
+                        </td>
+                        <td className="px-6 py-3.5 text-sm text-white font-semibold text-right tabular-nums">{fmtMoney(Number(file.commission))}</td>
+                        <td className="px-6 py-3.5 text-center">
+                          {file.file_type === 'office' ? (
+                            <span className="text-[10px] text-slate-500 font-medium">N/A</span>
+                          ) : (
+                            <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
+                              file.payment_status === 'paid' ? 'bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20' :
+                              file.payment_status === 'partially' ? 'bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/20' :
+                              'bg-rose-500/10 text-rose-400 ring-1 ring-rose-500/20'
+                            }`}>{file.payment_status || '—'}</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </SectionCard>
+        </div>
+      )}
+
+      {/* ══ GENERAL TAB ═══════════════════════════════════════════════════════ */}
+      {activeTab === 'general' && (
+        <div className="space-y-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatCard icon="savings" iconColor="text-emerald-400" iconBg="bg-emerald-500/10" label="Total Income" value={fmtMoney(data.generalTabData.totalIncome)} valueColor="text-emerald-400" accentGradient="bg-emerald-500" />
+            <StatCard icon="money_off" iconColor="text-rose-400" iconBg="bg-rose-500/10" label="Total Expenses" value={fmtMoney(data.generalTabData.totalExpenses)} valueColor="text-rose-400" accentGradient="bg-rose-500" />
+            <StatCard
+              icon="balance" iconColor={data.generalTabData.netBalance >= 0 ? 'text-emerald-400' : 'text-rose-400'}
+              iconBg={data.generalTabData.netBalance >= 0 ? 'bg-emerald-500/10' : 'bg-rose-500/10'}
+              label="Net Balance" value={fmtMoney(data.generalTabData.netBalance)}
+              valueColor={data.generalTabData.netBalance >= 0 ? 'text-emerald-400' : 'text-rose-400'}
+              accentGradient={data.generalTabData.netBalance >= 0 ? 'bg-emerald-500' : 'bg-rose-500'}
+            />
+            <StatCard icon="format_list_numbered" iconColor="text-violet-400" iconBg="bg-violet-500/10" label="Total Records" value={String(data.generalTabData.totalRecords)} accentGradient="bg-violet-500" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="relative overflow-hidden rounded-2xl border border-violet-500/20 bg-gradient-to-br from-violet-500/[0.08] via-purple-500/[0.04] to-transparent p-6">
+              <div className="absolute -top-20 -right-20 w-48 h-48 bg-violet-500 rounded-full opacity-[0.04] blur-3xl" />
+              <div className="relative z-10">
+                <div className="text-[11px] font-semibold uppercase tracking-wider text-violet-400 mb-2">General Balance</div>
+                <div className={`text-3xl font-bold tracking-tight ${data.generalTabData.netBalance >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>{fmtMoney(data.generalTabData.netBalance)}</div>
+                <div className="text-xs text-slate-400 mt-2 flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm">info</span>
+                  Income − Expenses
+                </div>
+              </div>
+            </div>
+
+            <SectionCard className="p-6">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-3">Quick Actions</div>
+              <div className="space-y-2">
+                <Link href="/admin/expenses?category=general" className="flex items-center justify-center gap-2 w-full border border-white/[0.08] text-slate-300 text-xs font-bold py-2.5 rounded-xl hover:bg-white/[0.04] hover:border-white/[0.12] transition-all">
+                  <span className="material-symbols-outlined text-sm">list_alt</span> All General Records
+                </Link>
+                <Link href="/admin/expenses?category=general&type=income" className="flex items-center justify-center gap-2 w-full border border-white/[0.08] text-slate-300 text-xs font-bold py-2.5 rounded-xl hover:bg-white/[0.04] hover:border-white/[0.12] transition-all">
+                  <span className="material-symbols-outlined text-sm">trending_up</span> View Income
+                </Link>
+                <Link href="/admin/expenses?category=general&type=expense" className="flex items-center justify-center gap-2 w-full border border-white/[0.08] text-slate-300 text-xs font-bold py-2.5 rounded-xl hover:bg-white/[0.04] hover:border-white/[0.12] transition-all">
+                  <span className="material-symbols-outlined text-sm">trending_down</span> View Expenses
+                </Link>
+              </div>
+            </SectionCard>
+
+            <SectionCard className="p-6">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-3">Add New</div>
+              <Link href="/admin/expenses" className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-violet-500 to-purple-500 text-white text-xs font-bold py-2.5 rounded-xl hover:shadow-lg hover:shadow-violet-500/20 transition-all active:scale-[0.98]">
+                <span className="material-symbols-outlined text-sm">add</span> Add Record
+              </Link>
+            </SectionCard>
+          </div>
+
+          {/* Recent Records Table */}
+          <SectionCard className="overflow-hidden">
+            <div className="px-6 py-4 border-b border-white/[0.06] flex justify-between items-center">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <span className="material-symbols-outlined text-violet-400 text-lg">history</span>
+                Recent General Records
+              </h3>
+              <Link href="/admin/expenses?category=general" className="text-[10px] text-cyan-400 hover:text-cyan-300 font-semibold uppercase tracking-wider transition">View All</Link>
+            </div>
+            {data.generalTabData.recentRecords.length === 0 ? (
+              <div className="px-6 py-12 text-center text-slate-500 text-xs">
+                <span className="material-symbols-outlined text-3xl text-slate-700 mb-2 block">inbox</span>
+                No records yet
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 border-b border-white/[0.04]">
+                      <th className="text-left px-6 py-3">Date</th>
+                      <th className="text-left px-6 py-3">Title</th>
+                      <th className="text-center px-6 py-3">Type</th>
+                      <th className="text-right px-6 py-3">Amount</th>
+                      <th className="text-left px-6 py-3">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.generalTabData.recentRecords.map(rec => (
+                      <tr key={rec.id} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition">
+                        <td className="px-6 py-3.5 text-sm text-slate-400">{fmtDate(rec.expense_date)}</td>
+                        <td className="px-6 py-3.5 text-sm text-slate-200 font-semibold">{rec.title}</td>
+                        <td className="px-6 py-3.5 text-center">
+                          <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
+                            rec.type === 'income' ? 'bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20' : 'bg-rose-500/10 text-rose-400 ring-1 ring-rose-500/20'
+                          }`}>{rec.type}</span>
+                        </td>
+                        <td className={`px-6 py-3.5 text-sm font-semibold text-right tabular-nums ${rec.type === 'income' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                          {rec.type === 'income' ? '+' : '−'}{fmtMoney(Number(rec.amount))}
+                        </td>
+                        <td className="px-6 py-3.5 text-xs text-slate-500 max-w-[200px] truncate">{rec.description || '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </SectionCard>
+        </div>
+      )}
+    </>
+  );
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col items-center justify-center py-24 gap-4">
+        <div className="w-10 h-10 rounded-full border-2 border-white/10 border-t-cyan-400 animate-spin" />
+        <span className="text-sm text-slate-500 font-medium">Loading dashboard…</span>
+      </div>
+    }>
+      <DashboardInner />
+    </Suspense>
+  );
 }
