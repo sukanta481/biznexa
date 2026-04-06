@@ -42,6 +42,12 @@ function emptyForm(entity: EntityKey): Record<string, string> {
     return forms[entity];
 }
 
+function normalizeFormValues(values: object): Record<string, string> {
+    return Object.fromEntries(
+        Object.entries(values).map(([key, value]) => [key, value == null ? '' : String(value)])
+    ) as Record<string, string>;
+}
+
 // ─── Add/Edit Modal ───────────────────────────────────────────────────────────
 
 function MasterModal({
@@ -58,10 +64,8 @@ function MasterModal({
     onSaved: () => void;
 }) {
     const isEdit = !!initial;
-    const [form, setForm] = useState<Record<string, string>>(
-        initial
-            ? Object.fromEntries(Object.entries(initial).map(([k, v]) => [k, v == null ? '' : String(v)]))
-            : emptyForm(entity)
+    const [form, setForm] = useState<Record<string, string>>(() =>
+        initial ? normalizeFormValues(initial) : emptyForm(entity)
     );
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState('');
@@ -326,9 +330,7 @@ export default function InspectionMasters() {
     }
 
     function toEditForm(item: AnyRow): Record<string, string> {
-        return Object.fromEntries(
-            Object.entries(item).map(([k, v]) => [k, v == null ? '' : String(v)])
-        );
+        return normalizeFormValues(item);
     }
 
     // ── Delete ─────────────────────────────────────────────────────────────────

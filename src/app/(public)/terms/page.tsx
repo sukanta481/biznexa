@@ -183,7 +183,7 @@ export default function TermsPage() {
       <section className="border-t border-white/5 py-16 px-6 md:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Ready to get started?</h2>
-          <p className="text-[#b0b8c8] mb-8">Let's discuss your project and build something amazing together.</p>
+          <p className="text-[#b0b8c8] mb-8">Let&#39;s discuss your project and build something amazing together.</p>
           <Link href="/contact" className="inline-flex items-center gap-2 bg-primary text-on-primary-fixed font-headline font-bold py-3 px-8 rounded-full hover:shadow-[0_0_30px_rgba(0,255,65,0.3)] transition-all transform hover:scale-105 text-sm uppercase tracking-widest">
             Book a Free Consultation
           </Link>

@@ -33,7 +33,7 @@ export default function PrivacyPolicyPage() {
       <section className="max-w-4xl mx-auto px-6 md:px-8 py-16 md:py-24">
         <div className="prose prose-invert prose-lg max-w-none">
           <p className="text-[#b0b8c8] leading-relaxed">
-            At <strong className="text-white">{COMPANY.name}</strong> ("we", "our", or "us"), we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.
+            At <strong className="text-white">{COMPANY.name}</strong> (&#34;we&#34;, &#34;our&#34;, or &#34;us&#34;), we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.
           </p>
 
           <h2 className="text-2xl font-bold text-white mt-12 mb-4">1. Information We Collect</h2>
@@ -140,14 +140,14 @@ export default function PrivacyPolicyPage() {
             Our website may contain links to third-party websites or services. We are not responsible for the privacy practices or content of these external sites. We encourage you to review the privacy policies of any third-party services you visit.
           </p>
 
-          <h2 className="text-2xl font-bold text-white mt-12 mb-4">9. Children's Privacy</h2>
+          <h2 className="text-2xl font-bold text-white mt-12 mb-4">9. Children&#39;s Privacy</h2>
           <p className="text-[#b0b8c8] leading-relaxed">
             Our services are not directed to individuals under the age of 18. We do not knowingly collect personal information from children. If we become aware that we have inadvertently collected data from a child, we will take steps to delete it promptly.
           </p>
 
           <h2 className="text-2xl font-bold text-white mt-12 mb-4">10. Changes to This Policy</h2>
           <p className="text-[#b0b8c8] leading-relaxed">
-            We may update this Privacy Policy from time to time to reflect changes in our practices, technology, legal requirements, or other factors. We will notify you of significant changes by posting the updated policy on our website with a revised "Last updated" date. We encourage you to review this policy periodically.
+            We may update this Privacy Policy from time to time to reflect changes in our practices, technology, legal requirements, or other factors. We will notify you of significant changes by posting the updated policy on our website with a revised &#34;Last updated&#34; date. We encourage you to review this policy periodically.
           </p>
 
           <h2 className="text-2xl font-bold text-white mt-12 mb-4">11. Contact Us</h2>
@@ -171,7 +171,7 @@ export default function PrivacyPolicyPage() {
       <section className="border-t border-white/5 py-16 px-6 md:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Have questions about your data?</h2>
-          <p className="text-[#b0b8c8] mb-8">We're here to help. Reach out to us anytime.</p>
+          <p className="text-[#b0b8c8] mb-8">We&#39;re here to help. Reach out to us anytime.</p>
           <Link href="/contact" className="inline-flex items-center gap-2 bg-primary text-on-primary-fixed font-headline font-bold py-3 px-8 rounded-full hover:shadow-[0_0_30px_rgba(0,255,65,0.3)] transition-all transform hover:scale-105 text-sm uppercase tracking-widest">
             Contact Us
           </Link>

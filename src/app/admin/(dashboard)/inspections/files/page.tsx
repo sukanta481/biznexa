@@ -18,6 +18,16 @@ interface InspectionFile {
     gross_amount: number | null;
     bank_name: string | null;
     branch_name: string | null;
+    bank_id: number | null;
+    branch_id: number | null;
+    source_id: number | null;
+    paid_to_office: string | null;
+}
+
+interface LookupOption {
+    id: number;
+    name: string;
+    bank_id?: number;
 }
 
 const statusStyles: Record<string, string> = {
@@ -51,11 +61,17 @@ function InspectionFilesInner() {
     const [typeFilter, setTypeFilter] = useState(() => searchParams.get('type') ?? '');
     const [dateFrom, setDateFrom] = useState(() => searchParams.get('dateFrom') ?? '');
     const [dateTo, setDateTo] = useState(() => searchParams.get('dateTo') ?? '');
+    const [bankFilter, setBankFilter] = useState(() => searchParams.get('bank_id') ?? '');
+    const [branchFilter, setBranchFilter] = useState(() => searchParams.get('branch_id') ?? '');
+    const [sourceFilter, setSourceFilter] = useState(() => searchParams.get('source_id') ?? '');
+    const [paymentStatusFilter, setPaymentStatusFilter] = useState(() => searchParams.get('payment_status') ?? '');
+    const [paidToOfficeFilter, setPaidToOfficeFilter] = useState(() => searchParams.get('paid_to_office') ?? '');
     const [currentPage, setCurrentPage] = useState(1);
 
-    // Hidden deep-link filters (from dashboard cards)
-    const [paymentStatusFilter] = useState(() => searchParams.get('payment_status') ?? '');
-    const [paidToOfficeFilter] = useState(() => searchParams.get('paid_to_office') ?? '');
+    // Lookup data
+    const [banks, setBanks] = useState<LookupOption[]>([]);
+    const [branches, setBranches] = useState<LookupOption[]>([]);
+    const [sources, setSources] = useState<LookupOption[]>([]);
 
     const hasDashboardFilter = !!(paymentStatusFilter || paidToOfficeFilter || searchParams.get('dateFrom') || searchParams.get('dateTo'));
 
@@ -70,6 +86,23 @@ function InspectionFilesInner() {
 
     const totalPages = Math.max(1, Math.ceil(total / LIMIT));
 
+    // Fetch lookup data
+    useEffect(() => {
+        fetch('/api/admin/inspection/files/lookups')
+            .then(res => res.json())
+            .then(data => {
+                setBanks(data.banks?.map((b: { id: number; bank_name: string }) => ({ id: b.id, name: b.bank_name })) ?? []);
+                setBranches(data.branches?.map((b: { id: number; branch_name: string; bank_id: number }) => ({ id: b.id, name: b.branch_name, bank_id: b.bank_id })) ?? []);
+                setSources(data.sources?.map((s: { id: number; source_name: string }) => ({ id: s.id, name: s.source_name })) ?? []);
+            })
+            .catch(() => {});
+    }, []);
+
+    // Filter branches by selected bank
+    const filteredBranches = bankFilter
+        ? branches.filter(b => b.bank_id === parseInt(bankFilter, 10))
+        : branches;
+
     const fetchFiles = useCallback(async () => {
         setLoading(true);
         try {
@@ -79,6 +112,9 @@ function InspectionFilesInner() {
             if (typeFilter) params.set('type', typeFilter);
             if (dateFrom) params.set('dateFrom', dateFrom);
             if (dateTo) params.set('dateTo', dateTo);
+            if (bankFilter) params.set('bank_id', bankFilter);
+            if (branchFilter) params.set('branch_id', branchFilter);
+            if (sourceFilter) params.set('source_id', sourceFilter);
             if (paymentStatusFilter) params.set('payment_status', paymentStatusFilter);
             if (paidToOfficeFilter) params.set('paid_to_office', paidToOfficeFilter);
             params.set('page', String(currentPage));
@@ -95,7 +131,7 @@ function InspectionFilesInner() {
         } finally {
             setLoading(false);
         }
-    }, [searchQuery, statusFilter, typeFilter, dateFrom, dateTo, paymentStatusFilter, paidToOfficeFilter, currentPage]);
+    }, [searchQuery, statusFilter, typeFilter, dateFrom, dateTo, bankFilter, branchFilter, sourceFilter, paymentStatusFilter, paidToOfficeFilter, currentPage]);
 
     useEffect(() => {
         fetchFiles();
@@ -119,7 +155,7 @@ function InspectionFilesInner() {
         }
     }, [fetchFiles]);
 
-    useEffect(() => { setCurrentPage(1); }, [searchQuery, statusFilter, typeFilter, dateFrom, dateTo]);
+    useEffect(() => { setCurrentPage(1); }, [searchQuery, statusFilter, typeFilter, dateFrom, dateTo, bankFilter, branchFilter, sourceFilter, paymentStatusFilter, paidToOfficeFilter]);
 
     const formatDate = (dateStr: string | null) => {
         if (!dateStr) return '—';
@@ -194,7 +230,7 @@ function InspectionFilesInner() {
             )}
 
             {/* Filter Bar */}
-            <div className="bg-[#0f172a]/60 backdrop-blur-[16px] p-4 rounded-xl flex flex-wrap items-center gap-4 border border-white/[0.08]">
+            <div className="bg-[#0f172a]/60 backdrop-blur-[16px] p-4 rounded-xl flex flex-wrap items-center gap-3 border border-white/[0.08]">
                 <div className="relative flex-1 min-w-[200px]">
                     <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-lg">search</span>
                     <input
@@ -204,6 +240,64 @@ function InspectionFilesInner() {
                         placeholder="Search by file ref or client..."
                         className="w-full rounded-lg border border-white/10 bg-slate-950/70 pl-10 pr-3 py-3 text-sm text-white outline-none transition focus:border-primary/50 focus:ring-2 focus:ring-primary/20 font-body"
                     />
+                </div>
+                <div className="relative">
+                    <select
+                        value={bankFilter}
+                        onChange={(e) => { setBankFilter(e.target.value); setBranchFilter(''); }}
+                        className="rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm text-white outline-none transition focus:border-primary/50 focus:ring-2 focus:ring-primary/20 appearance-none pr-10 font-body min-w-[150px]"
+                    >
+                        <option value="">Bank: All</option>
+                        {banks.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+                    </select>
+                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none text-sm">expand_more</span>
+                </div>
+                <div className="relative">
+                    <select
+                        value={branchFilter}
+                        onChange={(e) => setBranchFilter(e.target.value)}
+                        className="rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm text-white outline-none transition focus:border-primary/50 focus:ring-2 focus:ring-primary/20 appearance-none pr-10 font-body min-w-[150px]"
+                    >
+                        <option value="">Branch: All</option>
+                        {filteredBranches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+                    </select>
+                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none text-sm">expand_more</span>
+                </div>
+                <div className="relative">
+                    <select
+                        value={sourceFilter}
+                        onChange={(e) => setSourceFilter(e.target.value)}
+                        className="rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm text-white outline-none transition focus:border-primary/50 focus:ring-2 focus:ring-primary/20 appearance-none pr-10 font-body min-w-[150px]"
+                    >
+                        <option value="">Source: All</option>
+                        {sources.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                    </select>
+                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none text-sm">expand_more</span>
+                </div>
+                <div className="relative">
+                    <select
+                        value={paymentStatusFilter}
+                        onChange={(e) => setPaymentStatusFilter(e.target.value)}
+                        className="rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm text-white outline-none transition focus:border-primary/50 focus:ring-2 focus:ring-primary/20 appearance-none pr-10 font-body min-w-[160px]"
+                    >
+                        <option value="">Payment: All</option>
+                        <option value="due">Due</option>
+                        <option value="paid">Paid</option>
+                        <option value="partially">Partially Paid</option>
+                    </select>
+                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none text-sm">expand_more</span>
+                </div>
+                <div className="relative">
+                    <select
+                        value={paidToOfficeFilter}
+                        onChange={(e) => setPaidToOfficeFilter(e.target.value)}
+                        className="rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm text-white outline-none transition focus:border-primary/50 focus:ring-2 focus:ring-primary/20 appearance-none pr-10 font-body min-w-[160px]"
+                    >
+                        <option value="">Office: All</option>
+                        <option value="paid">Paid to Office</option>
+                        <option value="due">Not Paid to Office</option>
+                    </select>
+                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none text-sm">expand_more</span>
                 </div>
                 <div className="relative">
                     <select

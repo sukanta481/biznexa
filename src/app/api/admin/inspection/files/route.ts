@@ -56,6 +56,27 @@ export async function GET(request: NextRequest) {
     params.push(paidToOffice);
   }
 
+  // Bank filter
+  const bankId = searchParams.get("bank_id") ?? "";
+  if (bankId) {
+    conditions.push("f.bank_id = ?");
+    params.push(parseInt(bankId, 10));
+  }
+
+  // Branch filter
+  const branchId = searchParams.get("branch_id") ?? "";
+  if (branchId) {
+    conditions.push("f.branch_id = ?");
+    params.push(parseInt(branchId, 10));
+  }
+
+  // Source filter
+  const sourceId = searchParams.get("source_id") ?? "";
+  if (sourceId) {
+    conditions.push("f.source_id = ?");
+    params.push(parseInt(sourceId, 10));
+  }
+
   const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
 
   const [countRows, rows] = await Promise.all([
