@@ -134,4 +134,167 @@
     filter: invert(0.5);
     cursor: pointer;
   }
+
+  /* ── Cybercore Hero Background ── */
+  .scene {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    background: #000308;
+  }
+
+  .floor {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 220%;
+    height: 45%;
+    background-image:
+      linear-gradient(rgba(0, 229, 255, 0.18) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 229, 255, 0.18) 1px, transparent 1px);
+    background-size: 80px 80px;
+    transform-origin: bottom center;
+    transform: translateX(-50%) perspective(300px) rotateX(70deg);
+    animation: moveGrid 10s linear infinite;
+    opacity: 0.8;
+  }
+
+  .main-column {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 229, 255, 0.7) 0%, rgba(0, 229, 255, 0.2) 50%, transparent 100%);
+    filter: blur(3px);
+    animation: mainGlow 3s ease-in-out infinite alternate;
+  }
+
+  /* center dark vignette so text stays readable */
+  .scene::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 40%, rgba(0,3,8,0.55) 0%, transparent 100%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .light-stream-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .light-beam {
+    position: absolute;
+    bottom: 0;
+    height: 75%;
+    animation: rise 6s ease-out infinite, fade 6s ease-in-out infinite;
+  }
+
+  .light-beam.primary {
+    background: linear-gradient(to top, rgba(0, 229, 255, 0.6) 0%, rgba(0, 200, 255, 0.25) 50%, transparent 100%);
+    box-shadow: 0 0 6px rgba(0, 229, 255, 0.5), 0 0 16px rgba(0, 229, 255, 0.2);
+  }
+
+  .light-beam.secondary {
+    background: linear-gradient(to top, rgba(255, 184, 108, 0.6) 0%, rgba(255, 184, 108, 0.2) 50%, transparent 100%);
+    box-shadow: 0 0 6px rgba(255, 184, 108, 0.5), 0 0 16px rgba(255, 184, 108, 0.2);
+  }
+
+  /* Cybercore CTA Buttons */
+  .cyber-cta-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #00e5ff;
+    color: #00e5ff;
+    background: transparent;
+    font-family: var(--font-headline);
+    font-weight: 700;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.3), inset 0 0 12px rgba(0, 229, 255, 0.05);
+    text-decoration: none;
+  }
+
+  .cyber-cta-btn:hover {
+    background: rgba(0, 229, 255, 0.1);
+    box-shadow: 0 0 28px rgba(0, 229, 255, 0.6), inset 0 0 20px rgba(0, 229, 255, 0.15);
+  }
+
+  .cyber-cta-btn-ghost {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.65);
+    background: transparent;
+    font-family: var(--font-headline);
+    font-weight: 700;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .cyber-cta-btn-ghost:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* ── Cybercore Keyframes ── */
+@keyframes rise {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-130%);
+    opacity: 0;
+  }
+}
+
+@keyframes fade {
+  0%, 100% {
+    opacity: 0;
+  }
+  5%, 85% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes mainGlow {
+  from {
+    opacity: 0.5;
+    filter: blur(3px);
+  }
+  to {
+    opacity: 0.8;
+    filter: blur(2px);
+  }
+}
+
+@keyframes moveGrid {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -60px -60px;
+  }
 }
