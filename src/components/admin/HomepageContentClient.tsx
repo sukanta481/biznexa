@@ -287,16 +287,36 @@ export default function HomepageContentClient({ initialContent }: HomepageConten
         </section>
 
         <section className="col-span-12 lg:col-span-6 bg-[#0f172a]/40 backdrop-blur-[24px] border border-white/5 rounded-2xl p-6 md:p-8">
-          <div className="flex items-center gap-3 mb-8">
-            <span className="material-symbols-outlined text-primary">quiz</span>
-            <SectionTitle>FAQ Section</SectionTitle>
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined text-primary">quiz</span>
+              <SectionTitle>FAQ Section</SectionTitle>
+            </div>
+            <button
+              onClick={() => updateSection("faqs", [...content.faqs, { question: "", answer: "" }])}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary/20 bg-primary/10 text-[10px] font-headline font-bold uppercase tracking-[0.15em] text-primary transition hover:bg-primary/20"
+            >
+              <span className="material-symbols-outlined text-sm">add</span>
+              Add FAQ
+            </button>
           </div>
           <div className="space-y-4 mb-6">
             <div className="space-y-2"><Label>Section Heading</Label><Input value={content.faqIntro.heading} onChange={(event) => updateSection("faqIntro", { ...content.faqIntro, heading: event.target.value })} /></div>
           </div>
           <div className="space-y-4">
             {content.faqs.map((faq, index) => (
-              <div key={index} className="rounded-xl border border-white/10 bg-slate-950/60 p-5 space-y-3">
+              <div key={index} className="rounded-xl border border-white/10 bg-slate-950/60 p-5 space-y-3 relative group">
+                <button
+                  onClick={() => {
+                    if (confirm(`Delete FAQ "${faq.question || index + 1}"?`)) {
+                      updateSection("faqs", content.faqs.filter((_, i) => i !== index));
+                    }
+                  }}
+                  className="absolute top-3 right-3 w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition opacity-0 group-hover:opacity-100"
+                  title="Delete FAQ"
+                >
+                  <span className="material-symbols-outlined text-sm">delete</span>
+                </button>
                 <div className="space-y-2"><Label>Question</Label><Input value={faq.question} onChange={(event) => updateSection("faqs", content.faqs.map((item, itemIndex) => itemIndex === index ? { ...item, question: event.target.value } : item))} /></div>
                 <div className="space-y-2"><Label>Answer</Label><Textarea rows={3} value={faq.answer} onChange={(event) => updateSection("faqs", content.faqs.map((item, itemIndex) => itemIndex === index ? { ...item, answer: event.target.value } : item))} /></div>
               </div>
