@@ -8,15 +8,15 @@ export interface CybercoreBackgroundProps {
 
 const DEFAULT_BEAM_COUNT = 70;
 
+type Beam = { id: number; type: 'primary' | 'secondary'; style: CSSProperties };
+
 const CybercoreBackground: React.FC<CybercoreBackgroundProps> = ({
   beamCount = DEFAULT_BEAM_COUNT,
 }) => {
-  const [beams, setBeams] = useState<
-    Array<{ id: number; type: 'primary' | 'secondary'; style: CSSProperties }>
-  >([]);
+  const [beams, setBeams] = useState<Beam[]>([]);
 
   useEffect(() => {
-    const generated = Array.from({ length: beamCount }).map((_, i) => {
+    const generated: Beam[] = Array.from({ length: beamCount }).map((_, i) => {
       const riseDur = Math.random() * 3 + 5;
       const fadeDur = riseDur;
       const type = Math.random() < 0.15 ? 'secondary' : 'primary';
