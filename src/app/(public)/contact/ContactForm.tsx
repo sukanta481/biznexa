@@ -11,16 +11,44 @@ export default function ContactForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    setIsSuccess(true);
-    setFormData({ name: "", company: "", email: "", message: "" });
-    setTimeout(() => setIsSuccess(false), 5000);
+    setErrorMessage("");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Unable to send your message.");
+      }
+
+      setIsSuccess(true);
+      setSuccessMessage(
+        result.emailWarning
+          ? "Message received and saved. We will connect with you shortly."
+          : "Message received. We will calibrate our systems and connect with you shortly.",
+      );
+      setFormData({ name: "", company: "", email: "", message: "" });
+      setTimeout(() => setIsSuccess(false), 5000);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : "Unable to send your message right now.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -74,7 +102,7 @@ export default function ContactForm() {
           {isSuccess ? (
             <div className="bg-primary/10 border border-primary text-primary p-6 rounded-lg text-center font-headline animate-fade-in">
               <span className="material-symbols-outlined text-4xl mb-2 block mx-auto">check_circle</span>
-              Message received. We will calibrate our systems and connect with you shortly.
+              {successMessage}
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -131,6 +159,11 @@ export default function ContactForm() {
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 ></textarea>
               </div>
+              {errorMessage ? (
+                <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+                  {errorMessage}
+                </div>
+              ) : null}
               <button
                 disabled={isSubmitting}
                 className="w-full py-4 bg-tertiary text-on-tertiary-fixed font-headline font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-[0_0_20px_rgba(88,231,171,0.2)] disabled:opacity-50"
