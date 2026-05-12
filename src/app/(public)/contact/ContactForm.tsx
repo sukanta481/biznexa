@@ -86,7 +86,7 @@ export default function ContactForm() {
                   <input
                     required
                     className="w-full bg-surface-container-highest border-none rounded-sm px-4 py-3 text-on-surface focus:ring-1 focus:ring-primary/30 transition-all outline-none"
-                    placeholder="John Doe"
+                    placeholder="Rajesh Kumar"
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -112,7 +112,7 @@ export default function ContactForm() {
                 <input
                   required
                   className="w-full bg-surface-container-highest border-none rounded-sm px-4 py-3 text-on-surface focus:ring-1 focus:ring-primary/30 transition-all outline-none"
-                  placeholder="john@acme.com"
+                  placeholder="rajesh@acme.com"
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -157,8 +157,8 @@ export default function ContactForm() {
                   Headquarters
                 </h3>
                 <p className="text-on-surface font-medium font-body">
-                  Bidhannagar, Sector V<br />
-                  Kolkata, West Bengal 700091
+                  225/h/304 Bagmari Road<br />
+                  Kolkata, West Bengal 700054
                 </p>
               </div>
             </div>
@@ -173,7 +173,7 @@ export default function ContactForm() {
                   Direct Line
                 </h3>
                 <p className="text-on-surface font-medium font-body">
-                  +91 9831968846<br />
+                  +91 8961090050<br />
                   WhatsApp Available
                 </p>
               </div>
@@ -186,11 +186,10 @@ export default function ContactForm() {
               </div>
               <div>
                 <h3 className="font-label text-xs uppercase tracking-widest text-primary mb-1">
-                  Secure Email
+                  Email
                 </h3>
                 <p className="text-on-surface font-medium font-body">
-                  hello@biznexa.tech<br />
-                  encrypted.biznexa.tech
+                  info@biznexa.tech<br />
                 </p>
               </div>
             </div>

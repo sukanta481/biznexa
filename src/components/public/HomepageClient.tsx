@@ -98,7 +98,10 @@ export default function HomepageClient({ content }: HomepageClientProps) {
           <div className="hidden md:block h-px flex-grow bg-outline-variant/20 mx-12"></div>
         </div>
 
-        <div className="flex md:grid overflow-x-auto md:overflow-visible scrollbar-hide snap-x snap-mandatory md:snap-none pb-8 md:pb-0 px-6 md:px-0 gap-6 md:grid-cols-12 -mx-6 md:mx-0">
+        <div
+          className="flex touch-pan-x overscroll-x-contain md:grid overflow-x-auto md:overflow-visible scrollbar-hide snap-x snap-mandatory md:snap-none pb-8 md:pb-0 px-6 md:px-0 gap-6 md:grid-cols-12 -mx-6 md:mx-0"
+          style={{ WebkitOverflowScrolling: "touch" }}
+        >
           <GlowCard customSize glowColor="green" className="snap-center shrink-0 w-[85vw] md:w-auto md:col-span-8 group relative overflow-hidden rounded-3xl md:rounded-xl glass-panel cyber-border p-8 md:p-10 min-h-[350px] md:h-[400px] flex flex-col justify-end hover-lift transition-all">
             <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:opacity-40 transition-opacity">
               <span className="material-symbols-outlined text-9xl text-primary">{serviceOne?.icon ?? "code"}</span>

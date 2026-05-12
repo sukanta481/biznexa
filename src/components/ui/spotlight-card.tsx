@@ -135,7 +135,7 @@ const GlowCard: React.FC<GlowCardProps> = ({
     backgroundPosition: '50% 50%',
     backgroundAttachment: 'fixed',
     position: 'relative',
-    touchAction: 'none',
+    touchAction: customSize ? 'auto' : 'none',
   };
 
   // Only set these in standalone mode (not customSize) to avoid overriding card's own styles

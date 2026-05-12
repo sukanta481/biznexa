@@ -4,8 +4,9 @@ import Link from "next/link";
 import {
   Briefcase,
   CheckCircle2,
-  Rocket,
+  Layers3,
   ShoppingCart,
+  XCircle,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -14,58 +15,77 @@ import * as PricingCard from "@/components/ui/pricing-card";
 
 const plans = [
   {
-    icon: <Rocket />,
-    name: "Startup Plan",
-    description: "Ideal for founders and local businesses launching a clean digital presence.",
-    price: "₹5,499",
-    period: "/project",
-    variant: "outline" as const,
-    href: "/contact?plan=startup",
-    features: [
-      "1 Year Domain Free",
-      "1 Year Hosting Free",
-      "SSL Certificate Free",
-      "5 Pages Website",
-      "Mobile Responsive Design",
-      "WhatsApp Button Integration",
-    ],
-  },
-  {
     icon: <Briefcase />,
-    name: "Business Plan",
-    description: "Best for growing brands that need stronger visibility and lead capture.",
-    badge: "Most Popular",
-    price: "₹9,999",
-    period: "/project",
-    variant: "default" as const,
-    href: "/contact?plan=business",
+    name: "Starter",
+    description: "Best for solo founders and local shops.",
+    price: "₹24,999",
+    period: "(one-time)",
+    variant: "outline" as const,
+    href: "/contact?plan=starter",
     features: [
-      "1 Year Domain Included",
-      "1 Year Hosting Included",
-      "10 Pages Website",
-      "SEO Setup",
-      "Business Email",
-      "WhatsApp + Call Button",
-      "Social Media Integration",
+      { label: "Up to 5 Pages", included: true },
+      { label: "Template-Based Design", included: true },
+      { label: "Basic CMS", included: true },
+      { label: "On-Page SEO Basics", included: true },
+      { label: "80+ Speed Score", included: true },
+      { label: "Mobile Optimized", included: true },
+      { label: "WhatsApp / Form Integration", included: true },
+      { label: "AI Chatbot", included: false },
+      { label: "AI Lead Capture", included: false },
+      { label: "Google Analytics Dashboard", included: true },
+      { label: "2 Revisions", included: true },
+      { label: "Delivery in 10-14 Days", included: true },
+      { label: "30 Days Support", included: true },
     ],
   },
   {
     icon: <ShoppingCart />,
-    name: "E-Commerce Plan",
-    description: "For stores that want product listings, payments, and admin control from day one.",
-    price: "₹14,999",
-    period: "/project",
-    variant: "outline" as const,
-    href: "/contact?plan=ecommerce",
+    name: "Growth",
+    description: "Best for SMBs and D2C brands.",
+    badge: "Most Popular",
+    price: "₹59,999",
+    period: "(one-time)",
+    variant: "default" as const,
+    href: "/contact?plan=growth",
     features: [
-      "1 Year Domain Free",
-      "1 Year Hosting Free",
-      "Online Store Setup",
-      "20 Products Upload",
-      "Payment Gateway Integration",
-      "Admin Panel Access",
-      "WhatsApp Integration",
-      "Fully Responsive Design",
+      { label: "Up to 12 Pages", included: true },
+      { label: "Custom UI/UX Design", included: true },
+      { label: "WordPress / Headless CMS", included: true },
+      { label: "Full Tech SEO + Schema", included: true },
+      { label: "90+ Speed Score", included: true },
+      { label: "Mobile Optimized", included: true },
+      { label: "WhatsApp / Form Integration", included: true },
+      { label: "Basic FAQ AI Bot", included: true },
+      { label: "AI Lead Capture", included: true },
+      { label: "GA4 + Hotjar Dashboard", included: true },
+      { label: "Advanced AI Agent", included: false },
+      { label: "5 Revisions", included: true },
+      { label: "Delivery in 3-4 Weeks", included: true },
+      { label: "90 Days Support", included: true },
+    ],
+  },
+  {
+    icon: <Layers3 />,
+    name: "Scale",
+    description: "Best for e-commerce and funded startups.",
+    price: "₹1,49,999+",
+    period: "(one-time)",
+    variant: "outline" as const,
+    href: "/contact?plan=scale",
+    features: [
+      { label: "Unlimited Pages", included: true },
+      { label: "Premium Custom Design + Animation", included: true },
+      { label: "Headless CMS + Custom Dashboard", included: true },
+      { label: "SEO + Core Web Vitals", included: true },
+      { label: "95+ Speed Score", included: true },
+      { label: "Mobile Optimized", included: true },
+      { label: "WhatsApp / Form Integration", included: true },
+      { label: "Advanced AI Agent", included: true },
+      { label: "AI Lead Capture", included: true },
+      { label: "Custom Analytics Dashboard", included: true },
+      { label: "Unlimited Revisions", included: true },
+      { label: "Delivery in 6-10 Weeks", included: true },
+      { label: "6 Months Support", included: true },
     ],
   },
 ];
@@ -80,11 +100,11 @@ export default function PricingPlansSection() {
           </span>
           <h2 className="mt-4 font-headline text-3xl md:text-6xl font-bold text-white leading-tight">
             Pick The Right
-            <span className="block text-primary text-glow">Website Plan</span>
+            <span className="block text-primary text-glow">Growth Plan</span>
           </h2>
           <p className="mt-4 max-w-3xl mx-auto text-sm md:text-base text-on-surface-variant leading-relaxed">
-            Transparent INR pricing for startups, business websites, and e-commerce stores.
-            Every package is crafted for fast launch, responsive performance, and conversion-ready structure.
+            Transparent one-time INR pricing for founders, growing brands, and scale-stage businesses.
+            Every plan is mapped to CMS depth, SEO performance, AI capability, delivery speed, and post-launch support.
           </p>
         </div>
 
@@ -105,16 +125,16 @@ export default function PricingPlansSection() {
               <PricingCard.Card
                 key={plan.name}
                 className={cn(
-                  "mx-auto max-w-none border-white/10 bg-[rgba(8,14,24,0.92)] shadow-[0_20px_80px_rgba(0,0,0,0.28)]",
+                  "group mx-auto max-w-none border-white/10 bg-[rgba(8,14,24,0.92)] shadow-[0_20px_80px_rgba(0,0,0,0.28)] transition-all duration-300 hover:-translate-y-2 hover:border-primary/30 hover:shadow-[0_28px_90px_rgba(0,255,102,0.16)]",
                   plan.badge && "ring-1 ring-primary/40",
                 )}
               >
-                <PricingCard.Header className="mb-0 border-white/10 bg-[rgba(19,31,56,0.8)]">
+                <PricingCard.Header className="mb-0 border-white/10 bg-[rgba(19,31,56,0.8)] transition-colors duration-300 group-hover:bg-[rgba(22,36,64,0.92)]">
                   <PricingCard.Plan className="mb-6 items-start gap-3">
                     <div>
                       <PricingCard.PlanName className="text-primary">
                         {plan.icon}
-                        <span className="font-label uppercase tracking-[0.18em] text-primary">
+                        <span className="font-label uppercase tracking-[0.18em] text-primary transition-all duration-300 group-hover:text-[#6aff9c] group-hover:text-glow">
                           {plan.name}
                         </span>
                       </PricingCard.PlanName>
@@ -130,7 +150,7 @@ export default function PricingPlansSection() {
                   </PricingCard.Plan>
 
                   <PricingCard.Price className="items-end">
-                    <PricingCard.MainPrice className="text-white">
+                    <PricingCard.MainPrice className="text-white transition-all duration-300 group-hover:text-primary group-hover:text-glow">
                       {plan.price}
                     </PricingCard.MainPrice>
                     <PricingCard.Period className="text-on-surface-variant">
@@ -158,12 +178,25 @@ export default function PricingPlansSection() {
                   </PricingCard.Separator>
                   <PricingCard.List>
                     {plan.features.map((item) => (
-                      <PricingCard.ListItem key={item} className="text-on-surface-variant">
-                        <CheckCircle2
-                          className="mt-0.5 h-4 w-4 shrink-0 text-primary"
-                          aria-hidden="true"
-                        />
-                        <span>{item}</span>
+                      <PricingCard.ListItem
+                        key={item.label}
+                        className={cn(
+                          "transition-colors duration-300",
+                          item.included ? "text-on-surface-variant" : "text-red-300/85",
+                        )}
+                      >
+                        {item.included ? (
+                          <CheckCircle2
+                            className="mt-0.5 h-4 w-4 shrink-0 text-primary transition-transform duration-300 group-hover:scale-110"
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          <XCircle
+                            className="mt-0.5 h-4 w-4 shrink-0 text-red-400 transition-transform duration-300 group-hover:scale-110"
+                            aria-hidden="true"
+                          />
+                        )}
+                        <span>{item.label}</span>
                       </PricingCard.ListItem>
                     ))}
                   </PricingCard.List>
