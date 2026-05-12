@@ -52,6 +52,17 @@
   --color-on-error-container: #ffa8a3;
   --color-on-primary: #00330d;
   --color-surface-container: #0f1930;
+  --color-card: #0f1930;
+  --color-muted: #141f38;
+  --color-muted-foreground: #b0b8c8;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-input: rgba(255, 255, 255, 0.12);
+  --color-accent: #1f2b49;
+  --color-accent-foreground: #ffffff;
+  --color-ring: rgba(0, 255, 102, 0.45);
+  --color-primary-foreground: #00330d;
+  --color-destructive: #ff716c;
+  --color-destructive-foreground: #ffffff;
 
   --font-headline: var(--font-space-grotesk), sans-serif;
   --font-body: var(--font-manrope), sans-serif;

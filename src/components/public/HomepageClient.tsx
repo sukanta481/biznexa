@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import CybercoreBackground from "@/components/ui/cybercore-section-hero";
+import PricingPlansSection from "@/components/ui/pricing-plans-section";
 import { GlowCard } from "@/components/ui/spotlight-card";
 
 import type { HomepageContent } from "@/lib/homepage";
@@ -18,12 +19,20 @@ export default function HomepageClient({ content }: HomepageClientProps) {
   };
 
   const [serviceOne, serviceTwo, serviceThree, serviceFour] = content.services;
-  const [markerOne, markerTwo] = content.globalReach.markers;
-
   return (
     <>
-      <section className="relative min-h-0 md:min-h-[85vh] flex items-center justify-center overflow-hidden px-6 md:px-8 py-24 md:py-0" style={{ background: '#000308' }}>
+      <section
+        className="relative -mt-28 min-h-[100svh] md:min-h-screen flex items-center justify-center overflow-hidden px-6 md:px-8 pt-[13rem] pb-24 md:pt-32 md:pb-24"
+        style={{ background: '#000308' }}
+      >
         <CybercoreBackground beamCount={70} />
+        <div
+          className="absolute inset-x-0 top-0 z-[1] h-32 md:h-36"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(13,15,18,0.94) 0%, rgba(13,15,18,0.82) 52%, rgba(13,15,18,0.18) 100%)',
+          }}
+        />
 
         <div className="relative z-10 max-w-7xl mx-auto text-center">
           <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5" style={{ border: '1px solid rgba(0,229,255,0.25)', background: 'rgba(0,229,255,0.05)' }}>
@@ -142,25 +151,7 @@ export default function HomepageClient({ content }: HomepageClientProps) {
         </div>
       </section>
 
-      <section className="py-20 md:py-24 px-6 md:px-8">
-        <div className="max-w-7xl mx-auto rounded-3xl overflow-hidden h-[350px] md:h-[600px] relative shadow-[0_0_50px_rgba(0,255,65,0.1)] border border-outline-variant/10 md:border-none group">
-          <img alt="Global connectivity map" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[10s]" src={content.globalReach.backgroundImage} />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 md:via-background/60 to-transparent"></div>
-          <div className="absolute inset-0 flex items-center justify-center text-center p-6 md:p-12">
-            <div className="max-w-3xl">
-              <h2 className="font-headline text-2xl md:text-6xl font-bold text-white mb-6 md:mb-8 leading-tight">{content.globalReach.heading}</h2>
-              <div className="flex flex-wrap justify-center gap-6 md:gap-10 mt-6 md:mt-10">
-                {[markerOne, markerTwo].filter(Boolean).map((marker) => (
-                  <div key={`${marker?.icon}-${marker?.label}`} className="flex flex-col items-center">
-                    <span className="material-symbols-outlined text-primary mb-1 md:mb-2 text-2xl md:text-4xl">{marker?.icon}</span>
-                    <span className="font-label text-[8px] md:text-xs uppercase tracking-widest text-white">{marker?.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PricingPlansSection />
 
       <section className="py-20 md:py-24 pt-8 md:pt-24 px-0 md:px-8 max-w-7xl mx-auto bg-surface-container-low/50 md:bg-transparent">
         <div className="px-6 md:px-0 mb-8 md:mb-16">
