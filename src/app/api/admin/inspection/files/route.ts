@@ -1,107 +1,24 @@
 import "server-only";
 import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { getInspectionFileFilters, getInspectionFilesPage } from "@/lib/inspection-files";
 import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
 
 // ─── GET /api/admin/inspection/files ─────────────────────────────────────────
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const search = searchParams.get("search") ?? "";
-  const status = searchParams.get("status") ?? "";
-  const type = searchParams.get("type") ?? "";
-  const dateFrom = searchParams.get("dateFrom") ?? "";
-  const dateTo = searchParams.get("dateTo") ?? "";
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
   const limit = Math.max(1, parseInt(searchParams.get("limit") ?? "20", 10));
   const offset = (page - 1) * limit;
-
-  const conditions: string[] = [];
-  const params: unknown[] = [];
-
-  if (search) {
-    conditions.push("(f.file_number LIKE ? OR f.customer_name LIKE ?)");
-    params.push(`%${search}%`, `%${search}%`);
-  }
-  if (status) {
-    conditions.push("f.report_status = ?");
-    params.push(status);
-  }
-  if (type) {
-    conditions.push("f.file_type = ?");
-    params.push(type);
-  }
-  if (dateFrom) {
-    conditions.push("f.file_date >= ?");
-    params.push(dateFrom);
-  }
-  if (dateTo) {
-    conditions.push("f.file_date <= ?");
-    params.push(dateTo);
-  }
-
-  const paymentStatus = searchParams.get("payment_status") ?? "";
-  const paidToOffice = searchParams.get("paid_to_office") ?? "";
-
-  if (paymentStatus === "pending_payment") {
-    conditions.push("f.payment_status IN ('due', 'partially')");
-  } else if (paymentStatus) {
-    conditions.push("f.payment_status = ?");
-    params.push(paymentStatus);
-  }
-
-  if (paidToOffice === "due") {
-    conditions.push("(f.paid_to_office IS NULL OR f.paid_to_office != 'paid')");
-  } else if (paidToOffice) {
-    conditions.push("f.paid_to_office = ?");
-    params.push(paidToOffice);
-  }
-
-  // Bank filter
-  const bankId = searchParams.get("bank_id") ?? "";
-  if (bankId) {
-    conditions.push("f.bank_id = ?");
-    params.push(parseInt(bankId, 10));
-  }
-
-  // Branch filter
-  const branchId = searchParams.get("branch_id") ?? "";
-  if (branchId) {
-    conditions.push("f.branch_id = ?");
-    params.push(parseInt(branchId, 10));
-  }
-
-  // Source filter
-  const sourceId = searchParams.get("source_id") ?? "";
-  if (sourceId) {
-    conditions.push("f.source_id = ?");
-    params.push(parseInt(sourceId, 10));
-  }
-
-  const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
-
-  const [countRows, rows] = await Promise.all([
-    query<RowDataPacket[]>(
-      `SELECT COUNT(*) AS total FROM inspection_files f ${where}`,
-      params
-    ),
-    query<RowDataPacket[]>(
-      `SELECT f.id, f.file_number, f.file_date, f.file_type,
-              f.customer_name, f.report_status, f.payment_status,
-              f.fees, f.commission, f.gross_amount,
-              b.bank_name, br.branch_name
-       FROM inspection_files f
-       LEFT JOIN inspection_banks b ON b.id = f.bank_id
-       LEFT JOIN inspection_branches br ON br.id = f.branch_id
-       ${where}
-       ORDER BY f.id DESC
-       LIMIT ? OFFSET ?`,
-      [...params, limit, offset]
-    ),
-  ]);
+  const { files, total } = await getInspectionFilesPage(
+    getInspectionFileFilters(searchParams),
+    limit,
+    offset
+  );
 
   return NextResponse.json({
-    files: rows,
-    total: (countRows[0]?.total as number) ?? 0,
+    files,
+    total,
     page,
     limit,
   });

@@ -83,6 +83,7 @@ function InspectionFilesInner() {
     const [files, setFiles] = useState<InspectionFile[]>([]);
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [exportingFormat, setExportingFormat] = useState<'excel' | 'pdf' | null>(null);
 
     const totalPages = Math.max(1, Math.ceil(total / LIMIT));
 
@@ -103,20 +104,25 @@ function InspectionFilesInner() {
         ? branches.filter(b => b.bank_id === parseInt(bankFilter, 10))
         : branches;
 
+    const buildFilterParams = useCallback(() => {
+        const params = new URLSearchParams();
+        if (searchQuery) params.set('search', searchQuery);
+        if (statusFilter) params.set('status', statusFilter);
+        if (typeFilter) params.set('type', typeFilter);
+        if (dateFrom) params.set('dateFrom', dateFrom);
+        if (dateTo) params.set('dateTo', dateTo);
+        if (bankFilter) params.set('bank_id', bankFilter);
+        if (branchFilter) params.set('branch_id', branchFilter);
+        if (sourceFilter) params.set('source_id', sourceFilter);
+        if (paymentStatusFilter) params.set('payment_status', paymentStatusFilter);
+        if (paidToOfficeFilter) params.set('paid_to_office', paidToOfficeFilter);
+        return params;
+    }, [searchQuery, statusFilter, typeFilter, dateFrom, dateTo, bankFilter, branchFilter, sourceFilter, paymentStatusFilter, paidToOfficeFilter]);
+
     const fetchFiles = useCallback(async () => {
         setLoading(true);
         try {
-            const params = new URLSearchParams();
-            if (searchQuery) params.set('search', searchQuery);
-            if (statusFilter) params.set('status', statusFilter);
-            if (typeFilter) params.set('type', typeFilter);
-            if (dateFrom) params.set('dateFrom', dateFrom);
-            if (dateTo) params.set('dateTo', dateTo);
-            if (bankFilter) params.set('bank_id', bankFilter);
-            if (branchFilter) params.set('branch_id', branchFilter);
-            if (sourceFilter) params.set('source_id', sourceFilter);
-            if (paymentStatusFilter) params.set('payment_status', paymentStatusFilter);
-            if (paidToOfficeFilter) params.set('paid_to_office', paidToOfficeFilter);
+            const params = buildFilterParams();
             params.set('page', String(currentPage));
             params.set('limit', String(LIMIT));
 
@@ -131,7 +137,7 @@ function InspectionFilesInner() {
         } finally {
             setLoading(false);
         }
-    }, [searchQuery, statusFilter, typeFilter, dateFrom, dateTo, bankFilter, branchFilter, sourceFilter, paymentStatusFilter, paidToOfficeFilter, currentPage]);
+    }, [buildFilterParams, currentPage]);
 
     useEffect(() => {
         fetchFiles();
@@ -154,6 +160,19 @@ function InspectionFilesInner() {
             setDeletingId(null);
         }
     }, [fetchFiles]);
+
+    const handleExport = useCallback((format: 'excel' | 'pdf') => {
+        setExportingFormat(format);
+        const params = buildFilterParams();
+        params.set('format', format);
+        const link = document.createElement('a');
+        link.href = `/api/admin/inspection/files/export?${params.toString()}`;
+        link.download = '';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.setTimeout(() => setExportingFormat(null), 800);
+    }, [buildFilterParams]);
 
     useEffect(() => { setCurrentPage(1); }, [searchQuery, statusFilter, typeFilter, dateFrom, dateTo, bankFilter, branchFilter, sourceFilter, paymentStatusFilter, paidToOfficeFilter]);
 
@@ -339,6 +358,33 @@ function InspectionFilesInner() {
                         onChange={(e) => setDateTo(e.target.value)}
                         className="rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm text-white outline-none transition focus:border-primary/50 focus:ring-2 focus:ring-primary/20 [color-scheme:dark] font-body"
                     />
+                </div>
+                <div className="h-10 w-px bg-white/10 hidden lg:block" />
+                <div className="flex items-center gap-2 ml-auto">
+                    <button
+                        type="button"
+                        onClick={() => handleExport('excel')}
+                        disabled={exportingFormat !== null || loading}
+                        className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-xs font-headline font-bold uppercase tracking-widest text-emerald-300 hover:bg-emerald-500/15 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
+                        title="Export filtered files to Excel"
+                    >
+                        <span className={`material-symbols-outlined text-base ${exportingFormat === 'excel' ? 'animate-spin' : ''}`}>
+                            {exportingFormat === 'excel' ? 'progress_activity' : 'table_view'}
+                        </span>
+                        Excel
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => handleExport('pdf')}
+                        disabled={exportingFormat !== null || loading}
+                        className="rounded-lg border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-xs font-headline font-bold uppercase tracking-widest text-rose-300 hover:bg-rose-500/15 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
+                        title="Export filtered files to PDF"
+                    >
+                        <span className={`material-symbols-outlined text-base ${exportingFormat === 'pdf' ? 'animate-spin' : ''}`}>
+                            {exportingFormat === 'pdf' ? 'progress_activity' : 'picture_as_pdf'}
+                        </span>
+                        PDF
+                    </button>
                 </div>
             </div>
 
