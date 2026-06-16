@@ -1,6 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "framer-motion";
+
+import { useReducedMotionSafe } from "@/components/ui/Animations";
 import {
   Briefcase,
   CheckCircle2,
@@ -91,10 +94,18 @@ const plans = [
 ];
 
 export default function PricingPlansSection() {
+  const reduceMotion = useReducedMotionSafe();
+
   return (
     <section className="py-20 md:py-24 px-6 md:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-10 md:mb-16 text-center">
+        <motion.div
+          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="mb-10 md:mb-16 text-center"
+        >
           <span className="font-label text-[10px] md:text-xs uppercase tracking-[0.28em] text-primary/80">
             Website Pricing
           </span>
@@ -106,7 +117,7 @@ export default function PricingPlansSection() {
             Transparent one-time INR pricing for founders, growing brands, and scale-stage businesses.
             Every plan is mapped to CMS depth, SEO performance, AI capability, delivery speed, and post-launch support.
           </p>
-        </div>
+        </motion.div>
 
         <div className="relative overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(8,14,24,0.96),rgba(4,8,14,0.96))] px-4 py-8 md:px-8 md:py-10 shadow-[0_0_60px_rgba(0,255,102,0.08)]">
           <div
@@ -120,12 +131,19 @@ export default function PricingPlansSection() {
                 "radial-gradient(circle at 50% 0%, rgba(0,0,0,1), rgba(0,0,0,0.45) 55%, rgba(0,0,0,0) 100%)",
             }}
           />
-          <div className="relative grid gap-6 lg:grid-cols-3">
-            {plans.map((plan) => (
-              <PricingCard.Card
+          <div className="relative grid gap-6 lg:grid-cols-3" style={{ perspective: 1200 }}>
+            {plans.map((plan, index) => (
+              <motion.div
                 key={plan.name}
+                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 72, rotateX: 10, scale: 0.96 }}
+                whileInView={{ opacity: 1, y: 0, rotateX: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.65, delay: index * 0.14, ease: [0.21, 0.65, 0.36, 1] }}
+                style={{ transformStyle: "preserve-3d" }}
+              >
+              <PricingCard.Card
                 className={cn(
-                  "group mx-auto max-w-none border-white/10 bg-[rgba(8,14,24,0.92)] shadow-[0_20px_80px_rgba(0,0,0,0.28)] transition-all duration-300 hover:-translate-y-2 hover:border-primary/30 hover:shadow-[0_28px_90px_rgba(0,255,102,0.16)]",
+                  "group mx-auto h-full max-w-none border-white/10 bg-[rgba(8,14,24,0.92)] shadow-[0_20px_80px_rgba(0,0,0,0.28)] transition-all duration-300 hover:-translate-y-2 hover:border-primary/30 hover:shadow-[0_28px_90px_rgba(0,255,102,0.16)]",
                   plan.badge && "ring-1 ring-primary/40",
                 )}
               >
@@ -202,6 +220,7 @@ export default function PricingPlansSection() {
                   </PricingCard.List>
                 </PricingCard.Body>
               </PricingCard.Card>
+              </motion.div>
             ))}
           </div>
         </div>
