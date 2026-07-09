@@ -37,6 +37,18 @@ const statusStyles: Record<string, string> = {
     submitted: 'bg-blue-500/10 text-blue-400 border border-blue-500/20',
 };
 
+const paymentStatusStyles: Record<string, string> = {
+    due: 'bg-rose-500/10 text-rose-400 border border-rose-500/20',
+    paid: 'bg-tertiary/10 text-tertiary border border-tertiary/20',
+    partially: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
+    pending_payment: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
+};
+
+const paidToOfficeStyles: Record<string, string> = {
+    paid: 'bg-tertiary/10 text-tertiary border border-tertiary/20',
+    due: 'bg-rose-500/10 text-rose-400 border border-rose-500/20',
+};
+
 const LIMIT = 20;
 
 const PAYMENT_STATUS_LABELS: Record<string, string> = {
@@ -195,6 +207,20 @@ function InspectionFilesInner() {
     const statusLabel = (status: string | null) => status ?? '—';
     const statusClass = (status: string | null) =>
         statusStyles[(status ?? '').toLowerCase()] ?? 'bg-white/5 text-slate-400 border border-white/10';
+
+    const paymentStatusLabel = (status: string | null) => {
+        if (!status) return '—';
+        return PAYMENT_STATUS_LABELS[status] ?? status;
+    };
+    const paymentStatusClass = (status: string | null) =>
+        paymentStatusStyles[(status ?? '').toLowerCase()] ?? 'bg-white/5 text-slate-400 border border-white/10';
+
+    const paidToOfficeLabel = (status: string | null) => {
+        if (!status) return '—';
+        return PAID_TO_OFFICE_LABELS[status] ?? status;
+    };
+    const paidToOfficeClass = (status: string | null) =>
+        paidToOfficeStyles[(status ?? '').toLowerCase()] ?? 'bg-white/5 text-slate-400 border border-white/10';
 
     // Build a human-readable summary of active dashboard filters
     const dashFilterTags: string[] = [];
@@ -400,20 +426,22 @@ function InspectionFilesInner() {
                                 <th className="px-6 py-4 text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Date</th>
                                 <th className="px-6 py-4 text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Status</th>
                                 <th className="px-6 py-4 text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Fee</th>
+                                <th className="px-6 py-4 text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Payment Status</th>
+                                <th className="px-6 py-4 text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Paid to Office</th>
                                 <th className="px-6 py-4 text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
                             {loading ? (
                                 <tr>
-                                    <td colSpan={7} className="px-6 py-12 text-center text-slate-500">
+                                    <td colSpan={9} className="px-6 py-12 text-center text-slate-500">
                                         <span className="material-symbols-outlined text-4xl mb-2 block opacity-30 animate-spin">progress_activity</span>
                                         Loading...
                                     </td>
                                 </tr>
                             ) : files.length === 0 ? (
                                 <tr>
-                                    <td colSpan={7} className="px-6 py-12 text-center text-slate-500">
+                                    <td colSpan={9} className="px-6 py-12 text-center text-slate-500">
                                         <span className="material-symbols-outlined text-4xl mb-2 block opacity-30">search_off</span>
                                         No files found matching your filters.
                                     </td>
@@ -435,6 +463,16 @@ function InspectionFilesInner() {
                                             </span>
                                         </td>
                                         <td className="px-6 py-5 text-sm font-headline font-bold text-white">{formatFee(file)}</td>
+                                        <td className="px-6 py-5">
+                                            <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${paymentStatusClass(file.payment_status)}`}>
+                                                {paymentStatusLabel(file.payment_status)}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-5">
+                                            <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${paidToOfficeClass(file.paid_to_office)}`}>
+                                                {paidToOfficeLabel(file.paid_to_office)}
+                                            </span>
+                                        </td>
                                         <td className="px-6 py-5 text-right">
                                             <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <button
