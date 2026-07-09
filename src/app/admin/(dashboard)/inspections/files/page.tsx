@@ -474,7 +474,7 @@ function InspectionFilesInner() {
                                             </span>
                                         </td>
                                         <td className="px-6 py-5 text-right">
-                                            <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div className="flex justify-end gap-2">
                                                 <button
                                                     onClick={() => setEditFileId(file.id)}
                                                     className="p-2 hover:bg-[#1e293b] rounded-lg text-slate-500 hover:text-primary transition-all"
