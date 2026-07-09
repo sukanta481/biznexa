@@ -30,6 +30,18 @@ interface LookupOption {
     bank_id?: number;
 }
 
+interface InspectionFileStats {
+    totalFiles: number;
+    totalFees: number;
+    totalCommission: number;
+    paidAmount: number;
+    pendingAmount: number;
+    paidToOffice: number;
+    pendingToOffice: number;
+    totalGross: number;
+    statusBreakdown: Record<string, number>;
+}
+
 const statusStyles: Record<string, string> = {
     pending: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
     completed: 'bg-tertiary/10 text-tertiary border border-tertiary/20',
@@ -96,6 +108,7 @@ function InspectionFilesInner() {
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(true);
     const [exportingFormat, setExportingFormat] = useState<'excel' | 'pdf' | null>(null);
+    const [stats, setStats] = useState<InspectionFileStats | null>(null);
 
     const totalPages = Math.max(1, Math.ceil(total / LIMIT));
 
@@ -154,6 +167,22 @@ function InspectionFilesInner() {
     useEffect(() => {
         fetchFiles();
     }, [fetchFiles]);
+
+    const fetchStats = useCallback(async () => {
+        try {
+            const params = buildFilterParams();
+            const res = await fetch(`/api/admin/inspection/files/stats?${params}`);
+            if (!res.ok) throw new Error('Failed to fetch stats');
+            const data = await res.json();
+            setStats(data);
+        } catch {
+            setStats(null);
+        }
+    }, [buildFilterParams]);
+
+    useEffect(() => {
+        fetchStats();
+    }, [fetchStats]);
 
     const handleDelete = useCallback(async (file: InspectionFile) => {
         if (!confirm(`Delete file "${file.file_number}"? This cannot be undone.`)) return;
@@ -271,6 +300,84 @@ function InspectionFilesInner() {
                         <span className="material-symbols-outlined text-sm">close</span>
                         Clear
                     </button>
+                </div>
+            )}
+
+            {/* Stats Cards */}
+            {stats && (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                    <div className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-br from-white/[0.04] to-transparent p-4 transition-all duration-300 hover:border-white/[0.12] hover:shadow-lg hover:shadow-black/20">
+                        <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-blue-500 opacity-[0.07] blur-2xl" />
+                        <div className="relative z-10">
+                            <div className="flex items-center gap-2 mb-3">
+                                <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-base text-blue-400">folder_open</span>
+                                </div>
+                                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Total Files</span>
+                            </div>
+                            <div className="text-xl font-bold text-white tracking-tight leading-none">{stats.totalFiles.toLocaleString('en-IN')}</div>
+                        </div>
+                    </div>
+                    <div className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-br from-white/[0.04] to-transparent p-4 transition-all duration-300 hover:border-white/[0.12] hover:shadow-lg hover:shadow-black/20">
+                        <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-cyan-500 opacity-[0.07] blur-2xl" />
+                        <div className="relative z-10">
+                            <div className="flex items-center gap-2 mb-3">
+                                <div className="w-8 h-8 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-base text-cyan-400">request_quote</span>
+                                </div>
+                                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Total Fees</span>
+                            </div>
+                            <div className="text-xl font-bold text-white tracking-tight leading-none">₹{stats.totalFees.toLocaleString('en-IN')}</div>
+                        </div>
+                    </div>
+                    <div className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-br from-white/[0.04] to-transparent p-4 transition-all duration-300 hover:border-white/[0.12] hover:shadow-lg hover:shadow-black/20">
+                        <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-violet-500 opacity-[0.07] blur-2xl" />
+                        <div className="relative z-10">
+                            <div className="flex items-center gap-2 mb-3">
+                                <div className="w-8 h-8 rounded-xl bg-violet-500/10 flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-base text-violet-400">savings</span>
+                                </div>
+                                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Total Earnings</span>
+                            </div>
+                            <div className="text-xl font-bold text-white tracking-tight leading-none">₹{stats.totalCommission.toLocaleString('en-IN')}</div>
+                        </div>
+                    </div>
+                    <div className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-br from-white/[0.04] to-transparent p-4 transition-all duration-300 hover:border-white/[0.12] hover:shadow-lg hover:shadow-black/20">
+                        <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-tertiary opacity-[0.07] blur-2xl" />
+                        <div className="relative z-10">
+                            <div className="flex items-center gap-2 mb-3">
+                                <div className="w-8 h-8 rounded-xl bg-tertiary/10 flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-base text-tertiary">check_circle</span>
+                                </div>
+                                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Paid Amount</span>
+                            </div>
+                            <div className="text-xl font-bold text-tertiary tracking-tight leading-none">₹{stats.paidAmount.toLocaleString('en-IN')}</div>
+                        </div>
+                    </div>
+                    <div className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-br from-white/[0.04] to-transparent p-4 transition-all duration-300 hover:border-white/[0.12] hover:shadow-lg hover:shadow-black/20">
+                        <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-rose-500 opacity-[0.07] blur-2xl" />
+                        <div className="relative z-10">
+                            <div className="flex items-center gap-2 mb-3">
+                                <div className="w-8 h-8 rounded-xl bg-rose-500/10 flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-base text-rose-400">hourglass_top</span>
+                                </div>
+                                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Pending Amount</span>
+                            </div>
+                            <div className="text-xl font-bold text-rose-400 tracking-tight leading-none">₹{stats.pendingAmount.toLocaleString('en-IN')}</div>
+                        </div>
+                    </div>
+                    <div className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-br from-white/[0.04] to-transparent p-4 transition-all duration-300 hover:border-white/[0.12] hover:shadow-lg hover:shadow-black/20">
+                        <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-secondary opacity-[0.07] blur-2xl" />
+                        <div className="relative z-10">
+                            <div className="flex items-center gap-2 mb-3">
+                                <div className="w-8 h-8 rounded-xl bg-secondary/10 flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-base text-secondary">account_balance</span>
+                                </div>
+                                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Paid to Office</span>
+                            </div>
+                            <div className="text-xl font-bold text-secondary tracking-tight leading-none">₹{stats.paidToOffice.toLocaleString('en-IN')}</div>
+                        </div>
+                    </div>
                 </div>
             )}
 

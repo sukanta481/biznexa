@@ -154,6 +154,54 @@ export async function getInspectionFilesPage(filters: InspectionFileFilters, lim
   };
 }
 
+export async function getInspectionFileStats(filters: InspectionFileFilters) {
+  const { where, params } = buildInspectionFileWhere(filters);
+
+  const [statusRows, financeRows] = await Promise.all([
+    query<RowDataPacket[]>(
+      `SELECT f.report_status, COUNT(*) as count
+       FROM inspection_files f
+       ${where}
+       GROUP BY f.report_status`,
+      params
+    ),
+    query<RowDataPacket[]>(
+      `SELECT
+         COALESCE(SUM(CASE WHEN file_type = 'self' THEN fees ELSE 0 END), 0) as totalFees,
+         COALESCE(SUM(commission), 0) as totalCommission,
+         COALESCE(SUM(CASE WHEN file_type = 'self' AND payment_status = 'paid' THEN fees ELSE 0 END), 0) as paidAmount,
+         COALESCE(SUM(CASE WHEN file_type = 'self' AND payment_status IN ('due', 'partially') THEN COALESCE(fees, 0) - COALESCE(amount, 0) ELSE 0 END), 0) as pendingAmount,
+         COALESCE(SUM(CASE WHEN paid_to_office = 'paid' THEN commission ELSE 0 END), 0) as paidToOffice,
+         COALESCE(SUM(CASE WHEN paid_to_office != 'paid' OR paid_to_office IS NULL THEN commission ELSE 0 END), 0) as pendingToOffice,
+         COUNT(*) as totalFiles,
+         COALESCE(SUM(gross_amount), 0) as totalGross
+       FROM inspection_files f
+       ${where}`,
+      params
+    ),
+  ]);
+
+  const statusBreakdown: Record<string, number> = {};
+  let totalCount = 0;
+  for (const row of statusRows) {
+    statusBreakdown[row.report_status ?? 'unknown'] = Number(row.count);
+    totalCount += Number(row.count);
+  }
+
+  const fin = financeRows[0];
+  return {
+    totalFiles: Number(fin.totalFiles) ?? 0,
+    totalFees: Number(fin.totalFees) ?? 0,
+    totalCommission: Number(fin.totalCommission) ?? 0,
+    paidAmount: Number(fin.paidAmount) ?? 0,
+    pendingAmount: Number(fin.pendingAmount) ?? 0,
+    paidToOffice: Number(fin.paidToOffice) ?? 0,
+    pendingToOffice: Number(fin.pendingToOffice) ?? 0,
+    totalGross: Number(fin.totalGross) ?? 0,
+    statusBreakdown,
+  };
+}
+
 export async function getInspectionFilesForExport(filters: InspectionFileFilters) {
   const { where, params } = buildInspectionFileWhere(filters);
 
