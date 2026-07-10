@@ -260,6 +260,21 @@ function InspectionFilesInner() {
     else if (dateFrom) dashFilterTags.push(`From: ${formatDate(dateFrom)}`);
     else if (dateTo) dashFilterTags.push(`To: ${formatDate(dateTo)}`);
 
+    const handleClearFilters = useCallback(() => {
+        setSearchQuery('');
+        setStatusFilter('');
+        setTypeFilter('');
+        setDateFrom('');
+        setDateTo('');
+        setBankFilter('');
+        setBranchFilter('');
+        setSourceFilter('');
+        setPaymentStatusFilter('');
+        setPaidToOfficeFilter('');
+        setCurrentPage(1);
+        router.push('/admin/inspections/files');
+    }, [router]);
+
     return (
         <div className="max-w-[1400px] mx-auto space-y-8">
             {/* Header Section */}
@@ -293,7 +308,7 @@ function InspectionFilesInner() {
                         ))}
                     </div>
                     <button
-                        onClick={() => router.push('/admin/inspections/files')}
+                        onClick={handleClearFilters}
                         className="ml-auto flex items-center gap-1.5 text-[11px] font-bold text-slate-400 hover:text-white transition-colors shrink-0"
                         title="Clear dashboard filters"
                     >

@@ -24,6 +24,7 @@ export interface InspectionFileListRow extends RowDataPacket {
   customer_name: string | null;
   report_status: string | null;
   payment_status: string | null;
+  paid_to_office: string | null;
   fees: number | null;
   commission: number | null;
   gross_amount: number | null;
@@ -135,7 +136,7 @@ export async function getInspectionFilesPage(filters: InspectionFileFilters, lim
     ),
     query<InspectionFileListRow[]>(
       `SELECT f.id, f.file_number, f.file_date, f.file_type,
-              f.customer_name, f.report_status, f.payment_status,
+              f.customer_name, f.report_status, f.payment_status, f.paid_to_office,
               f.fees, f.commission, f.gross_amount,
               b.bank_name, br.branch_name
        FROM inspection_files f
@@ -182,10 +183,8 @@ export async function getInspectionFileStats(filters: InspectionFileFilters) {
   ]);
 
   const statusBreakdown: Record<string, number> = {};
-  let totalCount = 0;
   for (const row of statusRows) {
     statusBreakdown[row.report_status ?? 'unknown'] = Number(row.count);
-    totalCount += Number(row.count);
   }
 
   const fin = financeRows[0];
