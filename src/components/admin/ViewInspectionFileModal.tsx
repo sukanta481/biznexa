@@ -73,6 +73,9 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 const reportStatusColors: Record<string, string> = {
     draft: 'bg-white/5 text-slate-400 border-white/10',
+    inspection_done: 'bg-violet-500/10 text-violet-400 border-violet-500/20',
+    sent_to_office: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
+    hold: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
     final_soft: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
     final_hard: 'bg-tertiary/10 text-tertiary border-tertiary/20',
 };

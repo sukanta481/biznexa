@@ -47,6 +47,11 @@ const statusStyles: Record<string, string> = {
     completed: 'bg-tertiary/10 text-tertiary border border-tertiary/20',
     draft: 'bg-white/5 text-slate-400 border border-white/10',
     submitted: 'bg-blue-500/10 text-blue-400 border border-blue-500/20',
+    inspection_done: 'bg-violet-500/10 text-violet-400 border border-violet-500/20',
+    sent_to_office: 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20',
+    hold: 'bg-orange-500/10 text-orange-400 border border-orange-500/20',
+    final_soft: 'bg-blue-500/10 text-blue-400 border border-blue-500/20',
+    final_hard: 'bg-tertiary/10 text-tertiary border border-tertiary/20',
 };
 
 const paymentStatusStyles: Record<string, string> = {
@@ -477,6 +482,11 @@ function InspectionFilesInner() {
                         <option value="completed">Completed</option>
                         <option value="submitted">Submitted</option>
                         <option value="draft">Draft</option>
+                        <option value="inspection_done">Inspection Done</option>
+                        <option value="sent_to_office">Sent to Office</option>
+                        <option value="hold">Hold</option>
+                        <option value="final_soft">Final Soft Copy</option>
+                        <option value="final_hard">Final Hard Copy</option>
                     </select>
                     <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none text-sm">expand_more</span>
                 </div>

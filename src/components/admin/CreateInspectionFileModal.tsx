@@ -515,6 +515,9 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
                                         <Sel value={reportStatus} onChange={setReportStatus} disabled={!isSelf} color="t">
                                             <option value="">Select status...</option>
                                             <option value="draft">Draft</option>
+                                            <option value="inspection_done">Inspection Done</option>
+                                            <option value="sent_to_office">Sent to Office</option>
+                                            <option value="hold">Hold</option>
                                             <option value="final_soft">Final Soft Copy</option>
                                             <option value="final_hard">Final Hard Copy</option>
                                         </Sel>
