@@ -11,6 +11,7 @@ export interface InspectionFileFilters {
   dateTo: string;
   paymentStatus: string;
   paidToOffice: string;
+  paymentDone: string;
   bankId: string;
   branchId: string;
   sourceId: string;
@@ -25,6 +26,7 @@ export interface InspectionFileListRow extends RowDataPacket {
   report_status: string | null;
   payment_status: string | null;
   paid_to_office: string | null;
+  payment_done_date: string | Date | null;
   fees: number | null;
   commission: number | null;
   gross_amount: number | null;
@@ -56,6 +58,7 @@ export function getInspectionFileFilters(searchParams: URLSearchParams): Inspect
     dateTo: searchParams.get("dateTo") ?? "",
     paymentStatus: searchParams.get("payment_status") ?? "",
     paidToOffice: searchParams.get("paid_to_office") ?? "",
+    paymentDone: searchParams.get("payment_done") ?? "",
     bankId: searchParams.get("bank_id") ?? "",
     branchId: searchParams.get("branch_id") ?? "",
     sourceId: searchParams.get("source_id") ?? "",
@@ -105,6 +108,14 @@ export function buildInspectionFileWhere(filters: InspectionFileFilters) {
     params.push(filters.paidToOffice);
   }
 
+  // paymentDone filter is bound to a column that may not exist yet; the getOptionalCols()
+  // check in callers ensures these clauses are not emitted if the column is missing.
+  if (filters.paymentDone === "paid") {
+    conditions.push("f.payment_done_date IS NOT NULL");
+  } else if (filters.paymentDone === "due") {
+    conditions.push("f.payment_done_date IS NULL");
+  }
+
   if (filters.bankId) {
     conditions.push("f.bank_id = ?");
     params.push(parseInt(filters.bankId, 10));
@@ -126,8 +137,24 @@ export function buildInspectionFileWhere(filters: InspectionFileFilters) {
   };
 }
 
+// ─── Optional columns cache (per process lifetime) ────────────────────────────
+let optionalColCache: Set<string> | null = null;
+async function getOptionalCols(): Promise<Set<string>> {
+  if (optionalColCache) return optionalColCache;
+  const rows = await query<RowDataPacket[]>(
+    `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE()
+       AND TABLE_NAME = 'inspection_files'
+       AND COLUMN_NAME IN ('payment_done_date')`
+  );
+  optionalColCache = new Set(rows.map(r => r.COLUMN_NAME as string));
+  return optionalColCache;
+}
+
 export async function getInspectionFilesPage(filters: InspectionFileFilters, limit: number, offset: number) {
   const { where, params } = buildInspectionFileWhere(filters);
+  const cols = await getOptionalCols();
+  const paymentDoneSelect = cols.has("payment_done_date") ? "f.payment_done_date" : "NULL AS payment_done_date";
 
   const [countRows, rows] = await Promise.all([
     query<RowDataPacket[]>(
@@ -137,6 +164,7 @@ export async function getInspectionFilesPage(filters: InspectionFileFilters, lim
     query<InspectionFileListRow[]>(
       `SELECT f.id, f.file_number, f.file_date, f.file_type,
               f.customer_name, f.report_status, f.payment_status, f.paid_to_office,
+              ${paymentDoneSelect},
               f.fees, f.commission, f.gross_amount,
               b.bank_name, br.branch_name
        FROM inspection_files f
@@ -170,6 +198,7 @@ export async function getInspectionFileStats(filters: InspectionFileFilters) {
       `SELECT
          COALESCE(SUM(CASE WHEN file_type = 'self' THEN fees ELSE 0 END), 0) as totalFees,
          COALESCE(SUM(commission), 0) as totalCommission,
+         COALESCE(SUM(gross_amount), 0) as totalEarnings,
          COALESCE(SUM(CASE WHEN file_type = 'self' AND payment_status = 'paid' THEN fees ELSE 0 END), 0) as paidAmount,
          COALESCE(SUM(CASE WHEN file_type = 'self' AND payment_status IN ('due', 'partially') THEN COALESCE(fees, 0) - COALESCE(amount, 0) ELSE 0 END), 0) as pendingAmount,
          COALESCE(SUM(CASE WHEN paid_to_office = 'paid' THEN commission ELSE 0 END), 0) as paidToOffice,
@@ -192,6 +221,7 @@ export async function getInspectionFileStats(filters: InspectionFileFilters) {
     totalFiles: Number(fin.totalFiles) ?? 0,
     totalFees: Number(fin.totalFees) ?? 0,
     totalCommission: Number(fin.totalCommission) ?? 0,
+    totalEarnings: Number(fin.totalEarnings) ?? 0,
     paidAmount: Number(fin.paidAmount) ?? 0,
     pendingAmount: Number(fin.pendingAmount) ?? 0,
     paidToOffice: Number(fin.paidToOffice) ?? 0,

@@ -29,7 +29,7 @@ export async function GET() {
       `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
        WHERE TABLE_SCHEMA = DATABASE()
          AND TABLE_NAME = 'inspection_files'
-         AND COLUMN_NAME IN ('report_status_date','payment_status_date','paid_to_office_date','commission_pending')`
+         AND COLUMN_NAME IN ('report_status_date','payment_status_date','paid_to_office_date','commission_pending','payment_done_date')`
     ),
   ]);
 
@@ -45,6 +45,7 @@ export async function GET() {
       payment_status_date: cols.has("payment_status_date"),
       paid_to_office_date: cols.has("paid_to_office_date"),
       commission_pending: cols.has("commission_pending"),
+      payment_done_date: cols.has("payment_done_date"),
     },
   });
 }

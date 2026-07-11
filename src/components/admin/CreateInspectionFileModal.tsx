@@ -12,6 +12,7 @@ interface ColumnFlags {
     payment_status_date: boolean;
     paid_to_office_date: boolean;
     commission_pending: boolean;
+    payment_done_date: boolean;
 }
 
 interface InitData {
@@ -96,6 +97,7 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
     const [partialAmount, setPartialAmount] = useState('');
     const [paidToOffice, setPaidToOffice] = useState('');
     const [paidToOfficeDate, setPaidToOfficeDate] = useState('');
+    const [paymentDoneDate, setPaymentDoneDate] = useState('');
     const [commissionPending, setCommissionPending] = useState('');
     const [extraAmount, setExtraAmount] = useState('0');
     const [receivedAccountId, setReceivedAccountId] = useState('');
@@ -137,6 +139,7 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
                     setPartialAmount(file.amount != null && file.payment_status === 'partially' ? String(file.amount) : '');
                     setPaidToOffice((file.paid_to_office as string) ?? '');
                     setPaidToOfficeDate((file.paid_to_office_date as string) ?? '');
+                    setPaymentDoneDate((file.payment_done_date as string) ?? '');
                     setCommissionPending((file.commission_pending as string) ?? '');
                     setExtraAmount(file.extra_amount != null ? String(file.extra_amount) : '0');
                     setReceivedAccountId(file.received_account_id != null ? String(file.received_account_id) : '');
@@ -178,6 +181,7 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
             setCommissionPending('');
         } else {
             setLocation('');
+            setPaymentDoneDate('');
         }
     }, [fileType]);
 
@@ -251,6 +255,7 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
         setPartialAmount(''); setPaidToOffice(''); setPaidToOfficeDate('');
         setCommissionPending(''); setExtraAmount('0');
         setReceivedAccountId(''); setNotes('');
+        setPaymentDoneDate('');
         setError('');
     }
 
@@ -280,6 +285,7 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
             amount: fileType === 'self' && paymentStatus === 'partially' ? (parseFloat(partialAmount) || null) : null,
             paid_to_office: fileType === 'self' ? paidToOffice || null : null,
             paid_to_office_date: fileType === 'self' ? paidToOfficeDate || null : null,
+            payment_done_date: fileType === 'office' ? paymentDoneDate || null : null,
             commission_pending: showCommissionPending ? commissionPending || null : null,
             extra_amount: parseFloat(extraAmount) || 0,
             received_account_id: receivedAccountId || null,
@@ -634,6 +640,33 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
                                             </div>
                                         </div>
                                     )}
+
+                                    {/* Payment Done Date — Office only */}
+                                        <div>
+                                            <label className={lbl}>
+                                                Payment Done {!isSelf && <span className="ml-1 normal-case text-slate-600 font-normal">(Office only)</span>}
+                                            </label>
+                                            <div className="flex items-center gap-2">
+                                                <input
+                                                    type="date"
+                                                    value={paymentDoneDate}
+                                                    onChange={e => setPaymentDoneDate(e.target.value)}
+                                                    disabled={!fileType || fileType === 'self'}
+                                                    className={`${!fileType || fileType === 'self' ? iOff : iT} [color-scheme:dark] flex-1`}
+                                                />
+                                                {isSelf ? null : (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setPaymentDoneDate(todayStr())}
+                                                        className="px-3 py-3 rounded-lg border border-tertiary/30 bg-tertiary/10 text-tertiary text-xs font-headline font-bold uppercase tracking-wider hover:bg-tertiary/20 transition-all shrink-0"
+                                                        title="Mark as paid today"
+                                                    >
+                                                        Mark Paid
+                                                    </button>
+                                                )}
+                                            </div>
+                                            <p className="text-[10px] text-slate-500 mt-1.5 font-body">Set the date when the office paid the commission for this file.</p>
+                                        </div>
 
                                     {/* ── Calculated Fields ────────────────────── */}
                                     <div className="border-t border-white/5 pt-5 space-y-4">

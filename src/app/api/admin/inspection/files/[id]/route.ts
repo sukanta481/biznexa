@@ -8,7 +8,7 @@ async function getOptionalCols(): Promise<Set<string>> {
     `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
      WHERE TABLE_SCHEMA = DATABASE()
        AND TABLE_NAME = 'inspection_files'
-       AND COLUMN_NAME IN ('report_status_date','payment_status_date','paid_to_office_date','commission_pending')`
+       AND COLUMN_NAME IN ('report_status_date','payment_status_date','paid_to_office_date','commission_pending','payment_done_date')`
   );
   return new Set(rows.map((r) => r.COLUMN_NAME as string));
 }
@@ -149,6 +149,9 @@ export async function PATCH(
   if (cols.has("commission_pending")) {
     updates.commission_pending = commissionPendingRequired ? body.commission_pending : null;
   }
+  if (cols.has("payment_done_date")) {
+    updates.payment_done_date = fileType === "office" ? (body.payment_done_date || null) : null;
+  }
 
   const setClauses = Object.keys(updates).map((k) => `${k} = ?`).join(", ");
   const values = [...Object.values(updates), numId];
@@ -161,10 +164,10 @@ export async function PATCH(
   if (result.affectedRows === 0) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const updated = await query<RowDataPacket[]>(
-    `SELECT file_number FROM inspection_files WHERE id = ?`,
+    `SELECT file_number, payment_done_date FROM inspection_files WHERE id = ?`,
     [numId]
   );
-  return NextResponse.json({ id: numId, file_number: updated[0]?.file_number ?? "" });
+  return NextResponse.json({ id: numId, file_number: updated[0]?.file_number ?? "", payment_done_date: updated[0]?.payment_done_date ?? null });
 }
 
 // ─── DELETE /api/admin/inspection/files/[id] ──────────────────────────────────

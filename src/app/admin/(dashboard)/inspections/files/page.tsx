@@ -22,6 +22,7 @@ interface InspectionFile {
     branch_id: number | null;
     source_id: number | null;
     paid_to_office: string | null;
+    payment_done_date: string | null;
 }
 
 interface LookupOption {
@@ -34,6 +35,7 @@ interface InspectionFileStats {
     totalFiles: number;
     totalFees: number;
     totalCommission: number;
+    totalEarnings: number;
     paidAmount: number;
     pendingAmount: number;
     paidToOffice: number;
@@ -54,6 +56,18 @@ const statusStyles: Record<string, string> = {
     final_hard: 'bg-tertiary/10 text-tertiary border border-tertiary/20',
 };
 
+const REPORT_STATUS_LABELS: Record<string, string> = {
+    draft: 'Draft',
+    pending: 'Pending',
+    completed: 'Completed',
+    submitted: 'Submitted',
+    inspection_done: 'Inspection Done',
+    sent_to_office: 'Sent to Office',
+    hold: 'Hold',
+    final_soft: 'Final Soft Copy',
+    final_hard: 'Final Hard Copy',
+};
+
 const paymentStatusStyles: Record<string, string> = {
     due: 'bg-rose-500/10 text-rose-400 border border-rose-500/20',
     paid: 'bg-tertiary/10 text-tertiary border border-tertiary/20',
@@ -62,6 +76,11 @@ const paymentStatusStyles: Record<string, string> = {
 };
 
 const paidToOfficeStyles: Record<string, string> = {
+    paid: 'bg-tertiary/10 text-tertiary border border-tertiary/20',
+    due: 'bg-rose-500/10 text-rose-400 border border-rose-500/20',
+};
+
+const paymentDoneStyles: Record<string, string> = {
     paid: 'bg-tertiary/10 text-tertiary border border-tertiary/20',
     due: 'bg-rose-500/10 text-rose-400 border border-rose-500/20',
 };
@@ -95,6 +114,7 @@ function InspectionFilesInner() {
     const [sourceFilter, setSourceFilter] = useState(() => searchParams.get('source_id') ?? '');
     const [paymentStatusFilter, setPaymentStatusFilter] = useState(() => searchParams.get('payment_status') ?? '');
     const [paidToOfficeFilter, setPaidToOfficeFilter] = useState(() => searchParams.get('paid_to_office') ?? '');
+    const [paymentDoneFilter, setPaymentDoneFilter] = useState(() => searchParams.get('payment_done') ?? '');
     const [currentPage, setCurrentPage] = useState(1);
 
     // Lookup data
@@ -102,7 +122,7 @@ function InspectionFilesInner() {
     const [branches, setBranches] = useState<LookupOption[]>([]);
     const [sources, setSources] = useState<LookupOption[]>([]);
 
-    const hasDashboardFilter = !!(paymentStatusFilter || paidToOfficeFilter || searchParams.get('dateFrom') || searchParams.get('dateTo'));
+    const hasDashboardFilter = !!(paymentStatusFilter || paidToOfficeFilter || paymentDoneFilter || searchParams.get('dateFrom') || searchParams.get('dateTo'));
 
     const [showModal, setShowModal] = useState(false);
     const [editFileId, setEditFileId] = useState<number | null>(null);
@@ -146,8 +166,9 @@ function InspectionFilesInner() {
         if (sourceFilter) params.set('source_id', sourceFilter);
         if (paymentStatusFilter) params.set('payment_status', paymentStatusFilter);
         if (paidToOfficeFilter) params.set('paid_to_office', paidToOfficeFilter);
+        if (paymentDoneFilter) params.set('payment_done', paymentDoneFilter);
         return params;
-    }, [searchQuery, statusFilter, typeFilter, dateFrom, dateTo, bankFilter, branchFilter, sourceFilter, paymentStatusFilter, paidToOfficeFilter]);
+    }, [searchQuery, statusFilter, typeFilter, dateFrom, dateTo, bankFilter, branchFilter, sourceFilter, paymentStatusFilter, paidToOfficeFilter, paymentDoneFilter]);
 
     const fetchFiles = useCallback(async () => {
         setLoading(true);
@@ -220,7 +241,7 @@ function InspectionFilesInner() {
         window.setTimeout(() => setExportingFormat(null), 800);
     }, [buildFilterParams]);
 
-    useEffect(() => { setCurrentPage(1); }, [searchQuery, statusFilter, typeFilter, dateFrom, dateTo, bankFilter, branchFilter, sourceFilter, paymentStatusFilter, paidToOfficeFilter]);
+    useEffect(() => { setCurrentPage(1); }, [searchQuery, statusFilter, typeFilter, dateFrom, dateTo, bankFilter, branchFilter, sourceFilter, paymentStatusFilter, paidToOfficeFilter, paymentDoneFilter]);
 
     const formatDate = (dateStr: string | null) => {
         if (!dateStr) return '—';
@@ -238,7 +259,10 @@ function InspectionFilesInner() {
         return `₹${Number(amount).toLocaleString('en-IN')}`;
     };
 
-    const statusLabel = (status: string | null) => status ?? '—';
+    const statusLabel = (status: string | null) => {
+        if (!status) return '—';
+        return REPORT_STATUS_LABELS[status] ?? status;
+    };
     const statusClass = (status: string | null) =>
         statusStyles[(status ?? '').toLowerCase()] ?? 'bg-white/5 text-slate-400 border border-white/10';
 
@@ -256,11 +280,22 @@ function InspectionFilesInner() {
     const paidToOfficeClass = (status: string | null) =>
         paidToOfficeStyles[(status ?? '').toLowerCase()] ?? 'bg-white/5 text-slate-400 border border-white/10';
 
+    const isPaymentDone = (date: string | null) => !!date && date.trim() !== '';
+    const paymentDoneLabel = (date: string | null) => {
+        if (!date) return 'Not Received';
+        return 'Received';
+    };
+    const paymentDoneClass = (date: string | null) =>
+        isPaymentDone(date)
+            ? paymentDoneStyles.paid
+            : paymentDoneStyles.due;
+
     // Build a human-readable summary of active dashboard filters
     const dashFilterTags: string[] = [];
     if (typeFilter) dashFilterTags.push(`Type: ${typeFilter.charAt(0).toUpperCase() + typeFilter.slice(1)}`);
     if (paymentStatusFilter) dashFilterTags.push(`Payment: ${PAYMENT_STATUS_LABELS[paymentStatusFilter] ?? paymentStatusFilter}`);
     if (paidToOfficeFilter) dashFilterTags.push(`Office: ${PAID_TO_OFFICE_LABELS[paidToOfficeFilter] ?? paidToOfficeFilter}`);
+    if (paymentDoneFilter) dashFilterTags.push(`Payment Done: ${paymentDoneFilter === 'paid' ? 'Paid' : 'Not Paid'}`);
     if (dateFrom && dateTo) dashFilterTags.push(`Date: ${formatDate(dateFrom)} – ${formatDate(dateTo)}`);
     else if (dateFrom) dashFilterTags.push(`From: ${formatDate(dateFrom)}`);
     else if (dateTo) dashFilterTags.push(`To: ${formatDate(dateTo)}`);
@@ -276,6 +311,7 @@ function InspectionFilesInner() {
         setSourceFilter('');
         setPaymentStatusFilter('');
         setPaidToOfficeFilter('');
+        setPaymentDoneFilter('');
         setCurrentPage(1);
         router.push('/admin/inspections/files');
     }, [router]);
@@ -359,7 +395,7 @@ function InspectionFilesInner() {
                                 </div>
                                 <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Total Earnings</span>
                             </div>
-                            <div className="text-xl font-bold text-white tracking-tight leading-none">₹{stats.totalCommission.toLocaleString('en-IN')}</div>
+                            <div className="text-xl font-bold text-white tracking-tight leading-none">₹{stats.totalEarnings.toLocaleString('en-IN')}</div>
                         </div>
                     </div>
                     <div className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-br from-white/[0.04] to-transparent p-4 transition-all duration-300 hover:border-white/[0.12] hover:shadow-lg hover:shadow-black/20">
@@ -473,6 +509,18 @@ function InspectionFilesInner() {
                 </div>
                 <div className="relative">
                     <select
+                        value={paymentDoneFilter}
+                        onChange={(e) => setPaymentDoneFilter(e.target.value)}
+                        className="rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm text-white outline-none transition focus:border-primary/50 focus:ring-2 focus:ring-primary/20 appearance-none pr-10 font-body min-w-[180px]"
+                    >
+                        <option value="">Payment Done: All</option>
+                        <option value="paid">Received from Office</option>
+                        <option value="due">Not Received</option>
+                    </select>
+                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none text-sm">expand_more</span>
+                </div>
+                <div className="relative">
+                    <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
                         className="rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm text-white outline-none transition focus:border-primary/50 focus:ring-2 focus:ring-primary/20 appearance-none pr-10 font-body min-w-[160px]"
@@ -560,20 +608,21 @@ function InspectionFilesInner() {
                                 <th className="px-6 py-4 text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Fee</th>
                                 <th className="px-6 py-4 text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Payment Status</th>
                                 <th className="px-6 py-4 text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Paid to Office</th>
+                                <th className="px-6 py-4 text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Payment Done</th>
                                 <th className="px-6 py-4 text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
                             {loading ? (
                                 <tr>
-                                    <td colSpan={9} className="px-6 py-12 text-center text-slate-500">
+                                    <td colSpan={10} className="px-6 py-12 text-center text-slate-500">
                                         <span className="material-symbols-outlined text-4xl mb-2 block opacity-30 animate-spin">progress_activity</span>
                                         Loading...
                                     </td>
                                 </tr>
                             ) : files.length === 0 ? (
                                 <tr>
-                                    <td colSpan={9} className="px-6 py-12 text-center text-slate-500">
+                                    <td colSpan={10} className="px-6 py-12 text-center text-slate-500">
                                         <span className="material-symbols-outlined text-4xl mb-2 block opacity-30">search_off</span>
                                         No files found matching your filters.
                                     </td>
@@ -604,6 +653,20 @@ function InspectionFilesInner() {
                                             <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${paidToOfficeClass(file.paid_to_office)}`}>
                                                 {paidToOfficeLabel(file.paid_to_office)}
                                             </span>
+                                        </td>
+                                        <td className="px-6 py-5">
+                                            {file.file_type === 'office' ? (
+                                                <div className="flex flex-col gap-1">
+                                                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-flex w-fit ${paymentDoneClass(file.payment_done_date)}`}>
+                                                        {paymentDoneLabel(file.payment_done_date)}
+                                                    </span>
+                                                    {file.payment_done_date && (
+                                                        <span className="text-[10px] text-slate-500 font-body">{formatDate(file.payment_done_date)}</span>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <span className="text-slate-600 text-xs">—</span>
+                                            )}
                                         </td>
                                         <td className="px-6 py-5 text-right">
                                             <div className="flex justify-end gap-2">

@@ -56,6 +56,7 @@ export default function RootLayout({
         />
       </head>
       <body
+        suppressHydrationWarning
         className={`${spaceGrotesk.variable} ${manrope.variable} bg-background text-on-background font-body selection:bg-primary selection:text-on-primary-fixed antialiased min-h-screen flex flex-col overflow-x-hidden w-full`}
       >
         <OrganizationSchema />

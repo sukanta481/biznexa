@@ -216,19 +216,22 @@ export async function GET(request: NextRequest) {
 
     // ── Inspection Tab ───────────────────────────────────────────────────────
     const itRows = await query<RowDataPacket[]>(
-      `SELECT COALESCE(SUM(fees), 0) AS total_fees, COALESCE(SUM(gross_amount), 0) AS total_earnings, COUNT(*) AS total_files FROM inspection_files`,
+      `SELECT COALESCE(SUM(fees), 0) AS total_fees, COALESCE(SUM(gross_amount), 0) AS total_earnings, COUNT(*) AS total_files FROM inspection_files WHERE 1=1 ${inspClause}`,
+      inspValues,
     );
     const totalFees = Number(itRows[0]?.total_fees ?? 0);
     const totalInspEarnings = Number(itRows[0]?.total_earnings ?? 0);
     const totalFiles = Number(itRows[0]?.total_files ?? 0);
 
     const ipRows = await query<RowDataPacket[]>(
-      `SELECT COALESCE(SUM(fees - amount), 0) AS val FROM inspection_files WHERE payment_status IN ('due', 'partially')`,
+      `SELECT COALESCE(SUM(fees - amount), 0) AS val FROM inspection_files WHERE payment_status IN ('due', 'partially') ${inspClause}`,
+      inspValues,
     );
     const pendingInspAmount = Number(ipRows[0]?.val ?? 0);
 
     const ixRows = await query<RowDataPacket[]>(
-      `SELECT COALESCE(SUM(amount), 0) AS val FROM expenses WHERE category = 'inspection' AND type = 'expense'`,
+      `SELECT COALESCE(SUM(amount), 0) AS val FROM expenses WHERE category = 'inspection' AND type = 'expense' ${expClause}`,
+      expValues,
     );
     const inspTabExpenses = Number(ixRows[0]?.val ?? 0);
     const inspNetProfit = totalInspEarnings - inspTabExpenses;

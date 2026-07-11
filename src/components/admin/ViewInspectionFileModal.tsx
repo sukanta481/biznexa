@@ -24,6 +24,7 @@ interface FileDetail {
     amount: number | null;
     paid_to_office: string | null;
     paid_to_office_date: string | null;
+    payment_done_date: string | null;
     office_amount: number | null;
     commission: number | null;
     extra_amount: number | null;
@@ -259,6 +260,18 @@ export default function ViewInspectionFileModal({ fileId, onClose }: Props) {
                                         </span>
                                         {file.paid_to_office_date && (
                                             <span className="ml-2 text-xs text-slate-500">{fmtDate(file.paid_to_office_date)}</span>
+                                        )}
+                                    </div>
+                                )}
+
+                                {!isSelf && (
+                                    <div>
+                                        <span className={lbl}>Payment Done</span>
+                                        <span className={`text-sm font-body ${file.payment_done_date ? 'text-tertiary' : 'text-amber-400'}`}>
+                                            {file.payment_done_date ? 'Received' : 'Not Received'}
+                                        </span>
+                                        {file.payment_done_date && (
+                                            <span className="ml-2 text-xs text-slate-500">{fmtDate(file.payment_done_date)}</span>
                                         )}
                                     </div>
                                 )}

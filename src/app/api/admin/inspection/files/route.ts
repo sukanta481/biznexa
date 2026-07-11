@@ -32,7 +32,7 @@ async function getOptionalCols(): Promise<Set<string>> {
     `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
      WHERE TABLE_SCHEMA = DATABASE()
        AND TABLE_NAME = 'inspection_files'
-       AND COLUMN_NAME IN ('report_status_date','payment_status_date','paid_to_office_date','commission_pending')`
+       AND COLUMN_NAME IN ('report_status_date','payment_status_date','paid_to_office_date','commission_pending','payment_done_date')`
   );
   colCache = new Set(rows.map((r) => r.COLUMN_NAME as string));
   return colCache;
@@ -191,6 +191,10 @@ export async function POST(request: NextRequest) {
   if (cols.has("commission_pending")) {
     columns.push("commission_pending");
     values.push(commissionPendingRequired ? body.commission_pending : null);
+  }
+  if (cols.has("payment_done_date")) {
+    columns.push("payment_done_date");
+    values.push(fileType === "office" ? (body.payment_done_date || null) : null);
   }
 
   const placeholders = columns.map(() => "?").join(", ");

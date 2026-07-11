@@ -45,6 +45,22 @@ async function run() {
   await db.query(query);
   console.log("✓ report_status ENUM updated to include 'inspection_done', 'sent_to_office', and 'hold'.");
 
+  // payment_done_date column — date office paid the commission for office-typed files
+  const [exists] = await db.query(
+    `SELECT COUNT(*) AS cnt FROM INFORMATION_SCHEMA.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'inspection_files' AND COLUMN_NAME = 'payment_done_date'`
+  );
+  const alreadyExists = Number(exists[0]?.cnt ?? 0) > 0;
+  if (alreadyExists) {
+    console.log("✓ Column 'payment_done_date' already exists, skipping.");
+  } else {
+    await db.query(
+      `ALTER TABLE inspection_files
+       ADD COLUMN payment_done_date DATE DEFAULT NULL AFTER paid_to_office_date`
+    );
+    console.log("✓ Column 'payment_done_date' added to inspection_files.");
+  }
+
   const [rows] = await db.query(
     `SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS
      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'inspection_files' AND COLUMN_NAME = 'report_status'`
