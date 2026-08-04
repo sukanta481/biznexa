@@ -6,8 +6,14 @@ import { query } from "@/lib/db";
 import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
 
 const SESSION_COOKIE_NAME = "admin_session";
-const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
+const SESSION_MAX_AGE_REMEMBER = 60 * 60 * 24 * 7; // 7 days
+const SESSION_MAX_AGE_DEFAULT = 60 * 60 * 24; // 1 day
 const PEPPER = process.env.AUTH_PEPPER || process.env.APP_SECRET || "biznexa-auth-pepper-2026";
+
+/** The cookie carries the raw token; only this hash is ever persisted. */
+function hashToken(token: string): string {
+  return createHash("sha256").update(token).digest("hex");
+}
 
 export interface AdminUser {
   id: number;
@@ -45,7 +51,7 @@ export function verifyPassword(password: string, storedHash: string): boolean {
   }
 }
 
-export async function authenticateAdmin(username: string, password: string): Promise<{ user: AdminUser; token: string } | null> {
+export async function authenticateAdmin(username: string, password: string): Promise<{ user: AdminUser } | null> {
   const rows = await query<RowDataPacket[]>(
     `SELECT id, username, email, password, full_name, role, avatar, status
      FROM admin_users
@@ -74,8 +80,6 @@ export async function authenticateAdmin(username: string, password: string): Pro
     [user.id],
   );
 
-  const token = randomBytes(32).toString("hex");
-
   return {
     user: {
       id: user.id as number,
@@ -85,15 +89,28 @@ export async function authenticateAdmin(username: string, password: string): Pro
       role: user.role as string,
       avatar: user.avatar as string | null,
     },
-    token,
   };
 }
 
-export async function setSessionCookie(token: string, userId: number, remember: boolean = false) {
-  const cookieStore = await cookies();
-  const maxAge = remember ? SESSION_MAX_AGE : 60 * 60 * 24; // 1 day if not remember
+export async function createSession(
+  userId: number,
+  remember: boolean,
+  meta: { userAgent?: string | null; ip?: string | null } = {},
+): Promise<void> {
+  const token = randomBytes(32).toString("hex");
+  const maxAge = remember ? SESSION_MAX_AGE_REMEMBER : SESSION_MAX_AGE_DEFAULT;
 
-  cookieStore.set(SESSION_COOKIE_NAME, `${userId}:${token}`, {
+  await query<ResultSetHeader>(
+    `INSERT INTO admin_sessions (user_id, token_hash, expires_at, user_agent, ip)
+     VALUES (?, ?, DATE_ADD(NOW(), INTERVAL ? SECOND), ?, ?)`,
+    [userId, hashToken(token), maxAge, meta.userAgent?.slice(0, 255) ?? null, meta.ip?.slice(0, 45) ?? null],
+  );
+
+  // Opportunistic cleanup so the table cannot grow without bound.
+  await query<ResultSetHeader>(`DELETE FROM admin_sessions WHERE expires_at < NOW()`);
+
+  const cookieStore = await cookies();
+  cookieStore.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -102,29 +119,36 @@ export async function setSessionCookie(token: string, userId: number, remember: 
   });
 }
 
-export async function clearSessionCookie() {
+export async function destroySession(): Promise<void> {
   const cookieStore = await cookies();
+  const raw = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+
+  if (raw && /^[a-f0-9]{64}$/.test(raw)) {
+    await query<ResultSetHeader>(`DELETE FROM admin_sessions WHERE token_hash = ?`, [hashToken(raw)]);
+  }
+
   cookieStore.delete(SESSION_COOKIE_NAME);
 }
 
 export async function getCurrentAdmin(): Promise<AdminUser | null> {
   const cookieStore = await cookies();
-  const session = cookieStore.get(SESSION_COOKIE_NAME);
+  const raw = cookieStore.get(SESSION_COOKIE_NAME)?.value;
 
-  if (!session?.value) return null;
+  if (!raw) return null;
 
-  const parts = session.value.split(":");
-  if (parts.length !== 2) return null;
-
-  const userId = parseInt(parts[0], 10);
-  if (isNaN(userId)) return null;
+  // Anything that is not a bare 64-char hex token is rejected outright. This
+  // also invalidates every legacy "userId:token" cookie, which was forgeable.
+  if (!/^[a-f0-9]{64}$/.test(raw)) return null;
 
   const rows = await query<RowDataPacket[]>(
-    `SELECT id, username, email, full_name, role, avatar, status
-     FROM admin_users
-     WHERE id = ? AND status = 'active'
-     LIMIT 1`,
-    [userId],
+    `SELECT u.id, u.username, u.email, u.full_name, u.role, u.avatar
+       FROM admin_sessions s
+       JOIN admin_users u ON u.id = s.user_id
+      WHERE s.token_hash = ?
+        AND s.expires_at > NOW()
+        AND u.status = 'active'
+      LIMIT 1`,
+    [hashToken(raw)],
   );
 
   if (!rows.length) return null;

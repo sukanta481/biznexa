@@ -1,8 +1,8 @@
 import "server-only";
 import { NextResponse } from "next/server";
-import { clearSessionCookie } from "@/lib/auth";
+import { destroySession } from "@/lib/auth";
 
 export async function POST() {
-  await clearSessionCookie();
+  await destroySession();
   return NextResponse.json({ ok: true });
 }
