@@ -2,9 +2,13 @@ import "server-only";
 import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
 
 // ── GET /api/admin/clients/[id] ────────────────────────────────────────────────
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const { id } = await params;
   const rows = await query<RowDataPacket[]>(
     `SELECT * FROM clients WHERE id = ?`,
@@ -20,6 +24,9 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 
 // ── PATCH /api/admin/clients/[id] ──────────────────────────────────────────────
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const { id } = await params;
   const body = await request.json();
   const { name, email, phone, company, gst_number, address, status } = body;
@@ -48,6 +55,9 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
 // ── DELETE /api/admin/clients/[id] ─────────────────────────────────────────────
 export async function DELETE(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const { id } = await params;
 
   const billRows = await query<RowDataPacket[]>(

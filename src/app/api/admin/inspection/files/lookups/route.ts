@@ -3,7 +3,11 @@ import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { RowDataPacket } from "mysql2/promise";
 
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
+
 export async function GET() {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
   const banks = await query<RowDataPacket[]>(
     `SELECT id, bank_name FROM inspection_banks WHERE status = 'active' ORDER BY bank_name ASC`,
   );

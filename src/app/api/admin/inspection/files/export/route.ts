@@ -7,6 +7,8 @@ import {
   type InspectionFileExportRow,
 } from "@/lib/inspection-files";
 
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
+
 type ExportFormat = "excel" | "pdf";
 
 const EXPORT_COLUMNS: Array<{ label: string; value: (row: InspectionFileExportRow) => string | number | null }> = [
@@ -47,6 +49,9 @@ const PDF_COLUMNS = [
 ];
 
 export async function GET(request: NextRequest) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const { searchParams } = new URL(request.url);
   const format = parseFormat(searchParams.get("format"));
   if (!format) {

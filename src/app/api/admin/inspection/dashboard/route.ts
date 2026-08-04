@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { RowDataPacket } from "mysql2/promise";
 
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
+
 async function columnExists(table: string, column: string): Promise<boolean> {
   const rows = await query<RowDataPacket[]>(
     `SELECT COUNT(*) as cnt FROM INFORMATION_SCHEMA.COLUMNS
@@ -13,6 +15,9 @@ async function columnExists(table: string, column: string): Promise<boolean> {
 }
 
 export async function GET(request: NextRequest) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const { searchParams } = new URL(request.url);
   const month = searchParams.get("month") ?? "";
   const year = searchParams.get("year") ?? "";

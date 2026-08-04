@@ -1,5 +1,6 @@
 import "server-only";
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
 import { query } from "@/lib/db";
 import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
 
@@ -7,6 +8,9 @@ type Ctx = { params: Promise<{ id: string }> };
 
 // ── GET /api/admin/bills/[id] ─────────────────────────────────────────────────
 export async function GET(_: NextRequest, { params }: Ctx) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const { id: rawId } = await params;
   const id = parseInt(rawId, 10);
   if (isNaN(id)) return NextResponse.json({ error: "Invalid ID." }, { status: 400 });
@@ -32,6 +36,9 @@ export async function GET(_: NextRequest, { params }: Ctx) {
 
 // ── PATCH /api/admin/bills/[id] ───────────────────────────────────────────────
 export async function PATCH(request: NextRequest, { params }: Ctx) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const { id: rawId } = await params;
   const id = parseInt(rawId, 10);
   if (isNaN(id)) return NextResponse.json({ error: "Invalid ID." }, { status: 400 });
@@ -100,6 +107,9 @@ export async function PATCH(request: NextRequest, { params }: Ctx) {
 
 // ── DELETE /api/admin/bills/[id] ──────────────────────────────────────────────
 export async function DELETE(_: NextRequest, { params }: Ctx) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const { id: rawId } = await params;
   const id = parseInt(rawId, 10);
   if (isNaN(id)) return NextResponse.json({ error: "Invalid ID." }, { status: 400 });

@@ -1,6 +1,8 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
+
 export const runtime = "nodejs";
 
 const ALLOWED_TYPES = new Set([
@@ -23,6 +25,9 @@ function sanitizeFilename(name: string): string {
 
 export async function POST(request: Request) {
   try {
+    const admin = await requireAdmin();
+    if (!admin) return unauthorized();
+
     const formData = await request.formData();
     const file = formData.get("file");
 

@@ -2,12 +2,16 @@ import "server-only";
 import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { ResultSetHeader } from "mysql2/promise";
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
 
 // ── PATCH /api/admin/expenses/[id] ───────────────────────────────────────────
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const { id: rawId } = await params;
   const id = parseInt(rawId, 10);
   if (isNaN(id)) return NextResponse.json({ error: "Invalid ID." }, { status: 400 });
@@ -43,6 +47,9 @@ export async function DELETE(
   _: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const { id: rawId } = await params;
   const id = parseInt(rawId, 10);
   if (isNaN(id)) return NextResponse.json({ error: "Invalid ID." }, { status: 400 });

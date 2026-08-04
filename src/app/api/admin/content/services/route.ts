@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
 import { saveServicesContent } from "@/lib/services";
 
 export const runtime = "nodejs";
@@ -64,7 +65,10 @@ const servicesContentSchema = z.object({
 });
 
 export async function PUT(request: Request) {
-  try {
+try {
+    const admin = await requireAdmin();
+    if (!admin) return unauthorized();
+
     const body = await request.json();
     const payload = servicesContentSchema.parse(body);
 

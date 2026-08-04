@@ -4,8 +4,13 @@ import { query } from "@/lib/db";
 import { getInspectionFileFilters, getInspectionFilesPage } from "@/lib/inspection-files";
 import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
 
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
+
 // ─── GET /api/admin/inspection/files ─────────────────────────────────────────
 export async function GET(request: NextRequest) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const { searchParams } = new URL(request.url);
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
   const limit = Math.max(1, parseInt(searchParams.get("limit") ?? "20", 10));
@@ -66,6 +71,9 @@ async function generateFileNumber(): Promise<string> {
 
 // ─── POST /api/admin/inspection/files ─────────────────────────────────────────
 export async function POST(request: NextRequest) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const body = await request.json();
   const cols = await getOptionalCols();
 

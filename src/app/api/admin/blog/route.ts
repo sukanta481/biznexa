@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { createBlogPost } from "@/lib/blog";
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
 
 export const runtime = "nodejs";
 
@@ -27,6 +28,9 @@ const createBlogPostSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    const admin = await requireAdmin();
+    if (!admin) return unauthorized();
+
     const json = await request.json();
     const payload = createBlogPostSchema.parse(json);
 

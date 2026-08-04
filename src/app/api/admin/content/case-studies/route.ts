@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
 import { saveCaseStudy } from "@/lib/case-studies";
 
 export const runtime = "nodejs";
@@ -36,6 +37,9 @@ const caseStudySchema = z.object({
 
 export async function PUT(request: Request) {
   try {
+    const admin = await requireAdmin();
+    if (!admin) return unauthorized();
+
     const body = await request.json();
     const payload = caseStudySchema.parse(body);
 

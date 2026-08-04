@@ -1,10 +1,14 @@
 import "server-only";
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
 import { query } from "@/lib/db";
 import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
 
 // ── GET /api/admin/bills ──────────────────────────────────────────────────────
 export async function GET(request: NextRequest) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const { searchParams } = new URL(request.url);
   const search        = searchParams.get("search")         ?? "";
   const client_id     = searchParams.get("client_id")      ?? "";
@@ -84,6 +88,9 @@ export async function GET(request: NextRequest) {
 
 // ── POST /api/admin/bills ─────────────────────────────────────────────────────
 export async function POST(request: NextRequest) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const body = await request.json();
   const {
     client_id, bill_date, due_date, status,

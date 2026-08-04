@@ -2,9 +2,13 @@ import "server-only";
 import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
 
 // ── GET /api/admin/expenses ───────────────────────────────────────────────────
 export async function GET(request: NextRequest) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const { searchParams } = new URL(request.url);
   const search   = searchParams.get("search")    ?? "";
   const category = searchParams.get("category")  ?? "";
@@ -87,6 +91,9 @@ export async function GET(request: NextRequest) {
 
 // ── POST /api/admin/expenses ──────────────────────────────────────────────────
 export async function POST(request: NextRequest) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const body = await request.json();
   const { category, type, title, description, amount, expense_date } = body;
 

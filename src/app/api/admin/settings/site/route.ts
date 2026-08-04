@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
 import {
   createCsrfToken,
   getSiteSettings,
@@ -86,6 +87,9 @@ function parseEmailEntries(formData: FormData) {
 
 export async function GET() {
   try {
+    const admin = await requireAdmin();
+    if (!admin) return unauthorized();
+
     const settings = await getSiteSettings();
     return NextResponse.json({ ok: true, settings, csrfToken: createCsrfToken() });
   } catch (error) {
@@ -96,6 +100,9 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const admin = await requireAdmin();
+    if (!admin) return unauthorized();
+
     const formData = await request.formData();
 
     if (formData.get("update_settings") !== "1") {

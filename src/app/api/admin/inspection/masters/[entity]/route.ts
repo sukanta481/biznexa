@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
 
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
+
 type EntityKey = "banks" | "branches" | "sources" | "payment-modes" | "accounts";
 
 const ENTITY_MAP: Record<EntityKey, { table: string; nameField: string; extraFields: string[] }> = {
@@ -22,6 +24,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ entity: string }> }
 ) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const { entity: entityParam } = await params;
   const entity = resolveEntity(entityParam);
   if (!entity) return NextResponse.json({ error: "Invalid entity" }, { status: 400 });
@@ -91,6 +96,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ entity: string }> }
 ) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const { entity: entityParam } = await params;
   const entity = resolveEntity(entityParam);
   if (!entity) return NextResponse.json({ error: "Invalid entity" }, { status: 400 });

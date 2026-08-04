@@ -1,11 +1,15 @@
 import "server-only";
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
 import { query } from "@/lib/db";
 import { RowDataPacket } from "mysql2/promise";
 
 type Ctx = { params: Promise<{ id: string }> };
 
 export async function POST(request: NextRequest, { params }: Ctx) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const { id: rawId } = await params;
   const id = parseInt(rawId, 10);
   if (isNaN(id)) return NextResponse.json({ error: "Invalid ID." }, { status: 400 });

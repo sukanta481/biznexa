@@ -1,9 +1,13 @@
 import "server-only";
 import { NextResponse } from "next/server";
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
 import { query } from "@/lib/db";
 import { RowDataPacket } from "mysql2/promise";
 
 export async function GET() {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const [clients, methods, settings] = await Promise.all([
     query<RowDataPacket[]>(
       `SELECT id, name, email, phone, company FROM clients WHERE status = 'active' ORDER BY name ASC`

@@ -2,6 +2,7 @@ import "server-only";
 import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { RowDataPacket } from "mysql2/promise";
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
 
 function getDateRange(preset: string | null, dateFrom: string | null, dateTo: string | null): { from: string; to: string; label: string } | null {
   if (preset) {
@@ -70,6 +71,9 @@ function getDateRange(preset: string | null, dateFrom: string | null, dateTo: st
 // ── GET /api/admin/dashboard ──────────────────────────────────────────────────
 export async function GET(request: NextRequest) {
   try {
+    const admin = await requireAdmin();
+    if (!admin) return unauthorized();
+
     const { searchParams } = new URL(request.url);
     const preset = searchParams.get("preset");
     const dateFrom = searchParams.get("date_from");

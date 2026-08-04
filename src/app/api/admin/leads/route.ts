@@ -3,6 +3,7 @@ import "server-only";
 import { NextRequest, NextResponse } from "next/server";
 import { RowDataPacket } from "mysql2/promise";
 
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
 import { query } from "@/lib/db";
 
 interface LeadRow extends RowDataPacket {
@@ -20,6 +21,9 @@ interface LeadRow extends RowDataPacket {
 }
 
 export async function GET(request: NextRequest) {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
+
   const { searchParams } = new URL(request.url);
   const search = searchParams.get("search")?.trim() ?? "";
   const status = searchParams.get("status")?.trim() ?? "";

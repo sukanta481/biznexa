@@ -3,7 +3,11 @@ import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { RowDataPacket } from "mysql2/promise";
 
+import { requireAdmin, unauthorized } from "@/lib/admin-guard";
+
 export async function GET() {
+  const admin = await requireAdmin();
+  if (!admin) return unauthorized();
   const [banks, sources, paymentModes, accounts, existingCols] = await Promise.all([
     query<RowDataPacket[]>(
       `SELECT id, bank_name AS name FROM inspection_banks
