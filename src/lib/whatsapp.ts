@@ -15,6 +15,14 @@ function config() {
   return { token, phoneNumberId };
 }
 
+function tokenConfig(): string {
+  const token = process.env.WHATSAPP_TOKEN;
+  if (!token) {
+    throw new Error("Missing WHATSAPP_TOKEN.");
+  }
+  return token;
+}
+
 export interface SendResult {
   ok: boolean;
   waMessageId?: string;
@@ -51,6 +59,57 @@ export async function sendTextMessage(to: string, body: string): Promise<SendRes
     return { ok: true, waMessageId: json?.messages?.[0]?.id };
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : "Network error calling Graph API" };
+  }
+}
+
+export interface DownloadMediaResult {
+  ok: boolean;
+  buffer?: Buffer;
+  mimeType?: string;
+  error?: string;
+}
+
+/**
+ * Downloads a WhatsApp media asset. Two Graph calls: GET /{mediaId} for the
+ * URL, then GET that URL with the bearer token. Returns the bytes ready to
+ * stream onward to S3. WhatsApp media expires from Meta's servers after 30
+ * days, so callers must persist the result durably.
+ */
+export async function downloadMedia(mediaId: string): Promise<DownloadMediaResult> {
+  try {
+    const token = tokenConfig();
+
+    const metaRes = await fetch(`https://graph.facebook.com/${GRAPH_VERSION}/${mediaId}`, {
+      headers: { authorization: `Bearer ${token}` },
+    });
+
+    const metaJson = (await metaRes.json().catch(() => ({}))) as {
+      url?: string;
+      mime_type?: string;
+      error?: { message?: string };
+    };
+
+    if (!metaRes.ok || !metaJson.url) {
+      return {
+        ok: false,
+        error: metaJson?.error?.message ?? `Graph media lookup returned ${metaRes.status}`,
+      };
+    }
+
+    const fileRes = await fetch(metaJson.url, {
+      headers: { authorization: `Bearer ${token}` },
+    });
+
+    if (!fileRes.ok) {
+      return { ok: false, error: `Media download returned ${fileRes.status}` };
+    }
+
+    const arrayBuffer = await fileRes.arrayBuffer();
+    const mimeType = metaJson.mime_type ?? fileRes.headers.get("content-type") ?? "application/octet-stream";
+
+    return { ok: true, buffer: Buffer.from(arrayBuffer), mimeType };
+  } catch (err) {
+    return { ok: false, error: err instanceof Error ? err.message : "Network error downloading media" };
   }
 }
 

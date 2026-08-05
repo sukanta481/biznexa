@@ -54,6 +54,38 @@ function displayName(c: ConversationListItem | ConversationDetail): string {
   return c.profileName?.trim() || c.waId;
 }
 
+/** Inline image when the media is an image; download link for everything else. */
+function renderMedia(m: ChatMessage): React.ReactNode {
+  const path = m.media_path;
+  if (!path) return null;
+  const mime = m.media_mime ?? '';
+  const isImage = mime.startsWith('image/') || /\.(png|jpe?g|webp|gif|avif|svg)$/i.test(path);
+  const label = mime || 'Download media';
+  if (isImage) {
+    return (
+      <a href={path} target="_blank" rel="noopener noreferrer" className="block mb-2">
+        {/* eslint-disable-next-line @next/next/no-img-element -- admin tool, intentionally <img> */}
+        <img
+          src={path}
+          alt={m.text_body ?? 'WhatsApp media'}
+          className="rounded-lg max-w-full max-h-64 object-cover border border-white/10"
+        />
+      </a>
+    );
+  }
+  return (
+    <a
+      href={path}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-2 mb-2 text-sm text-cyan-400 hover:text-cyan-300 underline underline-offset-2"
+    >
+      <span className="material-symbols-outlined text-[18px]">attachment</span>
+      {label}
+    </a>
+  );
+}
+
 // ── Component ────────────────────────────────────────────────────────────────
 
 export default function ChatClient() {
@@ -445,6 +477,7 @@ export default function ChatClient() {
                               {senderLabel}
                             </p>
                           )}
+                          {m.media_path && renderMedia(m)}
                           {m.text_body && (
                             <p className="text-sm whitespace-pre-wrap break-words">{m.text_body}</p>
                           )}

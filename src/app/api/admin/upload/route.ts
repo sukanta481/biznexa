@@ -2,6 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import { requireAdmin, unauthorized } from "@/lib/admin-guard";
+import { isS3Configured, putObject } from "@/lib/storage";
 
 export const runtime = "nodejs";
 
@@ -58,16 +59,31 @@ export async function POST(request: Request) {
     const timestamp = Date.now();
     const sanitized = sanitizeFilename(file.name);
     const filename = `${timestamp}-${sanitized}`;
-
-    const uploadDir = join(process.cwd(), "public", "uploads");
-    await mkdir(uploadDir, { recursive: true });
-
     const buffer = Buffer.from(await file.arrayBuffer());
-    const filepath = join(uploadDir, filename);
 
-    await writeFile(filepath, buffer);
-
-    const url = `/uploads/${filename}`;
+    // New uploads prefer durable S3 storage (required in production where
+    // Amplify's SSR filesystem is ephemeral). When S3 is not configured — i.e.
+    // local dev — fall back to writing under public/uploads so the route still
+    // works. Existing committed files at /uploads/... keep resolving in both
+    // cases because Next serves them as static assets.
+    let url: string;
+    if (isS3Configured()) {
+      const key = `uploads/${filename}`;
+      const stored = await putObject(key, buffer, file.type);
+      if (!stored.ok || !stored.url) {
+        return Response.json(
+          { ok: false, error: stored.error ?? "S3 upload failed." },
+          { status: 502 },
+        );
+      }
+      url = stored.url;
+    } else {
+      const uploadDir = join(process.cwd(), "public", "uploads");
+      await mkdir(uploadDir, { recursive: true });
+      const filepath = join(uploadDir, filename);
+      await writeFile(filepath, buffer);
+      url = `/uploads/${filename}`;
+    }
 
     return Response.json({ ok: true, url, filename });
   } catch (error) {
