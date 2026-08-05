@@ -28,6 +28,7 @@ const NAV_GROUPS: NavGroup[] = [
         title: 'Main',
         items: [
             { href: '/admin', icon: 'space_dashboard', label: 'Dashboard', matchExact: true },
+            { href: '/admin/chat', icon: 'chat', label: 'Chat' },
         ],
     },
     {
