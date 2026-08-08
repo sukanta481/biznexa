@@ -67,7 +67,7 @@ export async function POST(request: Request) {
     // works. Existing committed files at /uploads/... keep resolving in both
     // cases because Next serves them as static assets.
     let url: string;
-    if (isS3Configured()) {
+    if (await isS3Configured()) {
       const key = `uploads/${filename}`;
       const stored = await putObject(key, buffer, file.type);
       if (!stored.ok || !stored.url) {

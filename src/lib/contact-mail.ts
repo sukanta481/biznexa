@@ -3,6 +3,7 @@ import "server-only";
 import nodemailer from "nodemailer";
 
 import { COMPANY } from "@/lib/constants";
+import { getIntegrationConfig } from "@/lib/integrations";
 
 export interface LeadNotificationPayload {
   id: number;
@@ -16,11 +17,9 @@ export interface LeadNotificationPayload {
   message: string;
 }
 
-function getMailerConfig() {
-  const host = process.env.SMTP_HOST;
-  const port = Number(process.env.SMTP_PORT ?? "587");
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
+async function getMailerConfig() {
+  const { host, port: portStr, user, pass, secure: secureStr } = await getIntegrationConfig("smtp");
+  const port = Number(portStr ?? "587");
 
   if (!host || !user || !pass) {
     return null;
@@ -29,21 +28,22 @@ function getMailerConfig() {
   return {
     host,
     port,
-    secure: process.env.SMTP_SECURE === "true" || port === 465,
+    secure: secureStr === "true" || port === 465,
     auth: { user, pass },
   };
 }
 
 export async function sendLeadNotificationEmail(payload: LeadNotificationPayload) {
-  const config = getMailerConfig();
+  const config = await getMailerConfig();
 
   if (!config) {
     return { sent: false as const, reason: "missing_smtp_config" as const };
   }
 
   const transporter = nodemailer.createTransport(config);
-  const to = process.env.CONTACT_NOTIFICATION_EMAIL || COMPANY.email;
-  const from = process.env.CONTACT_FROM_EMAIL || config.auth.user;
+  const { notificationEmail, fromEmail } = await getIntegrationConfig("smtp");
+  const to = notificationEmail || COMPANY.email;
+  const from = fromEmail || config.auth.user;
   const subject = `New Biznexa lead: ${payload.name}`;
 
   const text = [

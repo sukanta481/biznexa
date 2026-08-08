@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
 
     // WhatsApp media expires from Meta's servers after 30 days, so when S3 is
     // configured we download the bytes and persist them durably now.
-    if (body.mediaId && isS3Configured()) {
+    if (body.mediaId && (await isS3Configured())) {
       const dl = await downloadMedia(body.mediaId);
       if (dl.ok && dl.buffer) {
         const ext = extForMime(dl.mimeType ?? mediaMime);
