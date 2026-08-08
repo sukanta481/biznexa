@@ -35,6 +35,25 @@ const caseStudySchema = z.object({
   sortOrder: z.number(),
 });
 
+const FIELD_LABELS: Record<string, string> = {
+  slug: "Slug",
+  title: "Project Title",
+  client: "Client",
+  clientName: "Person Name",
+  clientRole: "Designation / Role",
+  category: "Category",
+  excerpt: "Excerpt",
+  challenge: "The Challenge",
+  solution: "The Biznexa Solution",
+  results: "Quantitative Results",
+  technologies: "Technologies",
+  coverImage: "Hero Background Image",
+  coverImageAlt: "Hero Image Alt",
+  clientQuote: "Client Quote",
+  clientImage: "Portrait / Logo",
+  sortOrder: "Sort Order",
+};
+
 export async function PUT(request: Request) {
   try {
     const admin = await requireAdmin();
@@ -52,11 +71,18 @@ export async function PUT(request: Request) {
     return Response.json({ ok: true });
   } catch (error) {
     if (error instanceof z.ZodError) {
+      // Name the offending field(s) — a bare "Too small" tells the editor
+      // nothing about which input to fix.
+      const details = error.issues
+        .slice(0, 4)
+        .map((issue) => {
+          const path = issue.path.join(".");
+          return path ? `${FIELD_LABELS[path] ?? path}: ${issue.message}` : issue.message;
+        })
+        .join(" | ");
+
       return Response.json(
-        {
-          ok: false,
-          error: error.issues[0]?.message ?? "Invalid case study payload.",
-        },
+        { ok: false, error: details || "Invalid case study payload." },
         { status: 400 },
       );
     }

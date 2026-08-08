@@ -72,16 +72,35 @@ export async function POST(request: Request) {
       const stored = await putObject(key, buffer, file.type);
       if (!stored.ok || !stored.url) {
         return Response.json(
-          { ok: false, error: stored.error ?? "S3 upload failed." },
+          { ok: false, error: `S3 upload failed: ${stored.error ?? "unknown error"}` },
           { status: 502 },
         );
       }
       url = stored.url;
+    } else if (process.env.NODE_ENV === "production") {
+      // The local-disk fallback below cannot work on a serverless/read-only
+      // host, so say exactly what is missing instead of surfacing an EROFS.
+      return Response.json(
+        {
+          ok: false,
+          error:
+            "Media storage is not configured on this server. Set S3_BUCKET and S3_REGION (plus credentials) in the hosting environment — the local public/uploads fallback only works in development.",
+        },
+        { status: 500 },
+      );
     } else {
-      const uploadDir = join(process.cwd(), "public", "uploads");
-      await mkdir(uploadDir, { recursive: true });
-      const filepath = join(uploadDir, filename);
-      await writeFile(filepath, buffer);
+      try {
+        const uploadDir = join(process.cwd(), "public", "uploads");
+        await mkdir(uploadDir, { recursive: true });
+        const filepath = join(uploadDir, filename);
+        await writeFile(filepath, buffer);
+      } catch (diskError) {
+        const reason = diskError instanceof Error ? diskError.message : String(diskError);
+        return Response.json(
+          { ok: false, error: `Could not write to public/uploads: ${reason}` },
+          { status: 500 },
+        );
+      }
       url = `/uploads/${filename}`;
     }
 
