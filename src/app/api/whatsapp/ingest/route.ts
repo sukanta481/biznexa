@@ -6,11 +6,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { recordMessage, upsertConversation, getConversation } from "@/lib/wa-inbox";
 import { isS3Configured, putObject } from "@/lib/storage";
 import { downloadMedia } from "@/lib/whatsapp";
+import { getIntegrationConfig } from "@/lib/integrations";
 
 export const runtime = "nodejs";
 
-function secretMatches(provided: string | null): boolean {
-  const expected = process.env.WHATSAPP_INGEST_SECRET;
+function secretMatches(provided: string | null, expected: string | null): boolean {
   if (!expected || !provided) return false;
 
   const a = Buffer.from(provided);
@@ -56,7 +56,8 @@ function extForMime(mime: string | null | undefined): string {
 }
 
 export async function POST(request: NextRequest) {
-  if (!secretMatches(request.headers.get("x-ingest-secret"))) {
+  const { ingestSecret } = await getIntegrationConfig("whatsapp");
+  if (!secretMatches(request.headers.get("x-ingest-secret"), ingestSecret)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

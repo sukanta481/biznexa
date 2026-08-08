@@ -1,12 +1,13 @@
 import "server-only";
 
+import { getIntegrationConfig } from "@/lib/integrations";
+
 const GRAPH_VERSION = "v22.0";
 
 export const WHATSAPP_WINDOW_MS = 24 * 60 * 60 * 1000;
 
-function config() {
-  const token = process.env.WHATSAPP_TOKEN;
-  const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+async function config() {
+  const { token, phoneNumberId } = await getIntegrationConfig("whatsapp");
 
   if (!token || !phoneNumberId) {
     throw new Error("Missing WHATSAPP_TOKEN or WHATSAPP_PHONE_NUMBER_ID.");
@@ -15,8 +16,8 @@ function config() {
   return { token, phoneNumberId };
 }
 
-function tokenConfig(): string {
-  const token = process.env.WHATSAPP_TOKEN;
+async function tokenConfig(): Promise<string> {
+  const { token } = await getIntegrationConfig("whatsapp");
   if (!token) {
     throw new Error("Missing WHATSAPP_TOKEN.");
   }
@@ -31,7 +32,7 @@ export interface SendResult {
 
 /** Sends a plain text message. Only valid inside the 24-hour window. */
 export async function sendTextMessage(to: string, body: string): Promise<SendResult> {
-  const { token, phoneNumberId } = config();
+  const { token, phoneNumberId } = await config();
 
   try {
     const res = await fetch(`https://graph.facebook.com/${GRAPH_VERSION}/${phoneNumberId}/messages`, {
