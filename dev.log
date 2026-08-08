@@ -1,0 +1,27 @@
+
+> biznexa@0.1.0 dev
+> next dev
+
+ ⚠ Port 3000 is in use by process 35572, using available port 3002 instead.
+   ▲ Next.js 15.5.14
+   - Local:        http://localhost:3002
+   - Network:      http://192.168.1.2:3002
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 2.1s
+ ○ Compiling /api/admin/settings/integrations ...
+ ✓ Compiled /api/admin/settings/integrations in 1390ms (441 modules)
+ GET /api/admin/settings/integrations 401 in 1972ms
+ POST /api/admin/settings/integrations 401 in 84ms
+ ○ Compiling /api/admin/settings/integrations/test ...
+ ✓ Compiled /api/admin/settings/integrations/test in 1324ms (487 modules)
+ POST /api/admin/settings/integrations/test 401 in 2356ms
+ ✓ Compiled /api/admin/chat/conversations in 136ms (491 modules)
+ GET /api/admin/chat/conversations 401 in 215ms
+ ✓ Compiled /api/admin/chat/updates in 126ms (493 modules)
+ GET /api/admin/chat/updates?since=0 401 in 192ms
+ ✓ Compiled /api/whatsapp/ingest in 148ms (496 modules)
+ POST /api/whatsapp/ingest 401 in 229ms
+ POST /api/whatsapp/ingest 401 in 21ms
+[?25h
