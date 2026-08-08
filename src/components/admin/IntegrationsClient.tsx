@@ -5,7 +5,6 @@ import {
   useTransition,
   type FormEvent,
   type ReactNode,
-  type SVGProps,
 } from 'react';
 import {
   ChevronDown,
@@ -349,7 +348,7 @@ export default function IntegrationsClient({ initial }: IntegrationsClientProps)
             <p className="font-headline font-bold">CREDENTIALS_KEY is not set.</p>
             <p className="mt-1 leading-relaxed">
               Credentials cannot be saved until it is configured. Generate one with{' '}
-              <code className="rounded bg-slate-950/70 px-1 py-0.5 text-[12px]">node -e "console.log(require(&apos;crypto&apos;).randomBytes(32).toString(&apos;hex&apos;))"</code>{' '}
+              <code className="rounded bg-slate-950/70 px-1 py-0.5 text-[12px]">{`node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`}</code>{' '}
               and set it in the environment.
             </p>
           </div>
