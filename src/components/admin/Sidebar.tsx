@@ -67,6 +67,7 @@ const NAV_GROUPS: NavGroup[] = [
         title: 'Settings',
         items: [
             { href: '/admin/audit', icon: 'history', label: 'Activity Audit' },
+            { href: '/admin/settings/integrations', icon: 'key', label: 'Integrations' },
             { href: '/admin/settings/site', icon: 'settings', label: 'Site Settings' },
             { href: '/admin/profile', icon: 'person', label: 'My Profile' },
         ],
