@@ -3,6 +3,11 @@ frontend:
   phases:
     preBuild:
       commands:
+        # @aws-sdk/client-s3 requires Node >= 20. Next itself is happy on 18, so
+        # without this pin the build image's default can be too old.
+        - nvm install 20
+        - nvm use 20
+        - node -v
         - npm ci
     build:
       commands:
@@ -24,6 +29,19 @@ frontend:
         - echo "S3_PUBLIC_BASE=$S3_PUBLIC_BASE" >> .env.production
         # Encryption key for integration_credentials. Set once and never rotated.
         - echo "CREDENTIALS_KEY=$CREDENTIALS_KEY" >> .env.production
+        # WhatsApp and SMTP fall back to these until the credentials are entered
+        # on /admin/settings/integrations. Remove them once that page shows
+        # "database" as the source for every field.
+        - echo "WHATSAPP_TOKEN=$WHATSAPP_TOKEN" >> .env.production
+        - echo "WHATSAPP_PHONE_NUMBER_ID=$WHATSAPP_PHONE_NUMBER_ID" >> .env.production
+        - echo "WHATSAPP_INGEST_SECRET=$WHATSAPP_INGEST_SECRET" >> .env.production
+        - echo "SMTP_HOST=$SMTP_HOST" >> .env.production
+        - echo "SMTP_PORT=$SMTP_PORT" >> .env.production
+        - echo "SMTP_SECURE=$SMTP_SECURE" >> .env.production
+        - echo "SMTP_USER=$SMTP_USER" >> .env.production
+        - echo "SMTP_PASS=$SMTP_PASS" >> .env.production
+        - echo "CONTACT_FROM_EMAIL=$CONTACT_FROM_EMAIL" >> .env.production
+        - echo "CONTACT_NOTIFICATION_EMAIL=$CONTACT_NOTIFICATION_EMAIL" >> .env.production
         - npm run build
   artifacts:
     baseDirectory: .next
