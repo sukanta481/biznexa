@@ -206,6 +206,29 @@ export async function getAllCaseStudySlugs(): Promise<string[]> {
   return studies.map((study) => study.slug);
 }
 
+/**
+ * Client names from the CRM `clients` table, for the case-study editor's
+ * Client dropdown. Separate table from case_studies — a case study's
+ * `client` column is a free-text label, not a foreign key. Falls back to an
+ * empty list (rather than throwing) so a missing table/db config doesn't
+ * break the case-studies editor, which has its own DEFAULT_CASE_STUDIES
+ * fallback already.
+ */
+export async function getClientDirectoryNames(): Promise<string[]> {
+  try {
+    const rows = await query<RowDataPacket[]>(`
+      SELECT DISTINCT name
+      FROM clients
+      WHERE name IS NOT NULL AND name <> ''
+      ORDER BY name ASC
+    `);
+    return rows.map((row) => String(row.name));
+  } catch (error) {
+    if (!shouldUseFallback(error)) throw error;
+    return [];
+  }
+}
+
 export async function saveCaseStudy(study: CaseStudy) {
   const relatedSlugs = study.relatedSlugs.filter((slug) => slug && slug !== study.slug);
   await query<ResultSetHeader>(`

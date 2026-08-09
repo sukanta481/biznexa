@@ -1,8 +1,11 @@
 import CaseStudiesContentClient from "@/components/admin/CaseStudiesContentClient";
-import { getAllCaseStudies } from "@/lib/case-studies";
+import { getAllCaseStudies, getClientDirectoryNames } from "@/lib/case-studies";
 
 export default async function CaseStudiesEditorPage() {
-  const initialStudies = await getAllCaseStudies({ includeUnpublished: true });
+  const [initialStudies, clientDirectory] = await Promise.all([
+    getAllCaseStudies({ includeUnpublished: true }),
+    getClientDirectoryNames(),
+  ]);
 
-  return <CaseStudiesContentClient initialStudies={initialStudies} />;
+  return <CaseStudiesContentClient initialStudies={initialStudies} clientDirectory={clientDirectory} />;
 }

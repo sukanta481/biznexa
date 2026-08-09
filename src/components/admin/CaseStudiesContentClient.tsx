@@ -7,6 +7,7 @@ import type { CaseStudy } from '@/lib/case-studies';
 
 interface CaseStudiesContentClientProps {
   initialStudies: CaseStudy[];
+  clientDirectory?: string[];
 }
 
 type ImageField = 'coverImage' | 'clientImage';
@@ -93,7 +94,7 @@ function normalizeStudy(study: Partial<CaseStudy> | undefined, nextSortOrder = 1
   };
 }
 
-export default function CaseStudiesContentClient({ initialStudies }: CaseStudiesContentClientProps) {
+export default function CaseStudiesContentClient({ initialStudies, clientDirectory = [] }: CaseStudiesContentClientProps) {
   const router = useRouter();
   const normalizedInitialStudies = useMemo(
     () => initialStudies.map((study, index) => normalizeStudy(study, index + 1)),
@@ -120,8 +121,8 @@ export default function CaseStudiesContentClient({ initialStudies }: CaseStudies
   );
 
   const clientOptions = useMemo(
-    () => Array.from(new Set(studies.map((study) => study.client).filter(Boolean))).sort((a, b) => a.localeCompare(b)),
-    [studies],
+    () => Array.from(new Set([...clientDirectory, ...studies.map((study) => study.client)].filter(Boolean))).sort((a, b) => a.localeCompare(b)),
+    [clientDirectory, studies],
   );
 
   const categoryOptions = useMemo(
