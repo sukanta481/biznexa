@@ -3,17 +3,17 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 
 import { BreadcrumbSchema } from "@/components/seo/JsonLd";
-import { getAllCaseStudies, getAllCaseStudySlugs, getCaseStudyBySlug } from "@/lib/case-studies";
+import { getAllCaseStudies, getCaseStudyBySlug } from "@/lib/case-studies";
 import { COMPANY } from "@/lib/constants";
 
 interface CaseStudyPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  const slugs = await getAllCaseStudySlugs();
-  return slugs.map((slug) => ({ slug }));
-}
+// Rendered per request rather than prerendered. generateStaticParams used to
+// fix the set of pages at build time, so a case study added through the CMS
+// had no detail page until the next deploy.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: CaseStudyPageProps): Promise<Metadata> {
   const { slug } = await params;
