@@ -76,12 +76,15 @@ export async function putObject(
   try {
     const s3 = await client();
     await s3.send(
+      // No ACL is set. The bucket runs with "bucket owner enforced" (ACLs
+      // disabled), so sending one is rejected outright. Public readability for
+      // site assets comes from a bucket policy scoped to `uploads/*`, which
+      // deliberately leaves WhatsApp media under `wa/` private.
       new PutObjectCommand({
         Bucket: bucket,
         Key: key,
         Body: body,
         ContentType: contentType,
-        ACL: "public-read",
       }),
     );
     const url = await publicUrl(key);
