@@ -286,3 +286,49 @@ export async function saveCaseStudy(study: CaseStudy) {
     study.sortOrder,
   ]);
 }
+
+/** Testimonial shape consumed by the homepage. Structurally matches HomepageTestimonial. */
+export interface CaseStudyTestimonial {
+  initials: string;
+  name: string;
+  company: string;
+  quote: string;
+}
+
+function initialsFrom(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+/**
+ * Real client quotes taken from published case studies, for the homepage
+ * testimonials section. Returns an empty array when no case study carries a
+ * quote yet, so the caller can fall back to its configured testimonials.
+ */
+export async function getCaseStudyTestimonials(limit = 3): Promise<CaseStudyTestimonial[]> {
+  const studies = await getAllCaseStudies();
+
+  return studies
+    .filter((study) => study.clientQuote.trim().length > 0)
+    .slice(0, limit)
+    .map((study) => {
+      const name = study.clientName.trim() || study.client;
+      // Matches the existing "Founder, TECHSPRINT (SaaS)" phrasing. The company
+      // is dropped when it is already the displayed name — which happens when a
+      // case study has no person name and falls back to the client — so the
+      // card does not read "Acme / Founder, Acme".
+      const client = study.client.trim();
+      const company = [study.clientRole.trim(), client === name ? "" : client]
+        .filter(Boolean)
+        .join(", ");
+
+      return {
+        initials: initialsFrom(name),
+        name,
+        company,
+        quote: study.clientQuote.trim(),
+      };
+    });
+}
