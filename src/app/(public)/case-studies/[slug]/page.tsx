@@ -10,6 +10,27 @@ interface CaseStudyPageProps {
   params: Promise<{ slug: string }>;
 }
 
+/**
+ * Narrative fields are stored as plain text from a textarea. Rendering them in
+ * a single <p> collapses every line break into one unreadable wall, so split
+ * on blank lines — falling back to single newlines when the author did not
+ * leave blank ones.
+ */
+function Paragraphs({ text, className = "" }: { text: string; className?: string }) {
+  let blocks = text.split(/\r?\n\s*\r?\n/).map((b) => b.trim()).filter(Boolean);
+  if (blocks.length <= 1) {
+    blocks = text.split(/\r?\n/).map((b) => b.trim()).filter(Boolean);
+  }
+
+  return (
+    <div className={`space-y-4 ${className}`}>
+      {blocks.map((block, i) => (
+        <p key={i}>{block}</p>
+      ))}
+    </div>
+  );
+}
+
 // Rendered per request rather than prerendered. generateStaticParams used to
 // fix the set of pages at build time, so a case study added through the CMS
 // had no detail page until the next deploy.
@@ -79,6 +100,12 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
             </div>
           ))}
         </div>
+        {study.projectUrl && (
+          <a href={study.projectUrl} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-4 font-label text-sm font-bold uppercase tracking-widest text-on-primary">
+            Visit project
+            <span className="material-symbols-outlined text-base" aria-hidden="true">open_in_new</span>
+          </a>
+        )}
       </section>
 
       <section className="hidden md:flex relative min-h-[870px] items-center overflow-hidden">
@@ -95,10 +122,16 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
             </Link>
             <span className="font-label text-tertiary uppercase tracking-[0.2em] text-xs mb-4 block">Case Study / {study.category}</span>
             <h1 className="font-headline text-5xl md:text-7xl font-bold leading-tight tracking-tighter text-glow mb-8 text-white">{study.title}</h1>
-            <p className="text-on-surface text-lg max-w-xl mb-10 leading-relaxed font-body">{study.excerpt}</p>
+            <p className="text-on-surface text-lg max-w-xl mb-8 leading-relaxed font-body">{study.excerpt}</p>
+            {study.projectUrl && (
+              <a href={study.projectUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg bg-primary px-7 py-4 font-label text-sm font-bold uppercase tracking-widest text-on-primary transition hover:brightness-110 mb-10">
+                Visit project
+                <span className="material-symbols-outlined text-base" aria-hidden="true">open_in_new</span>
+              </a>
+            )}
           </div>
           <div className="md:col-span-5">
-            <div className="glass-panel p-8 rounded-xl border border-primary/10 shadow-[0_0_50px_rgba(0,255,102,0.1)]">
+            <div className="bg-[rgba(10,17,33,0.92)] backdrop-blur-xl p-8 rounded-xl border border-primary/30 shadow-[0_0_50px_rgba(0,255,102,0.1)]">
               <h3 className="font-label text-primary text-sm uppercase tracking-widest mb-6">Impact Summary</h3>
               <div className="space-y-8">
                 {study.results.slice(0, 2).map((result, i) => (
@@ -121,11 +154,11 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
       <section className="md:hidden px-6 space-y-12">
         <div className="space-y-4">
           <div className="flex items-center gap-3"><div className="h-[1px] w-8 bg-primary/30"></div><h2 className="text-xs font-label font-bold text-primary tracking-[0.15em] uppercase">The Challenge</h2></div>
-          <p className="text-on-surface-variant leading-relaxed text-sm font-body">{study.challenge}</p>
+          <Paragraphs text={study.challenge} className="text-on-surface-variant leading-relaxed text-sm font-body" />
         </div>
         <div className="space-y-4">
           <div className="flex items-center gap-3"><div className="h-[1px] w-8 bg-primary/30"></div><h2 className="text-xs font-label font-bold text-primary tracking-[0.15em] uppercase">The Biznexa Solution</h2></div>
-          <p className="text-on-surface-variant leading-relaxed text-sm font-body">{study.solution}</p>
+          <Paragraphs text={study.solution} className="text-on-surface-variant leading-relaxed text-sm font-body" />
           <ul className="space-y-3">
             {study.technologies.slice(0, 3).map((tech, i) => (
               <li key={i} className="flex gap-3"><span className="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span><span className="text-xs text-on-surface">{tech}</span></li>
@@ -135,9 +168,28 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
       </section>
 
       <section className="hidden md:block max-w-7xl mx-auto px-8 py-24">
-        <div className="grid md:grid-cols-3 gap-8 mb-24">
-          <div className="md:col-span-1 bg-surface-container p-8 rounded-lg border border-outline-variant/10"><span className="material-symbols-outlined text-error text-4xl mb-6">warning</span><h2 className="font-headline text-2xl font-bold mb-4 text-white">The Challenge</h2><p className="text-on-surface-variant leading-relaxed font-body">{study.challenge}</p></div>
-          <div className="md:col-span-2 bg-surface-container-high p-8 rounded-lg relative overflow-hidden group border border-outline-variant/10"><div className="absolute top-0 right-0 p-4 opacity-5"><span className="material-symbols-outlined text-9xl">psychology</span></div><div className="relative z-10"><h2 className="font-headline text-2xl font-bold mb-4 text-primary">The {COMPANY.name} Solution</h2><div className="grid md:grid-cols-2 gap-8"><p className="text-on-surface-variant leading-relaxed font-body">{study.solution}</p><ul className="space-y-4 font-body">{study.technologies.slice(0, 4).map((tech, i) => (<li key={i} className="flex items-center gap-3 text-sm text-on-surface"><span className="material-symbols-outlined text-tertiary text-sm">check_circle</span>Developed with {tech}</li>))}</ul></div></div></div>
+        <div className="grid md:grid-cols-2 gap-8 mb-16 items-start">
+          <div className="bg-surface-container p-8 rounded-lg border border-outline-variant/10">
+            <span className="material-symbols-outlined text-error text-4xl mb-6">warning</span>
+            <h2 className="font-headline text-2xl font-bold mb-4 text-white">The Challenge</h2>
+            <Paragraphs text={study.challenge} className="text-on-surface-variant leading-relaxed font-body" />
+          </div>
+          <div className="bg-surface-container-high p-8 rounded-lg relative overflow-hidden border border-outline-variant/10">
+            <div className="absolute top-0 right-0 p-4 opacity-5"><span className="material-symbols-outlined text-9xl">psychology</span></div>
+            <div className="relative z-10">
+              <h2 className="font-headline text-2xl font-bold mb-4 text-primary">The {COMPANY.name} Solution</h2>
+              <Paragraphs text={study.solution} className="text-on-surface-variant leading-relaxed font-body" />
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-24 flex flex-wrap gap-3">
+          {study.technologies.map((tech, i) => (
+            <span key={i} className="inline-flex items-center gap-2 rounded-full border border-outline-variant/20 bg-surface-container-low px-4 py-2 text-sm text-on-surface font-body">
+              <span className="material-symbols-outlined text-tertiary text-sm" aria-hidden="true">check_circle</span>
+              {tech}
+            </span>
+          ))}
         </div>
 
         <div className="mb-24">
@@ -156,8 +208,8 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
             <blockquote className="text-2xl md:text-3xl font-headline italic text-white mb-8 leading-snug">&ldquo;{study.clientQuote}&rdquo;</blockquote>
             <div className="flex flex-col items-center">
               {study.clientImage && (
-                <div className="w-16 h-16 rounded-full border-2 border-primary mb-4 overflow-hidden bg-surface-container flex items-center justify-center">
-                  <img alt={study.clientName || study.client} className="w-full h-full object-contain" src={study.clientImage} />
+                <div className="mb-4 flex h-16 items-center justify-center rounded-xl border border-primary/25 bg-surface-container px-5 py-3">
+                  <img alt={study.clientName || study.client} className="max-h-10 w-auto max-w-[180px] object-contain" src={study.clientImage} />
                 </div>
               )}
               <cite className="not-italic font-bold text-white font-headline tracking-wide">{study.clientName || study.client}</cite>
@@ -178,7 +230,7 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
       </section>
 
       <section className="md:hidden px-6 py-16">
-        <div className="glass-panel p-8 rounded-2xl relative overflow-hidden"><div className="absolute top-0 right-0 p-4 opacity-10"><span className="material-symbols-outlined text-6xl">format_quote</span></div><p className="text-on-surface italic leading-relaxed mb-8 relative z-10 font-body">&ldquo;{study.clientQuote}&rdquo;</p><div className="flex items-center gap-4">{study.clientImage && <div className="w-12 h-12 rounded-full overflow-hidden border border-primary/30 bg-surface-container flex items-center justify-center shrink-0"><img alt={study.clientName || study.client} className="w-full h-full object-contain" src={study.clientImage} /></div>}<div><div className="text-sm font-bold font-headline text-white">{study.clientName || study.client}</div><div className="text-[10px] text-primary uppercase tracking-wider font-label">{study.clientRole}</div><div className="text-[10px] text-on-surface-variant">{study.client}</div></div></div></div>
+        <div className="glass-panel p-8 rounded-2xl relative overflow-hidden"><div className="absolute top-0 right-0 p-4 opacity-10"><span className="material-symbols-outlined text-6xl">format_quote</span></div><p className="text-on-surface italic leading-relaxed mb-8 relative z-10 font-body">&ldquo;{study.clientQuote}&rdquo;</p><div className="flex items-center gap-4">{study.clientImage && <div className="flex h-12 shrink-0 items-center justify-center rounded-lg border border-primary/25 bg-surface-container px-3 py-2"><img alt={study.clientName || study.client} className="max-h-8 w-auto max-w-[120px] object-contain" src={study.clientImage} /></div>}<div><div className="text-sm font-bold font-headline text-white">{study.clientName || study.client}</div><div className="text-[10px] text-primary uppercase tracking-wider font-label">{study.clientRole}</div><div className="text-[10px] text-on-surface-variant">{study.client}</div></div></div></div>
       </section>
 
       <section className="md:hidden py-12 border-t border-primary/10">

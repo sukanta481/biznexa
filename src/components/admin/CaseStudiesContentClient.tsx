@@ -40,6 +40,7 @@ async function readJsonResponse(response: Response): Promise<{ ok?: boolean; err
 function createEmptyStudy(nextSortOrder: number): CaseStudy {
   return {
     slug: '',
+    projectUrl: '',
     title: '',
     client: '',
     clientName: '',
@@ -609,6 +610,7 @@ export default function CaseStudiesContentClient({ initialStudies, clientDirecto
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2"><label className="text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Project Title</label><input type="text" value={draft.title} onChange={(e) => setField('title', e.target.value)} className="w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 font-headline text-lg text-white outline-none transition focus:border-[#00f2ff]/50 focus:ring-2 focus:ring-[#00f2ff]/20" /></div>
               <div className="space-y-2"><label className="text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Slug</label><input type="text" value={draft.slug} onChange={(e) => setField('slug', e.target.value)} className="w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm text-white outline-none transition focus:border-[#00f2ff]/50 focus:ring-2 focus:ring-[#00f2ff]/20" /></div>
+              <div className="space-y-2 md:col-span-2"><label className="text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Live Project URL <span className="text-slate-600 normal-case tracking-normal font-body">— optional, shows a &ldquo;Visit project&rdquo; button</span></label><input type="url" inputMode="url" placeholder="https://client-site.com" value={draft.projectUrl} onChange={(e) => setField('projectUrl', e.target.value)} className="w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm text-white outline-none transition focus:border-[#00f2ff]/50 focus:ring-2 focus:ring-[#00f2ff]/20" /></div>
               <div className="space-y-2">
                 <label htmlFor="cs-client" className="text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-slate-500">Client <span className="text-slate-600 normal-case tracking-normal font-body">— pick one or type a new name</span></label>
                 <input id="cs-client" list="cs-client-options" type="text" value={draft.client} onChange={(e) => setField('client', e.target.value)} placeholder="Select or type a client" className="w-full rounded-lg border border-white/10 bg-slate-950/70 px-3 py-3 text-sm text-white outline-none transition focus:border-[#00f2ff]/50 focus:ring-2 focus:ring-[#00f2ff]/20" />

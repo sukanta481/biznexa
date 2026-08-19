@@ -9,6 +9,8 @@ export const runtime = "nodejs";
 const caseStudySchema = z.object({
   id: z.number().optional(),
   slug: z.string().trim().min(1),
+  // Optional. Empty string means "no public link", which hides the button.
+  projectUrl: z.string().trim().default(""),
   title: z.string().trim().min(1),
   client: z.string().trim().min(1),
   clientName: z.string().trim(),

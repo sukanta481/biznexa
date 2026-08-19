@@ -12,6 +12,7 @@ export interface CaseStudyResult {
 export interface CaseStudy {
   id?: number;
   slug: string;
+  projectUrl: string;
   title: string;
   client: string;
   clientName: string;
@@ -34,6 +35,7 @@ export interface CaseStudy {
 interface CaseStudyRow extends RowDataPacket {
   id: number;
   slug: string;
+  project_url: string | null;
   title: string;
   client: string;
   client_name: string | null;
@@ -56,6 +58,7 @@ interface CaseStudyRow extends RowDataPacket {
 const DEFAULT_CASE_STUDIES: CaseStudy[] = [
   {
     slug: "ai-logistics-transformation",
+    projectUrl: "",
     title: "AI-Powered Logistics Transformation",
     client: "GlobalFreight Solutions",
     clientName: "Rajiv Mehta",
@@ -81,6 +84,7 @@ const DEFAULT_CASE_STUDIES: CaseStudy[] = [
   },
   {
     slug: "ecommerce-redesign",
+    projectUrl: "",
     title: "E-Commerce Revenue Surge",
     client: "ArtisanCraft India",
     clientName: "Priya Sharma",
@@ -106,6 +110,7 @@ const DEFAULT_CASE_STUDIES: CaseStudy[] = [
   },
   {
     slug: "seo-market-dominance",
+    projectUrl: "",
     title: "From Page 5 to Page 1",
     client: "Zenith Legal Associates",
     clientName: "Arjun Kapoor",
@@ -158,6 +163,7 @@ function mapRow(row: CaseStudyRow): CaseStudy {
     slug: row.slug,
     title: row.title,
     client: row.client,
+    projectUrl: row.project_url ?? "",
     clientName: row.client_name ?? "",
     clientRole: row.client_role ?? "Executive Sponsor",
     category: row.category,
@@ -233,12 +239,13 @@ export async function saveCaseStudy(study: CaseStudy) {
   const relatedSlugs = study.relatedSlugs.filter((slug) => slug && slug !== study.slug);
   await query<ResultSetHeader>(`
     INSERT INTO case_studies (
-      id, slug, title, client, client_name, client_role, category, excerpt, challenge, solution,
+      id, slug, project_url, title, client, client_name, client_role, category, excerpt, challenge, solution,
       results_json, technologies_json, cover_image, cover_image_alt, client_quote, client_image,
       related_slugs_json, published, sort_order
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON DUPLICATE KEY UPDATE
       slug = VALUES(slug),
+      project_url = VALUES(project_url),
       title = VALUES(title),
       client = VALUES(client),
       client_name = VALUES(client_name),
@@ -259,6 +266,7 @@ export async function saveCaseStudy(study: CaseStudy) {
   `, [
     study.id ?? null,
     study.slug,
+    study.projectUrl || null,
     study.title,
     study.client,
     study.clientName,
