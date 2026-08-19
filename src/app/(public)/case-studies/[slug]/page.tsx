@@ -56,6 +56,16 @@ export default async function CaseStudyDetailPage({ params }: CaseStudyPageProps
       />
 
       <section className="md:hidden px-6 py-8 mt-20">
+        {study.coverImage ? (
+          <div className="relative -mx-6 mb-6 h-52 overflow-hidden">
+            <img
+              alt={study.coverImageAlt || study.title}
+              className="w-full h-full object-cover"
+              src={study.coverImage}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent"></div>
+          </div>
+        ) : null}
         <div className="space-y-2 mb-6">
           <span className="text-primary font-label text-[10px] tracking-[0.2em] uppercase">Case Study: {study.category}</span>
           <h1 className="text-4xl font-headline font-bold leading-tight tracking-tight text-white">{study.title}</h1>
