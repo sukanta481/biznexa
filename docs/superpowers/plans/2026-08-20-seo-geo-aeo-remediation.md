@@ -409,14 +409,14 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "ClaudeBot", allow: "/" },
       { userAgent: "PerplexityBot", allow: "/" },
       { userAgent: "Google-Extended", allow: "/" },
-ようこそ    ],
+    ],
     sitemap: `${SITE_URL}/sitemap.xml`,
     host: SITE_URL,
   };
 }
 ```
 
-> ⚠️ The line beginning `ようこそ` above is a deliberate corruption check. Delete that stray text so the line reads only `    ],`. If you paste this file without noticing, the build will fail — that is intentional, and it means you are not reading the code you paste. Report it and continue.
+> **Report-back check:** in your completion message, quote the four AI user-agent strings exactly as they appear in the file you wrote, and paste the full body of the generated `/robots.txt`. This confirms you read what you produced rather than pasting blind.
 
 - [ ] **Step 2: Create `public/llms.txt`**
 
