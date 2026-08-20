@@ -10,6 +10,18 @@ const nextConfig: NextConfig = {
     DB_LIVE_USER: process.env.DB_LIVE_USER,
     DB_LIVE_PASSWORD: process.env.DB_LIVE_PASSWORD,
   },
+  // The previous PHP site's URLs are still indexed. Permanent redirects
+  // transfer their history to the App Router equivalents instead of 404ing.
+  async redirects() {
+    return [
+      { source: "/index.php", destination: "/", permanent: true },
+      { source: "/services.php", destination: "/services", permanent: true },
+      { source: "/about.php", destination: "/about", permanent: true },
+      { source: "/contact.php", destination: "/contact", permanent: true },
+      { source: "/blog.php", destination: "/blog", permanent: true },
+      { source: "/portfolio.php", destination: "/case-studies", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;
