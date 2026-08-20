@@ -293,6 +293,8 @@ export interface CaseStudyTestimonial {
   name: string;
   company: string;
   quote: string;
+  /** Client logo. Empty string when the case study has none. */
+  logo: string;
 }
 
 function initialsFrom(name: string): string {
@@ -307,7 +309,7 @@ function initialsFrom(name: string): string {
  * testimonials section. Returns an empty array when no case study carries a
  * quote yet, so the caller can fall back to its configured testimonials.
  */
-export async function getCaseStudyTestimonials(limit = 3): Promise<CaseStudyTestimonial[]> {
+export async function getCaseStudyTestimonials(limit = 12): Promise<CaseStudyTestimonial[]> {
   const studies = await getAllCaseStudies();
 
   return studies
@@ -329,6 +331,7 @@ export async function getCaseStudyTestimonials(limit = 3): Promise<CaseStudyTest
         name,
         company,
         quote: study.clientQuote.trim(),
+        logo: study.clientImage.trim(),
       };
     });
 }

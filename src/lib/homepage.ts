@@ -40,6 +40,8 @@ export interface HomepageTestimonial {
   name: string;
   company: string;
   quote: string;
+  /** Optional client logo, shown instead of the initials badge when present. */
+  logo?: string;
 }
 
 export interface HomepageFaq {

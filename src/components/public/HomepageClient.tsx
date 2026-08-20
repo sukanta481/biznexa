@@ -1,19 +1,20 @@
 'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 import {
   AnimatePresence,
   motion,
   useScroll,
   useTransform,
-  type MotionValue,
 } from "framer-motion";
 
 import PricingPlansSection from "@/components/ui/pricing-plans-section";
 import { CountUp, ScrollReveal, StaggerGroup, StaggerItem, TextReveal, useReducedMotionSafe } from "@/components/ui/Animations";
 
-import type { HomepageContent, HomepageService } from "@/lib/homepage";
+import type { HomepageContent, HomepageService, HomepageTestimonial } from "@/lib/homepage";
 
 interface HomepageClientProps {
   content: HomepageContent;
@@ -176,25 +177,113 @@ function DesktopServicesShowcase({ content }: { content: HomepageContent }) {
   );
 }
 
-function TestimonialColumn({
-  children,
-  index,
-  progress,
-  enabled,
-}: {
-  children: React.ReactNode;
-  index: number;
-  progress: MotionValue<number>;
-  enabled: boolean;
-}) {
-  // middle column drifts against its neighbours for depth
-  const range: [number, number] = index === 1 ? [56, -40] : [0, 24];
-  const y = useTransform(progress, [0, 1], enabled ? range : [0, 0]);
+function TestimonialAvatar({ testimonial }: { testimonial: HomepageTestimonial }) {
+  if (testimonial.logo) {
+    return (
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-primary/25 bg-white/5 p-2">
+        <img src={testimonial.logo} alt="" className="h-full w-full object-contain" />
+      </div>
+    );
+  }
 
   return (
-    <motion.div style={{ y }} className="w-[85vw] shrink-0 snap-center md:w-auto">
-      {children}
-    </motion.div>
+    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-primary/25 bg-primary/10 font-headline font-bold text-primary">
+      {testimonial.initials}
+    </div>
+  );
+}
+
+function TestimonialsCarousel({ testimonials }: { testimonials: HomepageTestimonial[] }) {
+  const reduceMotion = useReducedMotionSafe();
+  const autoplay = useRef(Autoplay({ delay: 6000, stopOnInteraction: false, stopOnMouseEnter: true }));
+  // Autoplay is dropped entirely when the visitor prefers reduced motion.
+  const plugins = useMemo(() => (reduceMotion ? [] : [autoplay.current]), [reduceMotion]);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start", containScroll: "trimSnaps" }, plugins);
+
+  const [selected, setSelected] = useState(0);
+  const [snaps, setSnaps] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    const sync = () => {
+      setSnaps(emblaApi.scrollSnapList());
+      setSelected(emblaApi.selectedScrollSnap());
+    };
+
+    sync();
+    emblaApi.on("select", sync);
+    emblaApi.on("reInit", sync);
+
+    return () => {
+      emblaApi.off("select", sync);
+      emblaApi.off("reInit", sync);
+    };
+  }, [emblaApi]);
+
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
+  return (
+    <div className="relative">
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="-ml-5 flex items-stretch">
+          {testimonials.map((testimonial) => (
+            <div
+              key={`${testimonial.name}-${testimonial.company}`}
+              className="min-w-0 shrink-0 grow-0 basis-full pl-5 sm:basis-1/2 lg:basis-1/3"
+            >
+              <figure className="relative flex h-full flex-col rounded-2xl border border-white/10 bg-surface-container-high/60 p-8 transition-colors duration-300 hover:border-primary/25 md:p-10">
+                <span aria-hidden className="mb-6 block font-headline text-5xl leading-none text-primary/40">&ldquo;</span>
+                <blockquote className="flex-1 font-body text-base leading-relaxed text-on-surface md:text-lg">{testimonial.quote}</blockquote>
+                <figcaption className="mt-8 flex items-center gap-4 border-t border-white/5 pt-6">
+                  <TestimonialAvatar testimonial={testimonial} />
+                  <div>
+                    <div className="font-headline text-base font-bold text-white">{testimonial.name}</div>
+                    <div className="font-label text-[10px] uppercase tracking-widest text-secondary">{testimonial.company}</div>
+                  </div>
+                </figcaption>
+              </figure>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {snaps.length > 1 && (
+        <div className="mt-8 flex items-center justify-center gap-6">
+          <button
+            type="button"
+            onClick={scrollPrev}
+            aria-label="Previous testimonial"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-on-surface transition hover:border-primary/40 hover:text-primary"
+          >
+            <span className="material-symbols-outlined text-lg" aria-hidden="true">arrow_back</span>
+          </button>
+
+          <div className="flex items-center gap-2">
+            {snaps.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => emblaApi?.scrollTo(i)}
+                aria-label={`Go to testimonial ${i + 1}`}
+                aria-current={i === selected}
+                className={`h-1.5 rounded-full transition-all ${i === selected ? "w-6 bg-primary" : "w-1.5 bg-white/20 hover:bg-white/40"}`}
+              />
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={scrollNext}
+            aria-label="Next testimonial"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-on-surface transition hover:border-primary/40 hover:text-primary"
+          >
+            <span className="material-symbols-outlined text-lg" aria-hidden="true">arrow_forward</span>
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -205,7 +294,6 @@ export default function HomepageClient({ content }: HomepageClientProps) {
   };
 
   const reduceMotion = useReducedMotionSafe();
-  const isDesktop = useIsDesktop();
 
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
@@ -214,10 +302,6 @@ export default function HomepageClient({ content }: HomepageClientProps) {
   const heroContentScale = useTransform(scrollYProgress, [0, 1], [1, reduceMotion ? 1 : 0.94]);
 
   const testimonialsRef = useRef<HTMLElement>(null);
-  const { scrollYProgress: testimonialsProgress } = useScroll({
-    target: testimonialsRef,
-    offset: ["start end", "end start"],
-  });
 
   const marqueeItems = content.services.map((service) => service.title);
 
@@ -354,30 +438,7 @@ export default function HomepageClient({ content }: HomepageClientProps) {
           <p className="mt-3 font-body text-sm text-on-surface-variant md:hidden">{content.testimonialsIntro.mobileDescription}</p>
         </ScrollReveal>
 
-        <StaggerGroup className="-mx-6 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-8 scrollbar-hide md:mx-0 md:grid md:snap-none md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0 md:pb-0">
-          {content.testimonials.map((testimonial, index) => (
-            <TestimonialColumn
-              key={`${testimonial.name}-${testimonial.company}`}
-              index={index}
-              progress={testimonialsProgress}
-              enabled={isDesktop && !reduceMotion}
-            >
-              <StaggerItem className="relative flex h-full flex-col rounded-2xl border border-white/10 bg-surface-container-high/60 p-8 transition-all duration-300 hover:border-primary/25 md:p-10">
-                <span aria-hidden className="mb-6 block font-headline text-5xl leading-none text-primary/40">&ldquo;</span>
-                <p className="flex-1 font-body text-base leading-relaxed text-on-surface md:text-lg">{testimonial.quote}</p>
-                <div className="mt-8 flex items-center gap-4 border-t border-white/5 pt-6">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full border border-primary/25 bg-primary/10 font-headline font-bold text-primary">
-                    {testimonial.initials}
-                  </div>
-                  <div>
-                    <div className="font-headline text-base font-bold text-white">{testimonial.name}</div>
-                    <div className="font-label text-[10px] uppercase tracking-widest text-secondary">{testimonial.company}</div>
-                  </div>
-                </div>
-              </StaggerItem>
-            </TestimonialColumn>
-          ))}
-        </StaggerGroup>
+        <TestimonialsCarousel testimonials={content.testimonials} />
       </section>
 
       {/* ── FAQ ──────────────────────────────────────────────── */}
