@@ -9,7 +9,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed:blog": "node scripts/seed-blog-posts.js"
+    "seed:blog": "node scripts/seed-blog-posts.js",
+    "seo:check": "node scripts/seo-check.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1104.0",
