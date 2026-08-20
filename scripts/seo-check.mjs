@@ -7,6 +7,17 @@ const results = [];
 const check = (name, pass, detail = "") =>
   results.push({ name, pass: !!pass, detail });
 
+// Titles and descriptions are read out of raw HTML, where "&" is "&amp;".
+// Measuring the encoded form overstates length by 4 chars per ampersand.
+const decode = (s) =>
+  s
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;|&#39;/g, "'")
+    .replace(/&nbsp;/g, " ");
+
 async function get(path) {
   const res = await fetch(BASE + path, { redirect: "manual" });
   const body = res.status >= 200 && res.status < 300 ? await res.text() : "";
@@ -51,8 +62,8 @@ async function main() {
     if (status !== 200) continue;
 
     const head = body.split("</head>")[0];
-    const title = (head.match(/<title>([^<]*)<\/title>/) || [])[1] || "";
-    const desc = (head.match(/<meta name="description" content="([^"]*)"/) || [])[1] || "";
+    const title = decode((head.match(/<title>([^<]*)<\/title>/) || [])[1] || "");
+    const desc = decode((head.match(/<meta name="description" content="([^"]*)"/) || [])[1] || "");
     const canon = (head.match(/<link rel="canonical" href="([^"]*)"/) || [])[1] || "";
     const ogImg = /og:image/.test(head);
 
@@ -112,7 +123,8 @@ async function main() {
   // --- Report ---
   const failed = results.filter((r) => !r.pass);
   for (const r of results) {
-    console.log(`${r.pass ? "PASS" : "FAIL"}  ${r.name}${r.detail ? `  (${r.detail})` : ""}`);
+    const detail = !r.pass && r.detail ? `  (${r.detail})` : "";
+    console.log(`${r.pass ? "PASS" : "FAIL"}  ${r.name}${detail}`);
   }
   console.log(`\n${results.length - failed.length}/${results.length} checks passed`);
   if (failed.length) {
