@@ -30,6 +30,18 @@ async function main() {
   const llms = await get("/llms.txt");
   check("llms.txt returns 200", llms.status === 200, `got ${llms.status}`);
 
+  // Every URL the sitemap advertises must actually resolve. A sitemap of 404s
+  // burns crawl budget and is worse than no sitemap — this exact defect shipped
+  // once, when the sitemap fell back to MDX fixture slugs that do not exist.
+  const locs = [...sitemap.body.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  const dead = [];
+  for (const loc of locs) {
+    const path = loc.replace(/^https?:\/\/[^/]+/, "") || "/";
+    const r = await get(path);
+    if (r.status === 404) dead.push(path);
+  }
+  check("no sitemap URL 404s", dead.length === 0, dead.join(", "));
+
   // --- Per-page metadata ---
   const titles = new Map();
   const descs = new Map();
