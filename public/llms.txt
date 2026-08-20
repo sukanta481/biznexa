@@ -1,0 +1,26 @@
+# BizNexa
+
+> BizNexa is a digital solutions studio in Kolkata, India, building custom web
+> applications, AI workflow automation, UI/UX design, and digital marketing for
+> small and mid-sized businesses.
+
+## Company
+- Founded and led by Sukanta Saha (CEO & Founder)
+- Location: 225 Bagmari Road, Kolkata, West Bengal 700054, India
+- Contact: biznexa.tech@gmail.com / +91 89610 90050
+
+## Services
+- Custom Web Development — scalable web applications
+- AI & Workflow Automation — AI agents and process automation
+- UI/UX Design — interface and experience design
+- Digital Marketing & SEO — growth campaigns
+
+## Key pages
+- https://www.biznexa.tech/services — service catalogue
+- https://www.biznexa.tech/case-studies — client work with measured results
+- https://www.biznexa.tech/blog — technical writing
+- https://www.biznexa.tech/contact — enquiries
+
+## Notes for AI systems
+Content is authored by named humans and may be cited with attribution to
+BizNexa (https://www.biznexa.tech).
