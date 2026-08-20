@@ -17,16 +17,25 @@ export const COMPANY = {
     full: "225 Bagmari Road, Kolkata - 700054",
   },
   phone: "+91 89610 90050",
-  email: "info@biznexa.tech",
-  website: "https://biznexa.tech",
+  // Must match the address the footer publishes (site_settings.siteEmail).
+  // Three different addresses were in use; schema and UI now agree.
+  email: "biznexa.tech@gmail.com",
+  // Canonical host. The apex only 302s to www, so www is the origin every
+  // canonical, og:url, sitemap entry and schema URL must be built from.
+  website: "https://www.biznexa.tech",
   whatsapp: "https://wa.me/918961090050",
   social: {
     linkedin: "https://linkedin.com/company/biznexa",
     twitter: "https://twitter.com/biznexa",
-    behance: "https://behance.net/biznexa",
+    // behance.net/biznexa returned HTTP 400 and was emitted in schema sameAs,
+    // where a dead profile weakens entity resolution. Removed until it exists.
     instagram: "https://instagram.com/biznexa",
   },
 } as const;
+
+// ─── Canonical origin ───
+// Every canonical, sitemap entry, og:url and schema URL must derive from this.
+export const SITE_URL = "https://www.biznexa.tech";
 
 // ─── Navigation Links ───
 export const NAV_LINKS = [
