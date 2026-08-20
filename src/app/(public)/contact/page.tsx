@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
 import ContactForm from "./ContactForm";
 import { COMPANY } from "@/lib/constants";
+import { pageMeta } from "@/lib/seo";
 import { BreadcrumbSchema, FAQSchema } from "@/components/seo/JsonLd";
 
-export const metadata: Metadata = {
-  title: "Contact Us — Start Your Project",
+export const metadata: Metadata = pageMeta({
+  title: "Contact BizNexa — Start Your Project",
   description:
-    "Ready to start your project? Get in touch with BizNexa for a free consultation. We offer web development, AI automation, UI/UX design, and digital marketing.",
-  openGraph: {
-    title: "Contact BizNexa — Start Your Project",
-    description: "Engineering breakthroughs aren't found in templates. Let's define your next evolution.",
-  },
-};
+    "Ready to start your project? Get in touch with BizNexa for a free consultation on web development, AI automation, UI/UX design and digital marketing.",
+  path: "/contact",
+});
 
 const faqData = [
   {

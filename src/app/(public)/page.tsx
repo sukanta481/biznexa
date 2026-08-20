@@ -1,6 +1,14 @@
 import HomepageClient from "@/components/public/HomepageClient";
 import { getCaseStudyTestimonials } from "@/lib/case-studies";
 import { getHomepageContent } from "@/lib/homepage";
+import { pageMeta } from "@/lib/seo";
+
+export const metadata = pageMeta({
+  title: "Web Development & AI Automation Agency | BizNexa",
+  description:
+    "BizNexa builds custom web applications, AI workflow automation and UI/UX design for growing businesses in India. See our client results and book a free call.",
+  path: "/",
+});
 
 // Testimonials come from real case studies, so this page must not be frozen
 // into the build — a new case study should appear without a redeploy.

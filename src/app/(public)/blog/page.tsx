@@ -4,17 +4,15 @@ import { getAllBlogPosts } from "@/lib/blog";
 
 export const dynamic = 'force-dynamic';
 import { COMPANY } from "@/lib/constants";
+import { pageMeta } from "@/lib/seo";
 import { BreadcrumbSchema } from "@/components/seo/JsonLd";
 
-export const metadata: Metadata = {
-  title: "Blog — Insights for the Digital Future | Biznexa",
+export const metadata: Metadata = pageMeta({
+  title: "Blog — Web Development & AI Insights | BizNexa",
   description:
-    "Explore how localized AI solutions are transforming SMBs, along with the latest insights on web development and digital marketing.",
-  openGraph: {
-    title: "BizNexa Blog — Insights & News",
-    description: "Insights on web development, AI automation, and digital strategy.",
-  },
-};
+    "Practical writing on web development, AI workflow automation and digital strategy for small and mid-sized businesses, from the BizNexa engineering team.",
+  path: "/blog",
+});
 
 const STITCH_IMAGES = [
   "https://lh3.googleusercontent.com/aida-public/AB6AXuDqjUkbztnBFTvFBA9Jk-GjdtMfdrNzumR8bq6t9lVdVrsZ04TWhFwu3mIHIaygvfVKnVSNbEXfceTGAJtfvMSap8Maq4J3SDwco8WcXNw3dJvGcXHK8d5gjoeMN6ZC9K4HOjoQWJurcabwquIeUR7fwaDXYfmHGYFG4ORK5A6-DDWe2woMCr4b0bGep2Qy4DcPnZGVXXlFjGe-SE3coZ7DWfAnhaEqWNMsr5GPqPaapG6kjsOYCPM-7dXfvXP591U2bo1buiftB327",
