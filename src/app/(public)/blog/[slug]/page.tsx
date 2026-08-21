@@ -168,9 +168,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 {post.readTime}
               </span>
             </div>
-            <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tighter mb-8 leading-tight text-white">
+            <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tighter mb-8 leading-tight text-white">
               {post.title}
-            </h1>
+            </h2>
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-surface-container-highest border border-outline-variant/30 overflow-hidden">

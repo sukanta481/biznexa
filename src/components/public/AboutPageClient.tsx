@@ -31,9 +31,9 @@ export default function AboutPageClient({ content }: { content: AboutContent }) 
             <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
               <span className="font-label text-[10px] font-bold tracking-[0.2em] text-primary uppercase">{content.hero.badgeText}</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-headline font-bold tracking-tighter mb-6 text-glow leading-none">
+            <h2 className="text-5xl md:text-7xl font-headline font-bold tracking-tighter mb-6 text-glow leading-none">
               {content.hero.headlineLead} <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">{content.hero.headlineAccent}</span>.
-            </h1>
+            </h2>
             <p className="text-lg text-on-surface-variant leading-relaxed font-body">{content.hero.description}</p>
           </div>
         </div>

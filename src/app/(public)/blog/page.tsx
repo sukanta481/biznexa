@@ -31,6 +31,7 @@ export default async function BlogListingPage() {
 
   return (
     <>
+      <h1 className="sr-only">Insights for the Digital Future</h1>
       <BreadcrumbSchema
         items={[
           { name: "Home", url: COMPANY.website },
@@ -68,7 +69,7 @@ export default async function BlogListingPage() {
                 <span className="w-1 h-1 bg-primary rounded-full"></span>
                 <span>{featuredPost ? featuredPost.readTime?.toUpperCase() : "12 MIN READ"}</span>
               </div>
-              <h1 className="text-3xl lg:text-6xl font-bold font-headline leading-tight text-white tracking-tight">
+              <h2 className="text-3xl lg:text-6xl font-bold font-headline leading-tight text-white tracking-tight">
                 {featuredPost ? (
                   <>
                     {featuredPost.title.split(' ').slice(0, 3).join(' ')}{" "}
@@ -77,7 +78,7 @@ export default async function BlogListingPage() {
                 ) : (
                   <>The Future of <span className="text-primary">AI</span> in Indian SMBs</>
                 )}
-              </h1>
+              </h2>
               <p className="text-sm md:text-lg leading-relaxed text-on-surface-variant max-w-xl font-body">
                 {featuredPost ? featuredPost.description : "Explore how localized AI solutions are transforming small to medium businesses across the subcontinent, from automated logistics to vernacular customer support."}
               </p>
