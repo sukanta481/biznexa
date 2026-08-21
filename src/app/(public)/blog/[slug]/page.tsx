@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 import type { ComponentPropsWithoutRef } from "react";
 import { getBlogPostBySlug } from "@/lib/blog";
-import { COMPANY } from "@/lib/constants";
+import { COMPANY, SITE_URL } from "@/lib/constants";
 import { BreadcrumbSchema, ArticleSchema } from "@/components/seo/JsonLd";
 
 export const dynamic = 'force-dynamic';
@@ -18,16 +19,30 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   const post = await getBlogPostBySlug(slug);
   if (!post) return {};
 
+  const url = `${SITE_URL}/blog/${slug}`;
+  const image = post.coverImage ?? `${SITE_URL}/images/og-image.png`;
+
   return {
-    title: post.seoTitle ?? `${post.title} | ${COMPANY.name} Insights`,
+    // `absolute` opts out of the root layout's "%s | BizNexa" template, which
+    // was pushing this page's title to 65 chars and truncating it in the SERP.
+    title: { absolute: post.seoTitle ?? `${post.title} | ${COMPANY.name}` },
     description: post.seoDescription ?? post.description,
     authors: [{ name: post.author }],
+    alternates: { canonical: url },
     openGraph: {
       type: "article",
       title: post.seoTitle ?? post.title,
       description: post.seoDescription ?? post.description,
+      url,
       publishedTime: post.date,
       authors: [post.author],
+      images: [image],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.seoTitle ?? post.title,
+      description: post.seoDescription ?? post.description,
+      images: [image],
     },
   };
 }
@@ -204,7 +219,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
           </div>
 
-          <MDXRemote source={post.content} components={mdxComponents} />
+          {/* remark-gfm enables markdown tables. mdxComponents already styles
+              table/th/td, but without this plugin a pipe table renders as
+              literal text — no table on this site has ever worked. */}
+          <MDXRemote
+            source={post.content}
+            components={mdxComponents}
+            options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
+          />
 
           {/* Author Bio Box */}
           <div className="mt-16 p-6 md:p-8 glass-panel rounded-xl flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 border border-outline-variant/20 shadow-[0_0_20px_rgba(0,0,0,0.3)] bg-surface-container-high/40">
