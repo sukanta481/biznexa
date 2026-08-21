@@ -2,6 +2,7 @@ import HomepageClient from "@/components/public/HomepageClient";
 import { getCaseStudyTestimonials } from "@/lib/case-studies";
 import { getHomepageContent } from "@/lib/homepage";
 import { pageMeta } from "@/lib/seo";
+import { LocalBusinessSchema, FAQSchema } from "@/components/seo/JsonLd";
 
 export const metadata = pageMeta({
   title: "Web Development & AI Automation Agency | BizNexa",
@@ -26,5 +27,11 @@ export default async function Home() {
   // carries a quote yet, the configured ones still show.
   const testimonials = caseStudyTestimonials.length > 0 ? caseStudyTestimonials : content.testimonials;
 
-  return <HomepageClient content={{ ...content, testimonials }} />;
+  return (
+    <>
+      <LocalBusinessSchema />
+      <FAQSchema faqs={content.faqs} />
+      <HomepageClient content={{ ...content, testimonials }} />
+    </>
+  );
 }

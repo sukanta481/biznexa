@@ -1,6 +1,8 @@
 import ServicesPageClient from "@/components/public/ServicesPageClient";
 import { getServicesContent } from "@/lib/services";
 import { pageMeta } from "@/lib/seo";
+import { ServiceSchema } from "@/components/seo/JsonLd";
+import { SERVICES } from "@/lib/constants";
 
 export const metadata = pageMeta({
   title: "Web Development & AI Automation Services | BizNexa",
@@ -12,5 +14,16 @@ export const metadata = pageMeta({
 export default async function ServicesPage() {
   const content = await getServicesContent();
 
-  return <ServicesPageClient content={content} />;
+  return (
+    <>
+      {SERVICES.map((service) => (
+        <ServiceSchema
+          key={service.slug}
+          name={service.title}
+          description={service.description}
+        />
+      ))}
+      <ServicesPageClient content={content} />
+    </>
+  );
 }
