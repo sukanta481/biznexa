@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Manrope } from "next/font/google";
 import "./globals.css";
-import { COMPANY } from "@/lib/constants";
+import { COMPANY, SITE_URL } from "@/lib/constants";
 import { OrganizationSchema } from "@/components/seo/JsonLd";
 
 // 1. Exact Google Fonts mapped to Stitch's system
@@ -19,25 +19,35 @@ const manrope = Manrope({
   display: "swap",
 });
 
+const DEFAULT_TITLE = `${COMPANY.name} | Web Development & AI Automation Agency`;
+const OG_IMAGE = {
+  url: `${SITE_URL}/images/og-image.png`,
+  width: 1200,
+  height: 630,
+  alt: COMPANY.name,
+};
+
 export const metadata: Metadata = {
-  metadataBase: new URL(COMPANY.website),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: `${COMPANY.name} | Digital Solutions Studio`,
+    default: DEFAULT_TITLE,
     template: `%s | ${COMPANY.name}`,
   },
   description: COMPANY.description,
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: COMPANY.website,
+    url: SITE_URL,
     siteName: COMPANY.name,
-    title: `${COMPANY.name} | Digital Solutions Studio`,
+    title: DEFAULT_TITLE,
     description: COMPANY.description,
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${COMPANY.name} | Digital Solutions Studio`,
+    title: DEFAULT_TITLE,
     description: COMPANY.description,
+    images: [OG_IMAGE.url],
   },
 };
 
