@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 
@@ -12,24 +12,43 @@ interface CaseStudiesPageClientProps {
   studies: CaseStudy[];
 }
 
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 1024px)");
+    const update = () => setIsDesktop(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  return isDesktop;
+}
+
 /** Cover image drifts vertically as the row scrolls through the viewport. */
 function ParallaxCover({ project }: { project: CaseStudy }) {
   const reduceMotion = useReducedMotionSafe();
+  const isDesktop = useIsDesktop();
+  // The drift needs an oversized image to slide behind the frame, which crops
+  // it heavily. Only worth paying on desktop, where the frame is tall; on
+  // phones the banner is shown whole instead.
+  const parallax = isDesktop && !reduceMotion;
   const ref = useRef<HTMLAnchorElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], reduceMotion ? ["0%", "0%"] : ["-8%", "8%"]);
+  const y = useTransform(scrollYProgress, [0, 1], parallax ? ["-8%", "8%"] : ["0%", "0%"]);
 
   return (
     <Link
       ref={ref}
       href={`/case-studies/${project.slug}`}
-      className="relative block aspect-[16/10] overflow-hidden lg:aspect-auto lg:min-h-[26rem]"
+      className="relative block aspect-[1200/630] overflow-hidden lg:aspect-auto lg:min-h-[26rem]"
     >
       <motion.img
         alt={project.coverImageAlt || project.title}
         src={project.coverImage}
         style={{ y }}
-        className="h-[116%] w-full scale-105 object-cover transition-transform duration-700 group-hover:scale-110"
+        className={`w-full object-cover transition-transform duration-700 group-hover:scale-110 ${parallax ? "h-[116%] scale-105" : "h-full"}`}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
       <span className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-background/70 px-4 py-1.5 backdrop-blur-md">

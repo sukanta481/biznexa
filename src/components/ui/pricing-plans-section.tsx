@@ -93,8 +93,18 @@ const plans = [
   },
 ];
 
-export default function PricingPlansSection() {
+interface PricingPlansSectionProps {
+  /**
+   * "summary" shows only the core of each plan — name, description, price and a
+   * link through to the pricing page. "full" adds the feature list and the
+   * direct select-plan action.
+   */
+  variant?: "full" | "summary";
+}
+
+export default function PricingPlansSection({ variant = "full" }: PricingPlansSectionProps) {
   const reduceMotion = useReducedMotionSafe();
+  const isSummary = variant === "summary";
 
   return (
     <section className="py-20 md:py-24 px-6 md:px-8">
@@ -186,10 +196,13 @@ export default function PricingPlansSection() {
                         : "border-primary/40 bg-transparent text-primary hover:bg-primary/10 hover:text-primary",
                     )}
                   >
-                    <Link href={plan.href}>Select Plan</Link>
+                    <Link href={isSummary ? "/pricing" : plan.href}>
+                      {isSummary ? "Know More" : "Select Plan"}
+                    </Link>
                   </Button>
                 </PricingCard.Header>
 
+                {!isSummary && (
                 <PricingCard.Body className="pt-6">
                   <PricingCard.Separator className="text-on-surface-variant/80">
                     Includes
@@ -219,6 +232,7 @@ export default function PricingPlansSection() {
                     ))}
                   </PricingCard.List>
                 </PricingCard.Body>
+                )}
               </PricingCard.Card>
               </motion.div>
             ))}

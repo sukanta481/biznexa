@@ -428,7 +428,7 @@ export default function HomepageClient({ content }: HomepageClientProps) {
       {/* ── Services (pinned horizontal pan on desktop) ──────── */}
       <ServicesShowcase content={content} />
 
-      <PricingPlansSection />
+      <PricingPlansSection variant="summary" />
 
       {/* ── Testimonials ─────────────────────────────────────── */}
       <section ref={testimonialsRef} className="mx-auto max-w-7xl px-6 py-20 md:px-8 md:py-28">
