@@ -67,8 +67,14 @@ export async function authenticateAdmin(username: string, password: string): Pro
 
   // Only support SHA-256 hashes
   if (!passwordHash.startsWith("$sha256$")) {
-    // Old bcrypt hash — can't verify without bcryptjs (removed due to webpack issues)
-    // Run the SQL migration to update your password
+    // A legacy bcrypt hash can no longer be verified. Returning null makes this
+    // look like a wrong password to the caller, which is correct — the response
+    // must not reveal that the account exists — but an operator needs to know,
+    // so say it in the server log where only they can see it.
+    console.warn(
+      `[auth] User "${username}" has an unsupported password hash. ` +
+        "Regenerate it with: node scripts/generate-password-hash.js '<newpassword>'",
+    );
     return null;
   }
 

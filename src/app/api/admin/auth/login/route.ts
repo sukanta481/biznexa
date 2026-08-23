@@ -1,6 +1,7 @@
 import "server-only";
 import { NextRequest, NextResponse } from "next/server";
 import { authenticateAdmin, createSession } from "@/lib/auth";
+import { classifyDatabaseError, describeDatabaseFault } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,6 +26,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, user: result.user });
   } catch (err) {
     console.error("Login error:", err);
+
+    // A database outage is not a credential problem. Saying so saves an
+    // operator from hunting a password that was never the issue.
+    const fault = classifyDatabaseError(err);
+    if (fault) {
+      return NextResponse.json({ error: describeDatabaseFault(fault) }, { status: 503 });
+    }
+
     return NextResponse.json({ error: "Internal server error." }, { status: 500 });
   }
 }

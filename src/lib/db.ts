@@ -79,3 +79,57 @@ export function getActiveDatabaseLabel() {
 export function isMissingDatabaseConfigError(error: unknown) {
   return error instanceof Error && error.message.startsWith(MISSING_DB_CONFIG_PREFIX);
 }
+
+export type DatabaseFault = "config" | "unreachable" | "credentials" | "schema";
+
+function errorCode(error: unknown): string | null {
+  if (typeof error === "object" && error !== null && "code" in error) {
+    const code = (error as { code: unknown }).code;
+    return typeof code === "string" ? code : null;
+  }
+  return null;
+}
+
+/**
+ * Classifies an infrastructure failure so callers can say what is actually
+ * wrong instead of collapsing everything into "internal server error".
+ * Returns null when the error is not a database fault.
+ */
+export function classifyDatabaseError(error: unknown): DatabaseFault | null {
+  if (isMissingDatabaseConfigError(error)) return "config";
+
+  switch (errorCode(error)) {
+    case "ECONNREFUSED":
+    case "ECONNRESET":
+    case "ENOTFOUND":
+    case "ETIMEDOUT":
+    case "PROTOCOL_CONNECTION_LOST":
+      return "unreachable";
+    case "ER_ACCESS_DENIED_ERROR":
+      return "credentials";
+    case "ER_BAD_DB_ERROR":
+    case "ER_NO_SUCH_TABLE":
+    case "ER_BAD_FIELD_ERROR":
+      return "schema";
+    default:
+      return null;
+  }
+}
+
+/** Operator-facing explanation. Detailed in development, discreet in production. */
+export function describeDatabaseFault(fault: DatabaseFault): string {
+  if (process.env.NODE_ENV === "production") {
+    return "The service is temporarily unavailable. Please try again shortly.";
+  }
+
+  switch (fault) {
+    case "config":
+      return "Database is not configured. Copy .env.example to .env.local and fill in the DB_LOCAL_* values.";
+    case "unreachable":
+      return "Cannot reach the database. Start MySQL in the XAMPP control panel and try again.";
+    case "credentials":
+      return "The database rejected the configured user. Check DB_LOCAL_USER and DB_LOCAL_PASSWORD in .env.local.";
+    case "schema":
+      return "The database is missing a table or column. Apply the migrations in db/ to your local database.";
+  }
+}
