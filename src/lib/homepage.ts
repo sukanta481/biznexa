@@ -206,7 +206,7 @@ export const DEFAULT_HOMEPAGE_CONTENT: HomepageContent = {
     secondaryHref: "/case-studies",
     email: "hello@biznexa.tech",
     phone: "+91 98765 43210",
-    whatsappIconUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuCZMFQEYWHXHwq0ys7NmfKsFUAuPUhzqxvrzFlgL15TtiUbnExZpG9-Bd6Awk28L8Bn_ILAfo78IX3mUF12nIY9AHVR6ILkQB1BT7rdjSrobEE6rXcHHQdCUbhLbSnl6vx8y27HpvMMHxJ0XS6rRNfoZFm6Ts7ZJUOXCYzl8UzgwXHLOUNdVnGCOzhcS6uiU5Agj7zH1gr0hZImElZdd1R_e3ioVsOHjBY9wOsY0dUCaUrA7Jf80KtUiDsURMnOsXetptDLw5Gl6zlZ",
+    whatsappIconUrl: "/whatsapp.svg",
   },
 };
 
