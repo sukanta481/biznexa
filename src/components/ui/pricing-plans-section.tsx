@@ -186,24 +186,39 @@ export default function PricingPlansSection({ variant = "full" }: PricingPlansSe
                     </PricingCard.Period>
                   </PricingCard.Price>
 
+                  {/* Small screens get the condensed call to action; from lg up the
+                      full plan and its own action are shown, unchanged. */}
+                  {isSummary && (
+                    <Button
+                      asChild
+                      variant={plan.variant}
+                      className={cn(
+                        "mt-4 w-full rounded-xl font-headline font-bold uppercase tracking-[0.2em] lg:hidden",
+                        plan.variant === "default"
+                          ? "border border-primary bg-primary text-on-primary shadow-[0_0_24px_rgba(0,255,102,0.28)] hover:bg-primary/90"
+                          : "border-primary/40 bg-transparent text-primary hover:bg-primary/10 hover:text-primary",
+                      )}
+                    >
+                      <Link href="/pricing">Know More</Link>
+                    </Button>
+                  )}
+
                   <Button
                     asChild
                     variant={plan.variant}
                     className={cn(
                       "mt-4 w-full rounded-xl font-headline font-bold uppercase tracking-[0.2em]",
+                      isSummary && "hidden lg:inline-flex",
                       plan.variant === "default"
                         ? "border border-primary bg-primary text-on-primary shadow-[0_0_24px_rgba(0,255,102,0.28)] hover:bg-primary/90"
                         : "border-primary/40 bg-transparent text-primary hover:bg-primary/10 hover:text-primary",
                     )}
                   >
-                    <Link href={isSummary ? "/pricing" : plan.href}>
-                      {isSummary ? "Know More" : "Select Plan"}
-                    </Link>
+                    <Link href={plan.href}>Select Plan</Link>
                   </Button>
                 </PricingCard.Header>
 
-                {!isSummary && (
-                <PricingCard.Body className="pt-6">
+                <PricingCard.Body className={cn("pt-6", isSummary && "hidden lg:block")}>
                   <PricingCard.Separator className="text-on-surface-variant/80">
                     Includes
                   </PricingCard.Separator>
@@ -232,7 +247,6 @@ export default function PricingPlansSection({ variant = "full" }: PricingPlansSe
                     ))}
                   </PricingCard.List>
                 </PricingCard.Body>
-                )}
               </PricingCard.Card>
               </motion.div>
             ))}
