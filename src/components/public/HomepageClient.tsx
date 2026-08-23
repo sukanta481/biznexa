@@ -12,6 +12,7 @@ import {
 } from "framer-motion";
 
 import PricingPlansSection from "@/components/ui/pricing-plans-section";
+import CtaGoldenRatio from "@/components/ui/cta-golden-ratio";
 import { CountUp, ScrollReveal, StaggerGroup, StaggerItem, TextReveal, useReducedMotionSafe } from "@/components/ui/Animations";
 
 import type { HomepageContent, HomepageService, HomepageTestimonial } from "@/lib/homepage";
@@ -485,49 +486,7 @@ export default function HomepageClient({ content }: HomepageClientProps) {
       </section>
 
       {/* ── Final CTA ────────────────────────────────────────── */}
-      <section className="px-6 pb-20 md:px-8 md:pb-28">
-        <ScrollReveal className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] border border-primary/15 bg-surface-container-low/60 px-6 py-16 text-center md:px-8 md:py-28">
-          <div className="pointer-events-none absolute -top-32 right-0 h-96 w-96 rounded-full bg-primary/8 blur-[120px]" />
-          <div className="pointer-events-none absolute -bottom-32 left-0 h-72 w-72 rounded-full bg-secondary/8 blur-[120px]" />
-
-          <div className="relative z-10 mx-auto max-w-4xl">
-            <h2 className="mb-6 font-headline text-3xl font-bold leading-tight tracking-tight text-white md:text-6xl md:tracking-tighter">{content.cta.heading}</h2>
-            <p className="mb-10 font-body text-sm leading-relaxed text-on-surface-variant md:text-lg">{content.cta.mobileDescription}</p>
-
-            <div className="mb-12 flex flex-col items-center justify-center gap-4 md:flex-row md:gap-8">
-              <a
-                href={`mailto:${content.cta.email}`}
-                className="font-headline text-xl font-light text-primary underline decoration-primary/40 underline-offset-8 transition-colors hover:text-tertiary md:text-3xl"
-              >
-                {content.cta.email}
-              </a>
-              <span className="hidden text-outline-variant md:block">/</span>
-              <a
-                href={`tel:${content.cta.phone.replace(/\s+/g, "")}`}
-                className="flex items-center gap-3 font-headline text-lg font-medium text-white transition-colors hover:text-primary md:text-2xl"
-              >
-                <img alt="WhatsApp" className="h-7 w-7 md:h-8 md:w-8" src={content.cta.whatsappIconUrl} />
-                {content.cta.phone}
-              </a>
-            </div>
-
-            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link
-                href={content.cta.primaryHref}
-                className="w-full rounded-full bg-primary px-12 py-5 font-headline text-sm font-extrabold uppercase tracking-widest text-on-primary-fixed shadow-[0_0_24px_rgba(0,255,102,0.3)] transition-all duration-300 hover:shadow-[0_0_50px_rgba(0,255,102,0.5)] active:scale-95 sm:w-auto"
-              >
-                {content.cta.primaryLabel}
-              </Link>
-              <Link
-                href={content.cta.secondaryHref}
-                className="w-full rounded-full border border-white/15 px-12 py-5 font-headline text-sm font-bold uppercase tracking-widest text-on-surface transition-all duration-300 hover:border-primary/40 hover:text-white active:scale-95 sm:w-auto"
-              >
-                {content.cta.secondaryLabel}
-              </Link>
-            </div>
-          </div>
-        </ScrollReveal>
-      </section>
+      <CtaGoldenRatio cta={content.cta} />
     </>
   );
 }
