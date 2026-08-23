@@ -42,6 +42,12 @@ frontend:
         - echo "SMTP_PASS=$SMTP_PASS" >> .env.production
         - echo "CONTACT_FROM_EMAIL=$CONTACT_FROM_EMAIL" >> .env.production
         - echo "CONTACT_NOTIFICATION_EMAIL=$CONTACT_NOTIFICATION_EMAIL" >> .env.production
+        # Apply any pending schema migrations before building. Migrations are
+        # tracked in schema_migrations, so this is a no-op when nothing is
+        # pending. A failure here stops the deploy, which is the point: shipping
+        # code against a schema it does not have is how silent runtime errors
+        # got into production.
+        - node scripts/migrate.mjs
         - npm run build
   artifacts:
     baseDirectory: .next
