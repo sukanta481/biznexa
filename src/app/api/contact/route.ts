@@ -12,6 +12,9 @@ const contactSchema = z.object({
   company: z.string().trim().max(100).optional().default(""),
   email: z.email().trim().max(100),
   message: z.string().trim().min(10).max(4000),
+  // The site chatbot posts leads through this same route; the column lets the
+  // admin inbox tell a chat lead from a contact-form lead.
+  source: z.enum(["website", "chatbot"]).optional().default("website"),
 });
 
 export async function POST(request: NextRequest) {
@@ -30,8 +33,8 @@ export async function POST(request: NextRequest) {
 
     const result = await query<ResultSetHeader>(
       `INSERT INTO leads (name, email, phone, company, service_type, message, budget_range, source, status, priority)
-       VALUES (?, ?, NULL, ?, NULL, ?, NULL, 'website', 'new', 'medium')`,
-      [payload.name, payload.email, payload.company || null, payload.message],
+       VALUES (?, ?, NULL, ?, NULL, ?, NULL, ?, 'new', 'medium')`,
+      [payload.name, payload.email, payload.company || null, payload.message, payload.source],
     );
 
     const leadId = result.insertId;
@@ -47,7 +50,7 @@ export async function POST(request: NextRequest) {
         phone: null,
         serviceType: null,
         budgetRange: null,
-        source: "website",
+        source: payload.source,
         message: payload.message,
       });
 

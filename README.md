@@ -56,3 +56,22 @@ Run the homepage setup SQL before using the admin homepage editor:
 ```text
 db/homepage-settings-alignment.sql
 ```
+
+### Site chatbot
+
+A floating assistant ("Nexa") sits above the WhatsApp button on every public
+page. It is deterministic — no LLM key or external API is required.
+
+- `src/lib/chatbot.ts` — the knowledge base. Each intent is a keyword list plus
+  the reply, quick-reply chips and deep links it returns. Multi-word keywords
+  score higher than single words, so `"how much"` beats a stray `"much"`.
+- `src/app/api/chat/route.ts` — `POST { message }` → `{ reply }`.
+- `src/components/layout/ChatbotWidget.tsx` — the panel, mounted from
+  `WhatsAppButton`.
+
+The plan prices quoted by the bot are mirrored from
+`src/components/ui/pricing-plans-section.tsx`; update both together.
+
+When a visitor asks to book a call, the bot opens an inline form that posts to
+`/api/contact` with `source: "chatbot"`, so chat leads land in the same `leads`
+table as contact-form leads and are distinguishable in the admin inbox.

@@ -61,6 +61,8 @@
   --color-accent-foreground: #ffffff;
   --color-ring: rgba(0, 255, 102, 0.45);
   --color-primary-foreground: #00330d;
+  --color-foreground: #b0b8c8;
+  --color-secondary-foreground: #080079;
   --color-destructive: #ff716c;
   --color-destructive-foreground: #ffffff;
 

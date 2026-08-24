@@ -1,5 +1,6 @@
 "use client";
 
+import ChatbotWidget from "@/components/layout/ChatbotWidget";
 import { COMPANY } from "@/lib/constants";
 
 export default function WhatsAppButton() {
@@ -9,6 +10,7 @@ export default function WhatsAppButton() {
 
   return (
     <nav className="fixed bottom-6 md:bottom-12 md:right-8 right-6 flex flex-col gap-4 z-[60]">
+      <ChatbotWidget />
       <a
         href={COMPANY.whatsapp}
         target="_blank"
