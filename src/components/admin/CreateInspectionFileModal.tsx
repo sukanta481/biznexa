@@ -542,36 +542,38 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
                                         {isSelf && addonReports.length > 0 && (
                                             <div className="space-y-2 mb-2">
                                                 {addonReports.map((row, i) => (
-                                                    <div key={i} className="flex gap-2">
-                                                        <div className="flex-1">
-                                                            <Sel
-                                                                value={row.typeId}
-                                                                onChange={(v) => setAddonReports(prev => prev.map((r, idx) => idx === i ? { ...r, typeId: v } : r))}
-                                                                color="t"
-                                                            >
-                                                                <option value="">Select report...</option>
-                                                                {initData?.reportTypes.map(t => (
-                                                                    <option key={t.id} value={String(t.id)}>{t.name}</option>
-                                                                ))}
-                                                            </Sel>
-                                                        </div>
-                                                        <div className="relative w-36">
-                                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs">₹</span>
-                                                            <input
-                                                                type="number" min="0" step="0.01" placeholder="0.00"
-                                                                value={row.fees}
-                                                                onChange={e => setAddonReports(prev => prev.map((r, idx) => idx === i ? { ...r, fees: e.target.value } : r))}
-                                                                className={`${iT} pl-8`}
-                                                            />
-                                                        </div>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => setAddonReports(prev => prev.filter((_, idx) => idx !== i))}
-                                                            aria-label="Remove report"
-                                                            className="shrink-0 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 text-rose-300 transition hover:bg-rose-500/20"
+                                                    <div key={i} className="rounded-lg border border-white/[0.06] bg-slate-950/40 p-2.5 space-y-2">
+                                                        {/* Report name gets the full column width — this panel is narrow
+                                                            and names like "Structural Certificate" were truncating. */}
+                                                        <Sel
+                                                            value={row.typeId}
+                                                            onChange={(v) => setAddonReports(prev => prev.map((r, idx) => idx === i ? { ...r, typeId: v } : r))}
+                                                            color="t"
                                                         >
-                                                            <span className="material-symbols-outlined text-base">close</span>
-                                                        </button>
+                                                            <option value="">Select report...</option>
+                                                            {initData?.reportTypes.map(t => (
+                                                                <option key={t.id} value={String(t.id)}>{t.name}</option>
+                                                            ))}
+                                                        </Sel>
+                                                        <div className="flex gap-2">
+                                                            <div className="relative flex-1">
+                                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs">₹</span>
+                                                                <input
+                                                                    type="number" min="0" step="0.01" placeholder="0.00"
+                                                                    value={row.fees}
+                                                                    onChange={e => setAddonReports(prev => prev.map((r, idx) => idx === i ? { ...r, fees: e.target.value } : r))}
+                                                                    className={`${iT} pl-8`}
+                                                                />
+                                                            </div>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => setAddonReports(prev => prev.filter((_, idx) => idx !== i))}
+                                                                aria-label="Remove report"
+                                                                className="shrink-0 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3.5 text-rose-300 transition hover:bg-rose-500/20"
+                                                            >
+                                                                <span className="material-symbols-outlined text-base">close</span>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 ))}
                                             </div>
