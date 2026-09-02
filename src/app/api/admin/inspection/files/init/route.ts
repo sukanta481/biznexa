@@ -8,7 +8,7 @@ import { requireAdmin, unauthorized } from "@/lib/admin-guard";
 export async function GET() {
   const admin = await requireAdmin();
   if (!admin) return unauthorized();
-  const [banks, sources, paymentModes, accounts, existingCols] = await Promise.all([
+  const [banks, sources, paymentModes, accounts, reportTypes, existingCols] = await Promise.all([
     query<RowDataPacket[]>(
       `SELECT id, bank_name AS name FROM inspection_banks
        WHERE status = 'active' OR status IS NULL OR status = ''
@@ -30,6 +30,10 @@ export async function GET() {
        ORDER BY account_name ASC`
     ),
     query<RowDataPacket[]>(
+      `SELECT id, report_name AS name FROM inspection_report_types
+        WHERE status = 'active' ORDER BY report_name ASC`,
+    ),
+    query<RowDataPacket[]>(
       `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
        WHERE TABLE_SCHEMA = DATABASE()
          AND TABLE_NAME = 'inspection_files'
@@ -44,6 +48,7 @@ export async function GET() {
     sources,
     paymentModes,
     accounts,
+    reportTypes,
     columns: {
       report_status_date: cols.has("report_status_date"),
       payment_status_date: cols.has("payment_status_date"),

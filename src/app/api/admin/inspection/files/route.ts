@@ -117,17 +117,38 @@ export async function POST(request: NextRequest) {
   const fees = fileType === "self" ? (parseFloat(body.fees) || 0) : 0;
   const extraAmount = parseFloat(body.extra_amount) || 0;
 
+  // Add-on reports apply to self files only; office files earn a flat
+  // commission, so extra deliverables do not change the split there.
+  const addonReports: Array<{ report_type_id: number | null; report_name: string; fees: number }> =
+    fileType === "self" && Array.isArray(body.addon_reports)
+      ? (body.addon_reports as unknown[])
+          .map((raw) => {
+            const r = raw as Record<string, unknown>;
+            const name = typeof r.report_name === "string" ? r.report_name.trim() : "";
+            const amountValue = Math.round((parseFloat(String(r.fees)) || 0) * 100) / 100;
+            const typeId = r.report_type_id ? parseInt(String(r.report_type_id), 10) : null;
+            return { report_type_id: Number.isNaN(typeId as number) ? null : typeId, report_name: name, fees: amountValue };
+          })
+          .filter((r) => r.report_name.length > 0)
+      : [];
+
+  const addonFees = Math.round(addonReports.reduce((sum, r) => sum + r.fees, 0) * 100) / 100;
+
+  // The office share is taken from everything the customer is billed, base fee
+  // and add-on reports together.
+  const totalFees = Math.round((fees + addonFees) * 100) / 100;
+
   let commission: number;
   let officeAmount: number | null;
   let amount: number | null;
 
   if (fileType === "self") {
-    commission = Math.round(fees * 0.30 * 100) / 100;
-    officeAmount = Math.round(fees * 0.70 * 100) / 100;
+    commission = Math.round(totalFees * 0.30 * 100) / 100;
+    officeAmount = Math.round(totalFees * 0.70 * 100) / 100;
 
     const paymentStatus = body.payment_status ?? "due";
     if (paymentStatus === "paid") {
-      amount = fees;
+      amount = totalFees;
     } else if (paymentStatus === "partially") {
       amount = parseFloat(body.amount) || null;
     } else {
@@ -151,7 +172,7 @@ export async function POST(request: NextRequest) {
     "location", "customer_name", "customer_phone",
     "property_address", "property_value",
     "bank_id", "branch_id", "source_id",
-    "fees", "report_status",
+    "fees", "addon_fees", "report_status",
     "payment_mode_id", "payment_status", "amount",
     "paid_to_office", "office_amount", "commission",
     "extra_amount", "gross_amount", "received_account_id", "notes",
@@ -170,6 +191,7 @@ export async function POST(request: NextRequest) {
     body.branch_id ? parseInt(body.branch_id) : null,
     body.source_id ? parseInt(body.source_id) : null,
     fileType === "self" ? fees : null,
+    addonFees,
     fileType === "self" ? (body.report_status || null) : null,
     fileType === "self" ? (body.payment_mode_id ? parseInt(body.payment_mode_id) : null) : null,
     fileType === "self" ? (body.payment_status || "due") : null,
@@ -210,6 +232,16 @@ export async function POST(request: NextRequest) {
     `INSERT INTO inspection_files (${columns.join(", ")}) VALUES (${placeholders})`,
     values
   );
+
+  if (addonReports.length > 0) {
+    for (const report of addonReports) {
+      await query<ResultSetHeader>(
+        `INSERT INTO inspection_file_reports (file_id, report_type_id, report_name, fees)
+         VALUES (?, ?, ?, ?)`,
+        [result.insertId, report.report_type_id, report.report_name, report.fees],
+      );
+    }
+  }
 
   return NextResponse.json({ id: result.insertId, file_number: fileNumber }, { status: 201 });
 }

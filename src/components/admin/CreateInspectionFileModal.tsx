@@ -20,6 +20,7 @@ interface InitData {
     sources: MasterItem[];
     paymentModes: MasterItem[];
     accounts: MasterItem[];
+    reportTypes: MasterItem[];
     columns: ColumnFlags;
 }
 
@@ -99,6 +100,8 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
     const [paidToOfficeDate, setPaidToOfficeDate] = useState('');
     const [paymentDoneDate, setPaymentDoneDate] = useState('');
     const [commissionPending, setCommissionPending] = useState('');
+    // Add-on reports: extra deliverables billed alongside the inspection.
+    const [addonReports, setAddonReports] = useState<Array<{ typeId: string; fees: string }>>([]);
     const [extraAmount, setExtraAmount] = useState('0');
     const [receivedAccountId, setReceivedAccountId] = useState('');
     const [notes, setNotes] = useState('');
@@ -225,12 +228,20 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
     const feesNum = parseFloat(fees) || 0;
     const extraNum = parseFloat(extraAmount) || 0;
 
+    const addonFeesNum = Math.round(
+        addonReports.reduce((sum, r) => sum + (parseFloat(r.fees) || 0), 0) * 100,
+    ) / 100;
+
+    // The office share comes out of everything the customer is billed, base
+    // fee and add-on reports together.
+    const totalFeesNum = Math.round((feesNum + addonFeesNum) * 100) / 100;
+
     const commissionCalc = fileType === 'self'
-        ? Math.round(feesNum * 0.30 * 100) / 100
+        ? Math.round(totalFeesNum * 0.30 * 100) / 100
         : location === 'kolkata' ? 300 : location === 'out_of_kolkata' ? 350 : 0;
 
     const officeAmountCalc = fileType === 'self'
-        ? Math.round(feesNum * 0.70 * 100) / 100
+        ? Math.round(totalFeesNum * 0.70 * 100) / 100
         : null;
 
     const grossAmountCalc = Math.round((commissionCalc + extraNum) * 100) / 100;
@@ -287,6 +298,15 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
             paid_to_office_date: fileType === 'self' ? paidToOfficeDate || null : null,
             payment_done_date: fileType === 'office' ? paymentDoneDate || null : null,
             commission_pending: showCommissionPending ? commissionPending || null : null,
+            addon_reports: isSelf
+                ? addonReports
+                      .filter((r) => r.typeId)
+                      .map((r) => ({
+                          report_type_id: r.typeId,
+                          report_name: initData?.reportTypes.find((t) => String(t.id) === r.typeId)?.name ?? '',
+                          fees: parseFloat(r.fees) || 0,
+                      }))
+                : [],
             extra_amount: parseFloat(extraAmount) || 0,
             received_account_id: receivedAccountId || null,
             notes: notes || null,
@@ -513,6 +533,79 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs">₹</span>
                                             <input type="number" min="0" step="0.01" value={fees} onChange={e => setFees(e.target.value)} disabled={!isSelf} placeholder="0.00" className={`${!isSelf ? iOff : iT} pl-8`} />
                                         </div>
+                                    </div>
+
+                                    {/* Add-On Reports — Self only */}
+                                    <div className="md:col-span-2">
+                                        <label className={lbl}>Add-On Reports {!isSelf && <span className="ml-1 normal-case text-slate-600 font-normal">(Self only)</span>}</label>
+
+                                        {isSelf && addonReports.length > 0 && (
+                                            <div className="space-y-2 mb-2">
+                                                {addonReports.map((row, i) => (
+                                                    <div key={i} className="flex gap-2">
+                                                        <div className="flex-1">
+                                                            <Sel
+                                                                value={row.typeId}
+                                                                onChange={(v) => setAddonReports(prev => prev.map((r, idx) => idx === i ? { ...r, typeId: v } : r))}
+                                                                color="t"
+                                                            >
+                                                                <option value="">Select report...</option>
+                                                                {initData?.reportTypes.map(t => (
+                                                                    <option key={t.id} value={String(t.id)}>{t.name}</option>
+                                                                ))}
+                                                            </Sel>
+                                                        </div>
+                                                        <div className="relative w-36">
+                                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs">₹</span>
+                                                            <input
+                                                                type="number" min="0" step="0.01" placeholder="0.00"
+                                                                value={row.fees}
+                                                                onChange={e => setAddonReports(prev => prev.map((r, idx) => idx === i ? { ...r, fees: e.target.value } : r))}
+                                                                className={`${iT} pl-8`}
+                                                            />
+                                                        </div>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setAddonReports(prev => prev.filter((_, idx) => idx !== i))}
+                                                            aria-label="Remove report"
+                                                            className="shrink-0 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 text-rose-300 transition hover:bg-rose-500/20"
+                                                        >
+                                                            <span className="material-symbols-outlined text-base">close</span>
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        <button
+                                            type="button"
+                                            disabled={!isSelf}
+                                            onClick={() => setAddonReports(prev => [...prev, { typeId: '', fees: '' }])}
+                                            className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-[11px] font-headline font-bold uppercase tracking-[0.15em] transition ${isSelf ? 'border-cyan-400/25 bg-cyan-400/10 text-cyan-200 hover:bg-cyan-400/15' : 'border-white/5 bg-white/[0.02] text-slate-600 cursor-not-allowed'}`}
+                                        >
+                                            <span className="material-symbols-outlined text-sm">add</span>
+                                            Add Report
+                                        </button>
+
+                                        {isSelf && addonReports.length > 0 && (
+                                            <div className="mt-3 rounded-lg border border-white/[0.08] bg-slate-950/50 p-3 space-y-1.5">
+                                                <div className="flex justify-between text-[11px] font-body text-slate-400">
+                                                    <span>Base fee</span><span>₹{feesNum.toFixed(2)}</span>
+                                                </div>
+                                                <div className="flex justify-between text-[11px] font-body text-slate-400">
+                                                    <span>Add-on reports</span><span>₹{addonFeesNum.toFixed(2)}</span>
+                                                </div>
+                                                <div className="flex justify-between border-t border-white/[0.08] pt-1.5 text-xs font-headline font-bold text-white">
+                                                    <span>Total fees</span><span>₹{totalFeesNum.toFixed(2)}</span>
+                                                </div>
+                                                <div className="flex justify-between text-[11px] font-body text-emerald-300">
+                                                    <span>Your commission (30%)</span><span>₹{commissionCalc.toFixed(2)}</span>
+                                                </div>
+                                                <div className="flex justify-between text-[11px] font-body text-amber-300">
+                                                    <span>Pay to office (70%)</span><span>₹{officeAmountCalc !== null ? officeAmountCalc.toFixed(2) : '—'}</span>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Report Status — Self only */}
