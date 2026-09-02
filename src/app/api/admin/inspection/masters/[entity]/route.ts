@@ -5,7 +5,7 @@ import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
 
 import { requireAdmin, unauthorized } from "@/lib/admin-guard";
 
-type EntityKey = "banks" | "branches" | "sources" | "payment-modes" | "accounts";
+type EntityKey = "banks" | "branches" | "sources" | "payment-modes" | "accounts" | "report-types";
 
 const ENTITY_MAP: Record<EntityKey, { table: string; nameField: string; extraFields: string[] }> = {
   banks: { table: "inspection_banks", nameField: "bank_name", extraFields: [] },
@@ -13,6 +13,7 @@ const ENTITY_MAP: Record<EntityKey, { table: string; nameField: string; extraFie
   sources: { table: "inspection_sources", nameField: "source_name", extraFields: ["phone"] },
   "payment-modes": { table: "inspection_payment_modes", nameField: "mode_name", extraFields: [] },
   accounts: { table: "inspection_my_accounts", nameField: "account_name", extraFields: ["bank_name", "account_number", "ifsc_code"] },
+  "report-types": { table: "inspection_report_types", nameField: "report_name", extraFields: [] },
 };
 
 function resolveEntity(param: string): EntityKey | null {

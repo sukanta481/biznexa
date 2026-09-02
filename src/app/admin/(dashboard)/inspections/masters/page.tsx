@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Status = 'active' | 'inactive';
-type EntityKey = 'banks' | 'branches' | 'sources' | 'payment-modes' | 'accounts';
+type EntityKey = 'banks' | 'branches' | 'sources' | 'payment-modes' | 'accounts' | 'report-types';
 
 interface BankRow { id: number; bank_name: string; status: Status; }
 interface BranchRow { id: number; branch_name: string; bank_id: number; bank_name: string; status: Status; }
@@ -25,6 +25,7 @@ const TABS: { key: EntityKey; label: string; icon: string; addLabel: string; sea
     { key: 'sources', label: 'Sources', icon: 'source', addLabel: 'Add New Source', searchPlaceholder: 'Filter sources by name...', totalLabel: 'sources' },
     { key: 'payment-modes', label: 'Payment Modes', icon: 'payments', addLabel: 'Add Payment Mode', searchPlaceholder: 'Filter payment modes...', totalLabel: 'payment modes' },
     { key: 'accounts', label: 'Accounts', icon: 'account_balance_wallet', addLabel: 'Add New Account', searchPlaceholder: 'Filter accounts...', totalLabel: 'accounts' },
+    { key: 'report-types', label: 'Report Types', icon: 'description', addLabel: 'Add Report Type', searchPlaceholder: 'Filter report types...', totalLabel: 'report types' },
 ];
 
 const PER_PAGE = 15;
@@ -38,6 +39,7 @@ function emptyForm(entity: EntityKey): Record<string, string> {
         'sources': { source_name: '', phone: '', status: 'active' },
         'payment-modes': { mode_name: '', status: 'active' },
         'accounts': { account_name: '', bank_name: '', account_number: '', ifsc_code: '', status: 'active' },
+        'report-types': { report_name: '', status: 'active' },
     };
     return forms[entity];
 }
@@ -159,6 +161,14 @@ function MasterModal({
                         <div>
                             <label className={labelClass}>Mode Name</label>
                             <input value={form.mode_name} onChange={e => set('mode_name', e.target.value)} required className={fieldClass} placeholder="e.g. NEFT / RTGS" />
+                        </div>
+                    )}
+
+                    {/* Report Types */}
+                    {entity === 'report-types' && (
+                        <div>
+                            <label className={labelClass}>Report Name</label>
+                            <input value={form.report_name} onChange={e => set('report_name', e.target.value)} required className={fieldClass} placeholder="e.g. Structural Certificate" />
                         </div>
                     )}
 
@@ -304,6 +314,7 @@ export default function InspectionMasters() {
         if ('source_name' in item) return (item as SourceRow).source_name;
         if ('mode_name' in item) return (item as PaymentModeRow).mode_name;
         if ('account_name' in item) return (item as AccountRow).account_name;
+        if ('report_name' in item) return (item as { report_name: string }).report_name;
         return '';
     }
 
