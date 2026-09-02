@@ -14,6 +14,7 @@ interface InspectionFile {
     report_status: string | null;
     payment_status: string | null;
     fees: number | null;
+    addon_fees: number | null;
     commission: number | null;
     gross_amount: number | null;
     bank_name: string | null;
@@ -254,8 +255,10 @@ function InspectionFilesInner() {
     };
 
     const formatFee = (file: InspectionFile) => {
-        const amount = file.file_type === 'self' ? file.fees : file.commission;
-        if (amount == null) return '—';
+        const amount = file.file_type === 'self'
+            ? (Number(file.fees) || 0) + (Number(file.addon_fees) || 0)
+            : file.commission;
+        if (amount == null || amount === 0) return '—';
         return `₹${Number(amount).toLocaleString('en-IN')}`;
     };
 
