@@ -45,7 +45,19 @@ export async function GET(
   );
 
   if (rows.length === 0) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  return NextResponse.json(rows[0]);
+
+  // Fetch add-on reports linked to this file
+  const addonRows = await query<RowDataPacket[]>(
+    `SELECT r.id, r.report_type_id, r.report_name, r.fees,
+            rt.report_name AS report_type_name
+     FROM inspection_file_reports r
+     LEFT JOIN inspection_report_types rt ON rt.id = r.report_type_id
+     WHERE r.file_id = ?
+     ORDER BY r.id`,
+    [numId]
+  );
+
+  return NextResponse.json({ ...rows[0], addon_reports: addonRows });
 }
 
 // ─── PATCH /api/admin/inspection/files/[id] ───────────────────────────────────
@@ -99,15 +111,32 @@ export async function PATCH(
   const fees = fileType === "self" ? (parseFloat(body.fees) || 0) : 0;
   const extraAmount = parseFloat(body.extra_amount) || 0;
 
+  // Add-on reports (same parsing as POST)
+  const addonReports: Array<{ report_type_id: number | null; report_name: string; fees: number }> =
+    fileType === "self" && Array.isArray(body.addon_reports)
+      ? (body.addon_reports as unknown[])
+          .map((raw) => {
+            const r = raw as Record<string, unknown>;
+            const name = typeof r.report_name === "string" ? r.report_name.trim() : "";
+            const amountValue = Math.round((parseFloat(String(r.fees)) || 0) * 100) / 100;
+            const typeId = r.report_type_id ? parseInt(String(r.report_type_id), 10) : null;
+            return { report_type_id: Number.isNaN(typeId as number) ? null : typeId, report_name: name, fees: amountValue };
+          })
+          .filter((r) => r.report_name.length > 0)
+      : [];
+
+  const addonFees = Math.round(addonReports.reduce((sum, r) => sum + r.fees, 0) * 100) / 100;
+  const totalFees = Math.round((fees + addonFees) * 100) / 100;
+
   let commission: number;
   let officeAmount: number | null;
   let amount: number | null;
 
   if (fileType === "self") {
-    commission = Math.round(fees * 0.30 * 100) / 100;
-    officeAmount = Math.round(fees * 0.70 * 100) / 100;
+    commission = Math.round(totalFees * 0.30 * 100) / 100;
+    officeAmount = Math.round(totalFees * 0.70 * 100) / 100;
     const paymentStatus = body.payment_status ?? "due";
-    if (paymentStatus === "paid") amount = fees;
+    if (paymentStatus === "paid") amount = totalFees;
     else if (paymentStatus === "partially") amount = parseFloat(body.amount) || null;
     else amount = null;
   } else {
@@ -131,6 +160,7 @@ export async function PATCH(
     branch_id: body.branch_id ? parseInt(body.branch_id) : null,
     source_id: body.source_id ? parseInt(body.source_id) : null,
     fees: fileType === "self" ? fees : null,
+    addon_fees: addonFees,
     report_status: fileType === "self" ? (body.report_status || null) : null,
     payment_mode_id: fileType === "self" ? (body.payment_mode_id ? parseInt(body.payment_mode_id) : null) : null,
     payment_status: fileType === "self" ? (body.payment_status || "due") : null,
@@ -171,6 +201,18 @@ export async function PATCH(
 
   if (result.affectedRows === 0) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+  // Sync add-on reports: delete existing, re-insert
+  await query<ResultSetHeader>(`DELETE FROM inspection_file_reports WHERE file_id = ?`, [numId]);
+  if (addonReports.length > 0) {
+    for (const report of addonReports) {
+      await query<ResultSetHeader>(
+        `INSERT INTO inspection_file_reports (file_id, report_type_id, report_name, fees)
+         VALUES (?, ?, ?, ?)`,
+        [numId, report.report_type_id, report.report_name, report.fees],
+      );
+    }
+  }
+
   const updated = await query<RowDataPacket[]>(
     `SELECT file_number, payment_done_date FROM inspection_files WHERE id = ?`,
     [numId]
@@ -189,6 +231,9 @@ export async function DELETE(
   const { id } = await params;
   const numId = parseInt(id, 10);
   if (isNaN(numId)) return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+
+  // Delete add-on reports first
+  await query<ResultSetHeader>(`DELETE FROM inspection_file_reports WHERE file_id = ?`, [numId]);
 
   const result = await query<ResultSetHeader>(
     `DELETE FROM inspection_files WHERE id = ?`,

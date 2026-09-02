@@ -45,6 +45,8 @@ export interface InspectionFileExportRow extends InspectionFileListRow {
   paid_to_office: string | null;
   office_amount: number | null;
   extra_amount: number | null;
+  addon_fees: number | null;
+  addon_report_names: string | null;
   received_account_name: string | null;
   notes: string | null;
 }
@@ -237,11 +239,13 @@ export async function getInspectionFilesForExport(filters: InspectionFileFilters
   return query<InspectionFileExportRow[]>(
     `SELECT f.id, f.file_number, f.file_date, f.file_type, f.location,
             f.customer_name, f.customer_phone, f.property_address, f.property_value,
-            f.report_status, f.payment_status, f.fees, f.amount,
+            f.report_status, f.payment_status, f.fees, f.addon_fees, f.amount,
             f.paid_to_office, f.office_amount, f.commission, f.extra_amount,
             f.gross_amount, f.notes,
             b.bank_name, br.branch_name, s.source_name,
-            pm.mode_name, ma.account_name AS received_account_name
+            pm.mode_name, ma.account_name AS received_account_name,
+            (SELECT GROUP_CONCAT(r.report_name SEPARATOR ', ')
+             FROM inspection_file_reports r WHERE r.file_id = f.id) AS addon_report_names
      FROM inspection_files f
      LEFT JOIN inspection_banks b ON b.id = f.bank_id
      LEFT JOIN inspection_branches br ON br.id = f.branch_id

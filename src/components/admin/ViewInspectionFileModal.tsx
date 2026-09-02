@@ -32,6 +32,13 @@ interface FileDetail {
     commission_pending: string | null;
     received_account_name: string | null;
     notes: string | null;
+    addon_reports?: Array<{
+        id: number;
+        report_type_id: number | null;
+        report_name: string;
+        fees: number;
+        report_type_name: string | null;
+    }>;
 }
 
 interface Props {
@@ -217,6 +224,25 @@ export default function ViewInspectionFileModal({ fileId, onClose }: Props) {
                                 </div>
 
                                 {isSelf && <Field label="Fees">{fmtMoney(file.fees)}</Field>}
+
+                                {/* Add-On Reports */}
+                                {isSelf && file.addon_reports && file.addon_reports.length > 0 && (
+                                    <div>
+                                        <span className={lbl}>Add-On Reports</span>
+                                        <div className="rounded-lg border border-white/[0.08] bg-slate-950/50 p-3 space-y-2">
+                                            {file.addon_reports.map((r) => (
+                                                <div key={r.id} className="flex justify-between items-center text-[11px] font-body">
+                                                    <span className="text-slate-300">{r.report_name || r.report_type_name || '—'}</span>
+                                                    <span className="text-slate-400 font-mono">{fmtMoney(r.fees)}</span>
+                                                </div>
+                                            ))}
+                                            <div className="flex justify-between border-t border-white/[0.08] pt-2 text-xs font-headline font-bold">
+                                                <span className="text-white">Total (base + add-ons)</span>
+                                                <span className="text-white">{fmtMoney(Number(file.fees ?? 0) + file.addon_reports.reduce((sum, r) => sum + Number(r.fees ?? 0), 0))}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
 
                                 {isSelf && (
                                     <div>

@@ -147,6 +147,16 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
                     setExtraAmount(file.extra_amount != null ? String(file.extra_amount) : '0');
                     setReceivedAccountId(file.received_account_id != null ? String(file.received_account_id) : '');
                     setNotes((file.notes as string) ?? '');
+                    // Add-on reports: restore from saved data
+                    if (Array.isArray(file.addon_reports)) {
+                        setAddonReports(
+                            (file.addon_reports as Array<{ report_type_id?: number | null; fees?: number | null }>)
+                                .map((r) => ({
+                                    typeId: r.report_type_id != null ? String(r.report_type_id) : '',
+                                    fees: r.fees != null ? String(r.fees) : '',
+                                }))
+                        );
+                    }
                     // Branch: set via ref so it loads after bank branches are fetched
                     if (file.branch_id != null) pendingBranchId.current = String(file.branch_id);
                     setBankId(file.bank_id != null ? String(file.bank_id) : '');

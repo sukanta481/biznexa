@@ -25,6 +25,8 @@ const EXPORT_COLUMNS: Array<{ label: string; value: (row: InspectionFileExportRo
   { label: "Payment Status", value: (row) => titleCase(row.payment_status) },
   { label: "Paid to Office", value: (row) => titleCase(row.paid_to_office) },
   { label: "Fees", value: (row) => numberValue(row.fees) },
+  { label: "Add-On Fees", value: (row) => numberValue(row.addon_fees) },
+  { label: "Add-On Reports", value: (row) => row.addon_report_names },
   { label: "Amount Paid", value: (row) => numberValue(row.amount) },
   { label: "Office Amount", value: (row) => numberValue(row.office_amount) },
   { label: "Commission", value: (row) => numberValue(row.commission) },
@@ -45,7 +47,7 @@ const PDF_COLUMNS = [
   EXPORT_COLUMNS[6],
   EXPORT_COLUMNS[7],
   EXPORT_COLUMNS[9],
-  EXPORT_COLUMNS[17],
+  EXPORT_COLUMNS[19],
 ];
 
 export async function GET(request: NextRequest) {
