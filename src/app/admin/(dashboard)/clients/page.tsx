@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback, Suspense } from 'react';
+
+import ExcelExportButton from '@/components/admin/ExcelExportButton';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -383,6 +385,16 @@ function ClientsInner() {
     router.push('/admin/clients');
   }
 
+  // Built from the URL rather than the input box so the download always
+  // matches the list on screen, not a filter the user typed but never applied.
+  const appliedSearch = searchParams.get('search') ?? '';
+  const appliedStatus = searchParams.get('status') ?? '';
+  const exportParams = new URLSearchParams();
+  if (appliedSearch) exportParams.set('search', appliedSearch);
+  if (appliedStatus) exportParams.set('status', appliedStatus);
+  const exportQuery = exportParams.toString();
+  const exportHref = `/api/admin/clients/export${exportQuery ? `?${exportQuery}` : ''}`;
+
   function handleSaved() {
     setShowAdd(false);
     setEditClient(null);
@@ -417,13 +429,20 @@ function ClientsInner() {
           <h1 className="text-2xl font-bold text-white">Clients Management</h1>
           <p className="text-sm text-slate-400 mt-1">Manage your client database</p>
         </div>
-        <button
-          onClick={() => setShowAdd(true)}
-          className="bg-primary px-5 py-2.5 rounded-lg text-sm font-bold text-slate-950 shadow-lg shadow-primary/20 hover:scale-[1.02] transition flex items-center gap-2"
-        >
-          <span className="material-symbols-outlined text-sm">add</span>
-          Add Client
-        </button>
+        <div className="flex items-center gap-3">
+          <ExcelExportButton
+            href={exportHref}
+            title="Export the filtered client list to Excel"
+            disabled={loading}
+          />
+          <button
+            onClick={() => setShowAdd(true)}
+            className="bg-primary px-5 py-2.5 rounded-lg text-sm font-bold text-slate-950 shadow-lg shadow-primary/20 hover:scale-[1.02] transition flex items-center gap-2"
+          >
+            <span className="material-symbols-outlined text-sm">add</span>
+            Add Client
+          </button>
+        </div>
       </header>
 
       {/* Main Content Card */}

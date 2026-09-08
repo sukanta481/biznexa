@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 
+import ExcelExportButton from '@/components/admin/ExcelExportButton';
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Status = 'active' | 'inactive';
@@ -265,6 +267,12 @@ export default function InspectionMasters() {
     const tab = TABS.find(t => t.key === activeTab)!;
     const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
 
+    // Export mirrors the active tab and its search box, so what downloads is
+    // what is on screen — minus the pagination.
+    const exportHref = `/api/admin/inspection/masters/${activeTab}/export${
+        searchQuery ? `?${new URLSearchParams({ search: searchQuery })}` : ''
+    }`;
+
     // ── Fetch data ─────────────────────────────────────────────────────────────
     const fetchData = useCallback(async () => {
         setLoading(true);
@@ -424,13 +432,21 @@ export default function InspectionMasters() {
                             placeholder={tab.searchPlaceholder}
                         />
                     </div>
-                    <button
-                        onClick={() => { setEditItem(null); setShowModal(true); }}
-                        className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-tertiary text-[#00452d] font-bold hover:brightness-110 transition-all font-headline text-xs uppercase tracking-wider shadow-lg shadow-tertiary/10 whitespace-nowrap"
-                    >
-                        <span className="material-symbols-outlined text-lg">add</span>
-                        {tab.addLabel}
-                    </button>
+                    <div className="flex items-center gap-3 w-full md:w-auto">
+                        <ExcelExportButton
+                            href={exportHref}
+                            title={`Export ${tab.totalLabel} to Excel`}
+                            disabled={loading}
+                            className="font-headline text-xs uppercase tracking-wider whitespace-nowrap"
+                        />
+                        <button
+                            onClick={() => { setEditItem(null); setShowModal(true); }}
+                            className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-tertiary text-[#00452d] font-bold hover:brightness-110 transition-all font-headline text-xs uppercase tracking-wider shadow-lg shadow-tertiary/10 whitespace-nowrap"
+                        >
+                            <span className="material-symbols-outlined text-lg">add</span>
+                            {tab.addLabel}
+                        </button>
+                    </div>
                 </div>
 
                 {/* Data Table */}

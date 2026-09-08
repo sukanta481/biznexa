@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
+import ExcelExportButton from '@/components/admin/ExcelExportButton';
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface Bill {
   id: number;
@@ -761,6 +763,20 @@ function BillsInner() {
 
   useEffect(() => { fetchBills(1); }, [fetchBills]);
 
+  // Same filters the list is showing, without the page — the export is the
+  // whole matching set, not the visible slice.
+  const exportParams = new URLSearchParams();
+  if (search)       exportParams.set('search', search);
+  if (filterClient) exportParams.set('client_id', filterClient);
+  if (filterStatus) exportParams.set('status', filterStatus);
+  if (filterPay)    exportParams.set('payment_status', filterPay);
+  if (dateFrom)     exportParams.set('date_from', dateFrom);
+  if (dateTo)       exportParams.set('date_to', dateTo);
+  if (amtMin)       exportParams.set('amount_min', amtMin);
+  if (amtMax)       exportParams.set('amount_max', amtMax);
+  const exportQuery = exportParams.toString();
+  const exportHref = `/api/admin/bills/export${exportQuery ? `?${exportQuery}` : ''}`;
+
   async function openEdit(bill: Bill) {
     setLoadingEdit(bill.id);
     const r = await fetch(`/api/admin/bills/${bill.id}`);
@@ -799,6 +815,11 @@ function BillsInner() {
             className="flex items-center gap-2 border border-white/10 px-4 py-2.5 rounded-lg text-sm font-bold text-slate-300 hover:border-white/20 hover:text-white transition">
             <span className="material-symbols-outlined text-sm">group</span> Clients
           </Link>
+          <ExcelExportButton
+            href={exportHref}
+            title="Export the filtered bills to Excel"
+            disabled={loading}
+          />
           <button onClick={() => setShowAdd(true)}
             className="flex items-center gap-2 bg-primary px-5 py-2.5 rounded-lg text-sm font-bold text-slate-950 shadow-lg shadow-primary/20 hover:scale-[1.02] transition">
             <span className="material-symbols-outlined text-sm">add</span> New Bill

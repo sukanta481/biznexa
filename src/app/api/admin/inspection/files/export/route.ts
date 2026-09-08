@@ -8,10 +8,11 @@ import {
 } from "@/lib/inspection-files";
 
 import { requireAdmin, unauthorized } from "@/lib/admin-guard";
+import { buildExcelSheet, type ExcelColumn } from "@/lib/excel-export";
 
 type ExportFormat = "excel" | "pdf";
 
-const EXPORT_COLUMNS: Array<{ label: string; value: (row: InspectionFileExportRow) => string | number | null }> = [
+const EXPORT_COLUMNS: ExcelColumn<InspectionFileExportRow>[] = [
   { label: "File Ref", value: (row) => row.file_number },
   { label: "Date", value: (row) => formatDate(row.file_date) },
   { label: "Type", value: (row) => titleCase(row.file_type) },
@@ -89,39 +90,11 @@ function parseFormat(format: string | null): ExportFormat | null {
 }
 
 function buildExcel(rows: InspectionFileExportRow[]) {
-  const header = EXPORT_COLUMNS
-    .map((column) => `<th>${escapeHtml(column.label)}</th>`)
-    .join("");
-  const body = rows
-    .map((row) => {
-      const cells = EXPORT_COLUMNS
-        .map((column) => `<td>${escapeHtml(formatCell(column.value(row)))}</td>`)
-        .join("");
-      return `<tr>${cells}</tr>`;
-    })
-    .join("");
-
-  return `<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <style>
-    body { font-family: Arial, sans-serif; }
-    table { border-collapse: collapse; width: 100%; }
-    th { background: #0f172a; color: #ffffff; font-weight: 700; }
-    th, td { border: 1px solid #cbd5e1; padding: 6px 8px; font-size: 12px; vertical-align: top; }
-    td { mso-number-format: "\\@"; }
-  </style>
-</head>
-<body>
-  <h2>Inspection Files Export</h2>
-  <p>Total records: ${rows.length}</p>
-  <table>
-    <thead><tr>${header}</tr></thead>
-    <tbody>${body}</tbody>
-  </table>
-</body>
-</html>`;
+  return buildExcelSheet({
+    title: "Inspection Files Export",
+    columns: EXPORT_COLUMNS,
+    rows,
+  });
 }
 
 function buildPdf(rows: InspectionFileExportRow[]) {
@@ -261,14 +234,6 @@ function titleCase(value: string | null) {
     .split(" ")
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ");
-}
-
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 }
 
 function escapePdfText(value: string) {

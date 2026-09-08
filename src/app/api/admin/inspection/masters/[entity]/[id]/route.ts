@@ -4,21 +4,8 @@ import { query } from "@/lib/db";
 import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
 
 import { requireAdmin, unauthorized } from "@/lib/admin-guard";
+import { MASTER_ENTITIES, resolveMasterEntity } from "@/lib/inspection-masters";
 
-type EntityKey = "banks" | "branches" | "sources" | "payment-modes" | "accounts";
-
-const ENTITY_MAP: Record<EntityKey, { table: string; nameField: string; extraFields: string[] }> = {
-  banks: { table: "inspection_banks", nameField: "bank_name", extraFields: [] },
-  branches: { table: "inspection_branches", nameField: "branch_name", extraFields: ["bank_id"] },
-  sources: { table: "inspection_sources", nameField: "source_name", extraFields: ["phone"] },
-  "payment-modes": { table: "inspection_payment_modes", nameField: "mode_name", extraFields: [] },
-  accounts: { table: "inspection_my_accounts", nameField: "account_name", extraFields: ["bank_name", "account_number", "ifsc_code"] },
-};
-
-function resolveEntity(param: string): EntityKey | null {
-  if (param in ENTITY_MAP) return param as EntityKey;
-  return null;
-}
 
 export async function PATCH(
   request: NextRequest,
@@ -28,10 +15,10 @@ export async function PATCH(
   if (!admin) return unauthorized();
 
   const { entity: entityParam, id } = await params;
-  const entity = resolveEntity(entityParam);
+  const entity = resolveMasterEntity(entityParam);
   if (!entity) return NextResponse.json({ error: "Invalid entity" }, { status: 400 });
 
-  const { table, nameField, extraFields } = ENTITY_MAP[entity];
+  const { table, nameField, extraFields } = MASTER_ENTITIES[entity];
   const body = await request.json();
 
   const setClauses: string[] = [];
@@ -79,10 +66,10 @@ export async function DELETE(
   if (!admin) return unauthorized();
 
   const { entity: entityParam, id } = await params;
-  const entity = resolveEntity(entityParam);
+  const entity = resolveMasterEntity(entityParam);
   if (!entity) return NextResponse.json({ error: "Invalid entity" }, { status: 400 });
 
-  const { table } = ENTITY_MAP[entity];
+  const { table } = MASTER_ENTITIES[entity];
   const result = await query<ResultSetHeader>(
     `DELETE FROM ${table} WHERE id = ?`,
     [id]
@@ -100,10 +87,10 @@ export async function GET(
   if (!admin) return unauthorized();
 
   const { entity: entityParam, id } = await params;
-  const entity = resolveEntity(entityParam);
+  const entity = resolveMasterEntity(entityParam);
   if (!entity) return NextResponse.json({ error: "Invalid entity" }, { status: 400 });
 
-  const { table } = ENTITY_MAP[entity];
+  const { table } = MASTER_ENTITIES[entity];
   const rows = await query<RowDataPacket[]>(`SELECT * FROM ${table} WHERE id = ?`, [id]);
   if (rows.length === 0) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json(rows[0]);

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
 import { requireAdmin, unauthorized } from "@/lib/admin-guard";
+import { buildClientWhere, getClientFilters } from "@/lib/clients";
 
 // ── GET /api/admin/clients ──────────────────────────────────────────────────────
 export async function GET(request: NextRequest) {
@@ -10,25 +11,11 @@ export async function GET(request: NextRequest) {
   if (!admin) return unauthorized();
 
   const { searchParams } = new URL(request.url);
-  const search = searchParams.get("search") ?? "";
-  const status = searchParams.get("status") ?? "";
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
   const limit = 20;
   const offset = (page - 1) * limit;
 
-  const conditions: string[] = [];
-  const values: unknown[] = [];
-
-  if (search) {
-    conditions.push("(c.name LIKE ? OR c.email LIKE ? OR c.company LIKE ? OR c.phone LIKE ?)");
-    values.push(`%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`);
-  }
-  if (status) {
-    conditions.push("c.status = ?");
-    values.push(status);
-  }
-
-  const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
+  const { where, params: values } = buildClientWhere(getClientFilters(searchParams));
 
   const [statsRows, records] = await Promise.all([
     query<RowDataPacket[]>(

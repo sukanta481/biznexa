@@ -1,6 +1,7 @@
 import "server-only";
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin, unauthorized } from "@/lib/admin-guard";
+import { buildBillWhere, getBillFilters } from "@/lib/bills";
 import { query } from "@/lib/db";
 import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
 
@@ -10,34 +11,11 @@ export async function GET(request: NextRequest) {
   if (!admin) return unauthorized();
 
   const { searchParams } = new URL(request.url);
-  const search        = searchParams.get("search")         ?? "";
-  const client_id     = searchParams.get("client_id")      ?? "";
-  const status        = searchParams.get("status")         ?? "";
-  const payment_status = searchParams.get("payment_status") ?? "";
-  const date_from     = searchParams.get("date_from")      ?? "";
-  const date_to       = searchParams.get("date_to")        ?? "";
-  const amount_min    = searchParams.get("amount_min")     ?? "";
-  const amount_max    = searchParams.get("amount_max")     ?? "";
-  const page          = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
-  const limit         = 20;
-  const offset        = (page - 1) * limit;
+  const page   = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
+  const limit  = 20;
+  const offset = (page - 1) * limit;
 
-  const conditions: string[] = [];
-  const values: unknown[] = [];
-
-  if (search) {
-    conditions.push("(b.bill_number LIKE ? OR c.name LIKE ? OR c.email LIKE ?)");
-    values.push(`%${search}%`, `%${search}%`, `%${search}%`);
-  }
-  if (client_id) { conditions.push("b.client_id = ?"); values.push(client_id); }
-  if (status)    { conditions.push("b.status = ?");    values.push(status); }
-  if (payment_status) { conditions.push("b.payment_status = ?"); values.push(payment_status); }
-  if (date_from) { conditions.push("b.bill_date >= ?"); values.push(date_from); }
-  if (date_to)   { conditions.push("b.bill_date <= ?"); values.push(date_to); }
-  if (amount_min) { conditions.push("b.total_amount >= ?"); values.push(amount_min); }
-  if (amount_max) { conditions.push("b.total_amount <= ?"); values.push(amount_max); }
-
-  const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
+  const { where, params: values } = buildBillWhere(getBillFilters(searchParams));
 
   const [statsRows, records] = await Promise.all([
     query<RowDataPacket[]>(

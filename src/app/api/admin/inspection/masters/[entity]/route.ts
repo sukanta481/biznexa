@@ -4,22 +4,8 @@ import { query } from "@/lib/db";
 import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
 
 import { requireAdmin, unauthorized } from "@/lib/admin-guard";
+import { MASTER_ENTITIES, resolveMasterEntity } from "@/lib/inspection-masters";
 
-type EntityKey = "banks" | "branches" | "sources" | "payment-modes" | "accounts" | "report-types";
-
-const ENTITY_MAP: Record<EntityKey, { table: string; nameField: string; extraFields: string[] }> = {
-  banks: { table: "inspection_banks", nameField: "bank_name", extraFields: [] },
-  branches: { table: "inspection_branches", nameField: "branch_name", extraFields: ["bank_id"] },
-  sources: { table: "inspection_sources", nameField: "source_name", extraFields: ["phone"] },
-  "payment-modes": { table: "inspection_payment_modes", nameField: "mode_name", extraFields: [] },
-  accounts: { table: "inspection_my_accounts", nameField: "account_name", extraFields: ["bank_name", "account_number", "ifsc_code"] },
-  "report-types": { table: "inspection_report_types", nameField: "report_name", extraFields: [] },
-};
-
-function resolveEntity(param: string): EntityKey | null {
-  if (param in ENTITY_MAP) return param as EntityKey;
-  return null;
-}
 
 export async function GET(
   request: NextRequest,
@@ -29,10 +15,10 @@ export async function GET(
   if (!admin) return unauthorized();
 
   const { entity: entityParam } = await params;
-  const entity = resolveEntity(entityParam);
+  const entity = resolveMasterEntity(entityParam);
   if (!entity) return NextResponse.json({ error: "Invalid entity" }, { status: 400 });
 
-  const { table } = ENTITY_MAP[entity];
+  const { table } = MASTER_ENTITIES[entity];
   const url = new URL(request.url);
   const search = url.searchParams.get("search") ?? "";
   const page = Math.max(1, Number(url.searchParams.get("page") ?? "1"));
@@ -75,7 +61,7 @@ export async function GET(
     return NextResponse.json({ items, total: (countRows[0] as RowDataPacket).total });
   }
 
-  const { nameField } = ENTITY_MAP[entity];
+  const { nameField } = MASTER_ENTITIES[entity];
   const searchClause = search ? `WHERE ${nameField} LIKE ?` : "";
   const searchParams = search ? [`%${search}%`] : [];
 
@@ -101,10 +87,10 @@ export async function POST(
   if (!admin) return unauthorized();
 
   const { entity: entityParam } = await params;
-  const entity = resolveEntity(entityParam);
+  const entity = resolveMasterEntity(entityParam);
   if (!entity) return NextResponse.json({ error: "Invalid entity" }, { status: 400 });
 
-  const { table, nameField, extraFields } = ENTITY_MAP[entity];
+  const { table, nameField, extraFields } = MASTER_ENTITIES[entity];
   const body = await request.json();
 
   const name = (body[nameField] ?? "").toString().trim();
