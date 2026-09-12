@@ -5,7 +5,7 @@ import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
 import { open, seal } from "@/lib/crypto-box";
 import { query } from "@/lib/db";
 
-export type Provider = "whatsapp" | "smtp" | "s3";
+export type Provider = "whatsapp" | "smtp" | "s3" | "google_drive";
 
 export interface WhatsAppConfig {
   token: string;
@@ -31,6 +31,14 @@ export interface S3Config {
   endpoint: string;
   forcePathStyle: string;
   publicBase: string;
+}
+
+export interface GoogleDriveConfig {
+  clientId: string;
+  clientSecret: string;
+  refreshToken: string;
+  accountEmail: string;
+  rootFolderId: string;
 }
 
 export type ProviderConfig = Record<string, string>;
@@ -69,6 +77,15 @@ const ENV_FALLBACK: Record<Provider, Record<string, string>> = {
     forcePathStyle: "S3_FORCE_PATH_STYLE",
     publicBase: "S3_PUBLIC_BASE",
   },
+  // refreshToken, accountEmail and rootFolderId are written by the OAuth
+  // callback, not typed in; the env names exist only so the lookup is uniform.
+  google_drive: {
+    clientId: "GOOGLE_CLIENT_ID",
+    clientSecret: "GOOGLE_CLIENT_SECRET",
+    refreshToken: "GOOGLE_DRIVE_REFRESH_TOKEN",
+    accountEmail: "GOOGLE_DRIVE_ACCOUNT_EMAIL",
+    rootFolderId: "GOOGLE_DRIVE_ROOT_FOLDER_ID",
+  },
 };
 
 /** Which fields are secret. Used for masking and for write-only handling. */
@@ -76,6 +93,7 @@ export const SECRET_FIELDS: Record<Provider, string[]> = {
   whatsapp: ["token", "ingestSecret"],
   smtp: ["pass"],
   s3: ["secretAccessKey"],
+  google_drive: ["clientSecret", "refreshToken"],
 };
 
 const CACHE_TTL_MS = 60_000;
@@ -165,6 +183,28 @@ export async function saveIntegrationConfig(
      VALUES (?, ?, ?)
      ON DUPLICATE KEY UPDATE config_json = VALUES(config_json), updated_by = VALUES(updated_by)`,
     [provider, seal(JSON.stringify(merged)), adminId],
+  );
+
+  invalidateIntegrationCache(provider);
+}
+
+/**
+ * Removes fields from the stored config. saveIntegrationConfig cannot do this
+ * for secrets, because it reads an empty secret as "leave unchanged".
+ */
+export async function clearIntegrationFields(
+  provider: Provider,
+  fields: string[],
+  adminId: number,
+): Promise<void> {
+  const current = await getStoredConfig(provider);
+  for (const field of fields) delete current[field];
+
+  await query<ResultSetHeader>(
+    `INSERT INTO integration_credentials (provider, config_json, updated_by)
+     VALUES (?, ?, ?)
+     ON DUPLICATE KEY UPDATE config_json = VALUES(config_json), updated_by = VALUES(updated_by)`,
+    [provider, seal(JSON.stringify(current)), adminId],
   );
 
   invalidateIntegrationCache(provider);

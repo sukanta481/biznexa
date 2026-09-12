@@ -1,5 +1,8 @@
+import { headers } from 'next/headers';
+
 import IntegrationsClient from '@/components/admin/IntegrationsClient';
 import { isEncryptionConfigured, mask } from '@/lib/crypto-box';
+import { getDriveStatus } from '@/lib/google-drive';
 import {
   getIntegrationConfig,
   getStoredConfig,
@@ -9,18 +12,20 @@ import {
 
 export const runtime = 'nodejs';
 
-const PROVIDERS: Provider[] = ['whatsapp', 'smtp', 's3'];
+const PROVIDERS: Provider[] = ['whatsapp', 'smtp', 's3', 'google_drive'];
 
 const PROVIDER_FIELDS: Record<Provider, readonly string[]> = {
   whatsapp: ['token', 'phoneNumberId', 'ingestSecret'],
   smtp: ['host', 'port', 'user', 'pass', 'secure', 'fromEmail', 'notificationEmail'],
   s3: ['bucket', 'region', 'accessKeyId', 'secretAccessKey', 'endpoint', 'forcePathStyle', 'publicBase'],
+  google_drive: ['clientId', 'clientSecret'],
 };
 
 const SECRET_FIELDS: Record<Provider, readonly string[]> = {
   whatsapp: ['token', 'ingestSecret'],
   smtp: ['pass'],
   s3: ['secretAccessKey'],
+  google_drive: ['clientSecret'],
 };
 
 export default async function IntegrationsPage() {
@@ -64,6 +69,7 @@ export default async function IntegrationsPage() {
     ok: true,
     encryptionConfigured: isEncryptionConfigured(),
     providers,
+    googleDrive: await getDriveStatus(await headers()),
   };
 
   return <IntegrationsClient initial={initial} />;

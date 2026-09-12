@@ -3,6 +3,7 @@ import { HeadBucketCommand, S3Client } from "@aws-sdk/client-s3";
 import nodemailer from "nodemailer";
 
 import { requireAdmin, unauthorized } from "@/lib/admin-guard";
+import { getAccessToken, getAccountEmail } from "@/lib/google-drive";
 import {
   getIntegrationConfig,
   recordVerification,
@@ -11,7 +12,7 @@ import {
 
 export const runtime = "nodejs";
 
-const PROVIDERS: Provider[] = ["whatsapp", "smtp", "s3"];
+const PROVIDERS: Provider[] = ["whatsapp", "smtp", "s3", "google_drive"];
 
 function isProvider(value: unknown): value is Provider {
   return typeof value === "string" && (PROVIDERS as string[]).includes(value);
@@ -92,6 +93,15 @@ async function probeS3(): Promise<{ ok: boolean; detail: string }> {
   }
 }
 
+async function probeGoogleDrive(): Promise<{ ok: boolean; detail: string }> {
+  try {
+    const email = await getAccountEmail(await getAccessToken());
+    return { ok: true, detail: email ? `Connected as ${email}` : "Connected" };
+  } catch (err) {
+    return { ok: false, detail: err instanceof Error ? err.message : "Google Drive check failed" };
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const admin = await requireAdmin();
@@ -105,6 +115,7 @@ export async function POST(request: Request) {
     let result: { ok: boolean; detail: string };
     if (body.provider === "whatsapp") result = await probeWhatsApp();
     else if (body.provider === "smtp") result = await probeSmtp();
+    else if (body.provider === "google_drive") result = await probeGoogleDrive();
     else result = await probeS3();
 
     await recordVerification(body.provider, result.ok, result.ok ? null : result.detail);

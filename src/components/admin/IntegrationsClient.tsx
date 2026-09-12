@@ -1,17 +1,23 @@
 'use client';
 
 import {
+  useEffect,
   useState,
   useTransition,
   type FormEvent,
   type ReactNode,
 } from 'react';
 import {
+  Check,
   ChevronDown,
+  Copy,
   Database,
+  ExternalLink,
   Eye,
   EyeOff,
+  FolderOpen,
   HardDrive,
+  Link2,
   KeyRound,
   Loader2,
   Mail,
@@ -20,11 +26,12 @@ import {
   Save,
   ShieldCheck,
   Sparkles,
+  Unplug,
 } from 'lucide-react';
 
 import { useReducedMotionSafe } from '@/components/ui/Animations';
 
-type Provider = 'whatsapp' | 'smtp' | 's3';
+type Provider = 'whatsapp' | 'smtp' | 's3' | 'google_drive';
 
 type FieldSource = 'database' | 'env' | 'unset';
 
@@ -43,10 +50,19 @@ interface ProviderView {
   updatedAt: string | null;
 }
 
+interface DriveStatus {
+  configured: boolean;
+  connected: boolean;
+  accountEmail: string;
+  rootFolderUrl: string | null;
+  redirectUri: string;
+}
+
 interface IntegrationsResponse {
   ok: boolean;
   encryptionConfigured: boolean;
   providers: ProviderView[];
+  googleDrive: DriveStatus;
 }
 
 const PROVIDER_TITLES: Record<Provider, { title: string; description: string; Icon: React.ComponentType<{ className?: string }> }> = {
@@ -64,6 +80,11 @@ const PROVIDER_TITLES: Record<Provider, { title: string; description: string; Ic
     title: 'File storage (S3)',
     description: 'Durable media storage for uploads and WhatsApp media. Required in production.',
     Icon: HardDrive,
+  },
+  google_drive: {
+    title: 'Google Drive',
+    description: 'Stores documents attached to inspection files, in one Drive folder per file.',
+    Icon: FolderOpen,
   },
 };
 
@@ -91,13 +112,24 @@ const PROVIDER_FIELDS: Record<Provider, { key: string; label: string; hint?: str
     { key: 'forcePathStyle', label: 'Force path-style addressing', hint: '"true" for non-AWS providers.' },
     { key: 'publicBase', label: 'Public base URL', hint: 'Optional CDN/base that prefixes public URLs.' },
   ],
+  google_drive: [
+    {
+      key: 'clientId',
+      label: 'OAuth client ID',
+      hint: 'Google Cloud Console → APIs & Services → Credentials → OAuth client ID (Web application).',
+    },
+    { key: 'clientSecret', label: 'OAuth client secret', secret: true },
+  ],
 };
 
 const SECRET_FIELDS: Record<Provider, string[]> = {
   whatsapp: ['token', 'ingestSecret'],
   smtp: ['pass'],
   s3: ['secretAccessKey'],
+  google_drive: ['clientSecret'],
 };
+
+const ALL_PROVIDERS: Provider[] = ['whatsapp', 'smtp', 's3', 'google_drive'];
 
 interface IntegrationsClientProps {
   initial: IntegrationsResponse;
@@ -225,19 +257,46 @@ export default function IntegrationsClient({ initial }: IntegrationsClientProps)
     whatsapp: true,
     smtp: false,
     s3: false,
+    google_drive: false,
   });
   const [revealed, setRevealed] = useState<Record<string, boolean>>({});
   const [drafts, setDrafts] = useState<Record<string, Record<string, string>>>({
     whatsapp: {},
     smtp: {},
     s3: {},
+    google_drive: {},
   });
-  const [pending, setPending] = useState<Record<Provider, boolean>>({ whatsapp: false, smtp: false, s3: false });
+  const [pending, setPending] = useState<Record<Provider, boolean>>({
+    whatsapp: false,
+    smtp: false,
+    s3: false,
+    google_drive: false,
+  });
   const [tests, setTests] = useState<Record<Provider, TestState>>({
     whatsapp: { status: 'idle' },
     smtp: { status: 'idle' },
     s3: { status: 'idle' },
+    google_drive: { status: 'idle' },
   });
+  const [drive, setDrive] = useState<DriveStatus>(initial.googleDrive);
+  const [disconnecting, setDisconnecting] = useState(false);
+  const [copiedRedirect, setCopiedRedirect] = useState(false);
+
+  // The OAuth callback lands back here with ?drive=connected|error. Show the
+  // outcome once, then strip the query so a refresh does not repeat it.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const outcome = params.get('drive');
+    if (!outcome) return;
+
+    setOpenCards((current) => ({ ...current, google_drive: true }));
+    setAlert(
+      outcome === 'connected'
+        ? { type: 'success', message: 'Google Drive connected.' }
+        : { type: 'error', message: params.get('message') ?? 'Google Drive could not be connected.' },
+    );
+    window.history.replaceState(null, '', window.location.pathname);
+  }, []);
   const [ingestGeneratedNotice, setIngestGeneratedNotice] = useState<string | null>(null);
 
   function toggleCard(provider: Provider) {
@@ -284,6 +343,7 @@ export default function IntegrationsClient({ initial }: IntegrationsClientProps)
         throw new Error('error' in result ? result.error : 'Failed to save credentials.');
       }
       setProviders(result.providers);
+      if (result.googleDrive) setDrive(result.googleDrive);
       setDrafts((current) => ({ ...current, [provider]: {} }));
       setIngestGeneratedNotice(null);
       setAlert({ type: 'success', message: `${PROVIDER_TITLES[provider].title} credentials saved.` });
@@ -323,10 +383,40 @@ export default function IntegrationsClient({ initial }: IntegrationsClientProps)
     }
   }
 
+  async function handleDisconnectDrive() {
+    if (!confirm('Disconnect Google Drive? Files already in Drive are kept, but new uploads stop until you reconnect.')) {
+      return;
+    }
+    setDisconnecting(true);
+    setAlert(null);
+    try {
+      const response = await fetch('/api/admin/integrations/google-drive/disconnect', { method: 'POST' });
+      if (!response.ok) throw new Error('Failed to disconnect Google Drive.');
+      const refreshed = (await fetch('/api/admin/settings/integrations').then((r) => r.json())) as IntegrationsResponse;
+      if (refreshed.googleDrive) setDrive(refreshed.googleDrive);
+      setTests((current) => ({ ...current, google_drive: { status: 'idle' } }));
+      setAlert({ type: 'success', message: 'Google Drive disconnected.' });
+    } catch (error) {
+      setAlert({ type: 'error', message: error instanceof Error ? error.message : 'Failed to disconnect.' });
+    } finally {
+      setDisconnecting(false);
+    }
+  }
+
+  async function copyRedirectUri() {
+    try {
+      await navigator.clipboard.writeText(drive.redirectUri);
+      setCopiedRedirect(true);
+      window.setTimeout(() => setCopiedRedirect(false), 2000);
+    } catch {
+      // Clipboard can be blocked; the URI is visible and selectable anyway.
+    }
+  }
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     startTransition(() => {
-      void Promise.all((['whatsapp', 'smtp', 's3'] as Provider[]).map((provider) => handleSave(provider)));
+      void Promise.all(ALL_PROVIDERS.map((provider) => handleSave(provider)));
     });
   }
 
@@ -337,7 +427,7 @@ export default function IntegrationsClient({ initial }: IntegrationsClientProps)
           Integrations
         </h1>
         <p className="max-w-2xl text-sm leading-relaxed text-slate-400 md:text-base">
-          Encrypted credentials for WhatsApp, SMTP, and S3. Stored once, refreshed without a redeploy.
+          Encrypted credentials for WhatsApp, SMTP, S3 and Google Drive. Stored once, refreshed without a redeploy.
         </p>
       </header>
 
@@ -489,6 +579,81 @@ export default function IntegrationsClient({ initial }: IntegrationsClientProps)
                   </div>
                 );
               })}
+              {view.provider === 'google_drive' ? (
+                <div className="space-y-4 rounded-xl border border-white/8 bg-slate-950/40 p-4">
+                  <div className="space-y-2">
+                    <FieldLabel hint="Add this exact URI under Authorized redirect URIs on the OAuth client.">
+                      Authorized redirect URI
+                    </FieldLabel>
+                    <div className="flex gap-2">
+                      <code className="min-w-0 flex-1 break-all rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-xs leading-relaxed text-cyan-100">
+                        {drive.redirectUri}
+                      </code>
+                      <button
+                        type="button"
+                        onClick={copyRedirectUri}
+                        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-cyan-400/25 bg-cyan-400/10 text-cyan-200 transition hover:bg-cyan-400/15"
+                        aria-label="Copy redirect URI"
+                      >
+                        {copiedRedirect ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-3 border-t border-white/8 pt-4">
+                    <div className="text-sm">
+                      {drive.connected ? (
+                        <p className="text-emerald-200">
+                          Connected
+                          {drive.accountEmail ? (
+                            <span>
+                              {' '}as <strong>{drive.accountEmail}</strong>
+                            </span>
+                          ) : null}
+                        </p>
+                      ) : (
+                        <p className="text-slate-400">
+                          {drive.configured
+                            ? 'Not connected yet.'
+                            : 'Save the client ID and secret first, then connect.'}
+                        </p>
+                      )}
+                      {drive.connected && drive.rootFolderUrl ? (
+                        <a
+                          href={drive.rootFolderUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-1 inline-flex items-center gap-1 text-xs text-cyan-300 hover:text-cyan-200"
+                        >
+                          Open the inspection files folder <ExternalLink className="h-3 w-3" />
+                        </a>
+                      ) : null}
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {drive.configured ? (
+                        <a
+                          href="/api/admin/integrations/google-drive/connect"
+                          className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-400/25 bg-emerald-500/10 px-4 py-2 text-xs font-headline font-bold uppercase tracking-[0.2em] text-emerald-200 transition hover:bg-emerald-500/15"
+                        >
+                          <Link2 className="h-4 w-4" />
+                          {drive.connected ? 'Reconnect' : 'Connect Google Drive'}
+                        </a>
+                      ) : null}
+                      {drive.connected ? (
+                        <button
+                          type="button"
+                          onClick={handleDisconnectDrive}
+                          disabled={disconnecting}
+                          className="inline-flex items-center justify-center gap-2 rounded-xl border border-rose-400/25 bg-rose-500/10 px-4 py-2 text-xs font-headline font-bold uppercase tracking-[0.2em] text-rose-200 transition hover:bg-rose-500/15 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                          {disconnecting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Unplug className="h-4 w-4" />}
+                          Disconnect
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              ) : null}
               {test.status === 'ok' || test.status === 'error' ? (
                 <div
                   className={`rounded-xl border px-4 py-3 text-xs leading-relaxed ${

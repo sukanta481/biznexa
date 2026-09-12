@@ -4,6 +4,7 @@ import { query } from "@/lib/db";
 import { RowDataPacket } from "mysql2/promise";
 
 import { requireAdmin, unauthorized } from "@/lib/admin-guard";
+import { isDriveConnected } from "@/lib/google-drive";
 
 export async function GET() {
   const admin = await requireAdmin();
@@ -42,6 +43,7 @@ export async function GET() {
   ]);
 
   const cols = new Set(existingCols.map((r) => r.COLUMN_NAME as string));
+  const driveConnected = await isDriveConnected();
 
   return NextResponse.json({
     banks,
@@ -49,6 +51,7 @@ export async function GET() {
     paymentModes,
     accounts,
     reportTypes,
+    driveConnected,
     columns: {
       report_status_date: cols.has("report_status_date"),
       payment_status_date: cols.has("payment_status_date"),

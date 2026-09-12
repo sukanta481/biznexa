@@ -1,5 +1,6 @@
 'use client';
 
+import { driveFolderUrl } from '@/lib/drive-links';
 import { useState, useEffect } from 'react';
 
 interface FileDetail {
@@ -32,6 +33,7 @@ interface FileDetail {
     commission_pending: string | null;
     received_account_name: string | null;
     notes: string | null;
+    drive_folder_id?: string | null;
     addon_reports?: Array<{
         id: number;
         report_type_id: number | null;
@@ -327,7 +329,18 @@ export default function ViewInspectionFileModal({ fileId, onClose }: Props) {
                 </div>
 
                 {/* Footer */}
-                <footer className="p-4 md:p-6 bg-[#1e293b]/90 border-t border-white/[0.08] flex justify-end shrink-0">
+                <footer className="p-4 md:p-6 bg-[#1e293b]/90 border-t border-white/[0.08] flex flex-col sm:flex-row justify-end gap-3 shrink-0">
+                    {file?.drive_folder_id && (
+                        <a
+                            href={driveFolderUrl(file.drive_folder_id)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-6 py-3 border border-tertiary/30 bg-tertiary/10 text-tertiary font-headline font-bold uppercase text-[11px] tracking-[0.12em] hover:bg-tertiary/15 transition-all rounded-lg flex items-center justify-center gap-2"
+                        >
+                            <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                            View files in Google Drive
+                        </a>
+                    )}
                     <button
                         type="button"
                         onClick={onClose}

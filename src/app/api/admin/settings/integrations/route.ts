@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 
 import { requireAdmin, unauthorized } from "@/lib/admin-guard";
 import { isEncryptionConfigured, mask } from "@/lib/crypto-box";
+import { clearAccessTokenCache, getDriveStatus } from "@/lib/google-drive";
 import {
+  clearIntegrationFields,
   getIntegrationConfig,
   getStoredConfig,
   getVerificationState,
@@ -14,13 +16,16 @@ import {
 
 export const runtime = "nodejs";
 
-const PROVIDERS: Provider[] = ["whatsapp", "smtp", "s3"];
+const PROVIDERS: Provider[] = ["whatsapp", "smtp", "s3", "google_drive"];
 
 // Field names per provider. Must stay in sync with integrations.ts ENV_FALLBACK.
 const PROVIDER_FIELDS: Record<Provider, readonly string[]> = {
   whatsapp: ["token", "phoneNumberId", "ingestSecret"],
   smtp: ["host", "port", "user", "pass", "secure", "fromEmail", "notificationEmail"],
   s3: ["bucket", "region", "accessKeyId", "secretAccessKey", "endpoint", "forcePathStyle", "publicBase"],
+  // Only the OAuth client is typed in. The refresh token, account and folder
+  // are written by the OAuth callback and deliberately not accepted here.
+  google_drive: ["clientId", "clientSecret"],
 };
 
 function isProvider(value: unknown): value is Provider {
@@ -88,13 +93,14 @@ async function loadAllViews() {
   return views;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const admin = await requireAdmin();
     if (!admin) return unauthorized();
 
     const providers = await loadAllViews();
-    return NextResponse.json({ ok: true, encryptionConfigured: isEncryptionConfigured(), providers });
+    const googleDrive = await getDriveStatus(request.headers);
+    return NextResponse.json({ ok: true, encryptionConfigured: isEncryptionConfigured(), providers, googleDrive });
   } catch (error) {
     console.error("Failed to load integrations", error);
     return NextResponse.json({ ok: false, error: "Failed to load integrations." }, { status: 500 });
@@ -128,11 +134,23 @@ export async function POST(request: Request) {
       }
     }
 
+    // A refresh token is bound to the OAuth client that issued it. Switching
+    // the client ID would leave a token that can never refresh, so drop the
+    // connection and let the admin reconnect under the new client.
+    if (provider === "google_drive" && updates.clientId) {
+      const stored = await getStoredConfig("google_drive");
+      if (stored.refreshToken && stored.clientId && stored.clientId !== updates.clientId) {
+        await clearIntegrationFields("google_drive", ["refreshToken", "accountEmail"], admin.id);
+        clearAccessTokenCache();
+      }
+    }
+
     await saveIntegrationConfig(provider, updates, admin.id);
 
     // Never echo submitted secret values back — return the same masked shape as GET.
     const providers = await loadAllViews();
-    return NextResponse.json({ ok: true, encryptionConfigured: true, providers });
+    const googleDrive = await getDriveStatus(request.headers);
+    return NextResponse.json({ ok: true, encryptionConfigured: true, providers, googleDrive });
   } catch (error) {
     console.error("Failed to save integrations", error);
     const message = error instanceof Error ? error.message : "Failed to save integrations.";

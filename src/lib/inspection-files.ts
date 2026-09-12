@@ -33,6 +33,7 @@ export interface InspectionFileListRow extends RowDataPacket {
   gross_amount: number | null;
   bank_name: string | null;
   branch_name: string | null;
+  drive_folder_id: string | null;
 }
 
 export interface InspectionFileExportRow extends InspectionFileListRow {
@@ -168,7 +169,7 @@ export async function getInspectionFilesPage(filters: InspectionFileFilters, lim
       `SELECT f.id, f.file_number, f.file_date, f.file_type,
               f.customer_name, f.report_status, f.payment_status, f.paid_to_office,
               ${paymentDoneSelect},
-              f.fees, f.addon_fees, f.commission, f.gross_amount,
+              f.fees, f.addon_fees, f.commission, f.gross_amount, f.drive_folder_id,
               b.bank_name, br.branch_name
        FROM inspection_files f
        LEFT JOIN inspection_banks b ON b.id = f.bank_id

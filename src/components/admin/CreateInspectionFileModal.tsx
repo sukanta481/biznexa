@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
+
+import { driveFolderUrl } from '@/lib/drive-links';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -21,7 +24,35 @@ interface InitData {
     paymentModes: MasterItem[];
     accounts: MasterItem[];
     reportTypes: MasterItem[];
+    driveConnected?: boolean;
     columns: ColumnFlags;
+}
+
+// Must match MAX_UPLOAD_BYTES in src/lib/google-drive.ts, which enforces it.
+const MAX_DOC_BYTES = 20 * 1024 * 1024;
+
+type DocStatus = 'queued' | 'uploading' | 'done' | 'error';
+
+interface UploadItem {
+    file: File;
+    status: DocStatus;
+    error?: string;
+}
+
+/** The post-save step that sends queued documents to Google Drive. */
+interface UploadRun {
+    fileId: number;
+    fileNumber: string;
+    andAnother: boolean;
+    folderUrl: string | null;
+    items: UploadItem[];
+    running: boolean;
+}
+
+function formatBytes(bytes: number) {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+    return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
 interface Props {
@@ -106,6 +137,15 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
     const [receivedAccountId, setReceivedAccountId] = useState('');
     const [notes, setNotes] = useState('');
 
+    // Documents: queued in the form, uploaded to Google Drive after the save
+    // succeeds, because a new file has no ID to hang a Drive folder on until then.
+    const [pendingDocs, setPendingDocs] = useState<File[]>([]);
+    const [docError, setDocError] = useState('');
+    const [docDragOver, setDocDragOver] = useState(false);
+    const [existingFolderId, setExistingFolderId] = useState<string | null>(null);
+    const [loadedFileNumber, setLoadedFileNumber] = useState('');
+    const [uploadRun, setUploadRun] = useState<UploadRun | null>(null);
+
     // Submit state
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState('');
@@ -147,6 +187,8 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
                     setExtraAmount(file.extra_amount != null ? String(file.extra_amount) : '0');
                     setReceivedAccountId(file.received_account_id != null ? String(file.received_account_id) : '');
                     setNotes((file.notes as string) ?? '');
+                    setExistingFolderId((file.drive_folder_id as string) ?? null);
+                    setLoadedFileNumber((file.file_number as string) ?? '');
                     // Add-on reports: restore from saved data
                     if (Array.isArray(file.addon_reports)) {
                         setAddonReports(
@@ -277,7 +319,78 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
         setCommissionPending(''); setExtraAmount('0');
         setReceivedAccountId(''); setNotes('');
         setPaymentDoneDate('');
+        setAddonReports([]);
+        setPendingDocs([]); setDocError('');
         setError('');
+    }
+
+    // ── Documents ─────────────────────────────────────────────────────────────
+    function addDocs(list: FileList | null) {
+        if (!list || list.length === 0) return;
+        const accepted: File[] = [];
+        const tooLarge: string[] = [];
+        for (const file of Array.from(list)) {
+            if (file.size > MAX_DOC_BYTES) tooLarge.push(file.name);
+            else if (file.size > 0) accepted.push(file);
+        }
+        setPendingDocs((current) => [...current, ...accepted]);
+        setDocError(tooLarge.length ? `Not added — larger than 20 MB: ${tooLarge.join(', ')}` : '');
+    }
+
+    function removeDoc(index: number) {
+        setPendingDocs((current) => current.filter((_, i) => i !== index));
+    }
+
+    function patchUploadItem(index: number, patch: Partial<UploadItem>) {
+        setUploadRun((run) => run && {
+            ...run,
+            items: run.items.map((item, i) => (i === index ? { ...item, ...patch } : item)),
+        });
+    }
+
+    // One file per request, in order: a slow or failed file never takes the
+    // others down with it, and each request stays under the proxy's size limit.
+    async function runUploads(targetId: number, items: UploadItem[]) {
+        setUploadRun((run) => run && { ...run, running: true });
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].status === 'done') continue;
+            patchUploadItem(i, { status: 'uploading', error: undefined });
+            try {
+                const body = new FormData();
+                body.append('file', items[i].file);
+                const res = await fetch(`/api/admin/inspection/files/${targetId}/attachments`, {
+                    method: 'POST',
+                    body,
+                    signal: AbortSignal.timeout(300_000),
+                });
+                const json = await res.json().catch(() => ({})) as { folderId?: string; folderUrl?: string; error?: string };
+                if (!res.ok) {
+                    throw new Error(json.error ?? (res.status === 413 ? 'File is too large for the server.' : 'Upload failed.'));
+                }
+                if (json.folderId) setExistingFolderId(json.folderId);
+                setUploadRun((run) => run && {
+                    ...run,
+                    folderUrl: json.folderUrl ?? run.folderUrl,
+                    items: run.items.map((item, j) => (j === i ? { ...item, status: 'done', error: undefined } : item)),
+                });
+            } catch (err) {
+                patchUploadItem(i, { status: 'error', error: err instanceof Error ? err.message : 'Upload failed.' });
+            }
+        }
+        setUploadRun((run) => run && { ...run, running: false });
+    }
+
+    function finishUploadRun() {
+        const run = uploadRun;
+        if (!run) return;
+        setUploadRun(null);
+        setPendingDocs([]);
+        if (run.andAnother) {
+            resetForm();
+            setSavedMsg(`Saved as ${run.fileNumber}. Form ready for next entry.`);
+        } else {
+            onSaved(run.fileNumber);
+        }
     }
 
     // ── Save / Update ─────────────────────────────────────────────────────────
@@ -333,6 +446,21 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
             });
             const json = await res.json() as { id?: number; file_number?: string; error?: string };
             if (!res.ok) throw new Error(json.error ?? 'Save failed');
+
+            const savedId = isEdit ? Number(fileId) : Number(json.id);
+            if (pendingDocs.length > 0 && initData?.driveConnected && savedId) {
+                const items: UploadItem[] = pendingDocs.map((file) => ({ file, status: 'queued' }));
+                setUploadRun({
+                    fileId: savedId,
+                    fileNumber: (isEdit ? loadedFileNumber : json.file_number) ?? '',
+                    andAnother: !isEdit && andAnother,
+                    folderUrl: existingFolderId ? driveFolderUrl(existingFolderId) : null,
+                    items,
+                    running: true,
+                });
+                void runUploads(savedId, items);
+                return;
+            }
 
             if (!isEdit && andAnother) {
                 setSavedMsg(`Saved as ${json.file_number}. Form ready for next entry.`);
@@ -523,6 +651,88 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
                                         <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Additional notes or remarks..." rows={3} className={`${iS} resize-none`} />
                                     </div>
                                 </div>
+                            </section>
+
+                            {/* Card 3: Documents (Google Drive) */}
+                            <section className="bg-[#1e293b]/40 border border-white/5 hover:border-tertiary/30 transition-all p-6 rounded-xl border-l-4 border-l-tertiary/40">
+                                <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
+                                    <div className="flex items-center gap-3">
+                                        <span className="material-symbols-outlined text-tertiary">folder_shared</span>
+                                        <h3 className="font-headline font-bold uppercase tracking-widest text-sm text-white">Documents</h3>
+                                    </div>
+                                    {existingFolderId && (
+                                        <a
+                                            href={driveFolderUrl(existingFolderId)}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-1.5 rounded-lg border border-tertiary/25 bg-tertiary/10 px-3 py-1.5 text-[11px] font-headline font-bold uppercase tracking-[0.12em] text-tertiary hover:bg-tertiary/15 transition-all"
+                                        >
+                                            <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                                            View files in Drive
+                                        </a>
+                                    )}
+                                </div>
+
+                                {!initData?.driveConnected ? (
+                                    <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4 text-sm leading-relaxed text-amber-200/90 font-body">
+                                        Google Drive isn&apos;t connected, so documents can&apos;t be attached yet.{' '}
+                                        <a
+                                            href="/admin/settings/integrations"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="underline underline-offset-2 hover:text-amber-100"
+                                        >
+                                            Connect it in Settings → Integrations
+                                        </a>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-3">
+                                        <label
+                                            onDragOver={(e) => { e.preventDefault(); setDocDragOver(true); }}
+                                            onDragLeave={() => setDocDragOver(false)}
+                                            onDrop={(e) => { e.preventDefault(); setDocDragOver(false); addDocs(e.dataTransfer.files); }}
+                                            className={`block cursor-pointer rounded-lg border-2 border-dashed px-4 py-6 text-center transition-all ${
+                                                docDragOver ? 'border-tertiary/60 bg-tertiary/5' : 'border-white/10 bg-slate-950/40 hover:border-tertiary/40'
+                                            }`}
+                                        >
+                                            <input
+                                                type="file"
+                                                multiple
+                                                className="sr-only"
+                                                onChange={(e) => { addDocs(e.target.files); e.target.value = ''; }}
+                                            />
+                                            <span className="flex justify-center mb-1">
+                                                <span className="material-symbols-outlined text-3xl text-tertiary/80">cloud_upload</span>
+                                            </span>
+                                            <span className="text-sm text-white font-body">Add files</span>
+                                            <span className="block text-xs text-slate-500 mt-1 font-body">
+                                                or drag them here · up to 20 MB each · uploaded to Google Drive when you save
+                                            </span>
+                                        </label>
+
+                                        {docError && <p className="text-xs text-rose-400 font-body">{docError}</p>}
+
+                                        {pendingDocs.length > 0 && (
+                                            <ul className="space-y-2">
+                                                {pendingDocs.map((doc, i) => (
+                                                    <li key={`${doc.name}-${doc.size}-${i}`} className="flex items-center gap-3 rounded-lg border border-white/[0.06] bg-slate-950/40 px-3 py-2">
+                                                        <span className="material-symbols-outlined text-slate-400 text-[18px]">description</span>
+                                                        <span className="flex-1 min-w-0 truncate text-sm text-slate-200 font-body">{doc.name}</span>
+                                                        <span className="text-xs text-slate-500 shrink-0 font-body">{formatBytes(doc.size)}</span>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => removeDoc(i)}
+                                                            className="p-1 rounded text-slate-500 hover:text-rose-400 hover:bg-white/5 transition-all"
+                                                            aria-label={`Remove ${doc.name}`}
+                                                        >
+                                                            <span className="material-symbols-outlined text-[18px]">close</span>
+                                                        </button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
+                                )}
                             </section>
                         </div>
 
@@ -885,6 +1095,100 @@ export default function CreateInspectionFileModal({ onClose, onSaved, fileId }: 
                         )}
                     </button>
                 </footer>
+
+
+                {/* ── Upload step: shown after save while documents go to Drive ── */}
+                {/* Portalled to <body>: the modal layers use backdrop-blur, which makes them
+                    the containing block for fixed children, so fixed would act like absolute. */}
+                {uploadRun && createPortal((() => {
+                    const total = uploadRun.items.length;
+                    const done = uploadRun.items.filter((item) => item.status === 'done').length;
+                    const failed = uploadRun.items.filter((item) => item.status === 'error').length;
+                    const finished = !uploadRun.running;
+                    const title = !finished
+                        ? 'Uploading documents…'
+                        : failed > 0
+                            ? `${failed} document${failed === 1 ? '' : 's'} did not upload`
+                            : 'Documents uploaded';
+
+                    return (
+                        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+                        <div className="w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden rounded-xl border border-white/[0.08] bg-[#0f172a] shadow-[0_0_80px_rgba(0,0,0,0.5)]">
+                            <header className="p-6 border-b border-white/[0.08] space-y-3 shrink-0">
+                                <span className="text-[10px] font-headline uppercase tracking-widest text-tertiary">Google Drive</span>
+                                <h2 className="text-xl md:text-2xl font-headline font-bold text-white tracking-tight">{title}</h2>
+                                <p className="text-sm text-slate-400 font-body">
+                                    {uploadRun.fileNumber ? `File ${uploadRun.fileNumber} is saved. ` : 'The file is saved. '}
+                                    {done} of {total} uploaded.
+                                    {finished && failed > 0 && ' You can retry now, or attach them later by editing the file.'}
+                                </p>
+                                <div className="h-1.5 w-full rounded-full bg-white/5 overflow-hidden">
+                                    <div
+                                        className="h-full rounded-full bg-tertiary transition-all"
+                                        style={{ width: `${total ? Math.round((done / total) * 100) : 0}%` }}
+                                    />
+                                </div>
+                            </header>
+
+                            <ul className="flex-1 overflow-y-auto p-6 space-y-2">
+                                {uploadRun.items.map((item, i) => (
+                                    <li key={`${item.file.name}-${i}`} className="flex items-start gap-3 rounded-lg border border-white/[0.06] bg-slate-950/40 px-4 py-3">
+                                        <span
+                                            className={`material-symbols-outlined text-[20px] shrink-0 ${
+                                                item.status === 'done' ? 'text-tertiary'
+                                                    : item.status === 'error' ? 'text-rose-400'
+                                                        : item.status === 'uploading' ? 'text-primary animate-spin'
+                                                            : 'text-slate-500'
+                                            }`}
+                                        >
+                                            {item.status === 'done' ? 'check_circle'
+                                                : item.status === 'error' ? 'error'
+                                                    : item.status === 'uploading' ? 'progress_activity'
+                                                        : 'schedule'}
+                                        </span>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="truncate text-sm text-slate-200 font-body">{item.file.name}</p>
+                                            {item.error && <p className="text-xs text-rose-400 font-body mt-0.5">{item.error}</p>}
+                                        </div>
+                                        <span className="text-xs text-slate-500 shrink-0 font-body">{formatBytes(item.file.size)}</span>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <footer className="p-4 md:p-6 bg-[#1e293b]/90 border-t border-white/[0.08] flex flex-col sm:flex-row justify-end gap-3 shrink-0">
+                                {finished && failed > 0 && (
+                                    <button
+                                        type="button"
+                                        onClick={() => void runUploads(uploadRun.fileId, uploadRun.items)}
+                                        className="px-6 py-3 border border-white/10 text-white font-headline uppercase text-[11px] tracking-[0.1em] hover:bg-[#1e293b] transition-all rounded-lg"
+                                    >
+                                        Retry failed
+                                    </button>
+                                )}
+                                {uploadRun.folderUrl && (
+                                    <a
+                                        href={uploadRun.folderUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="px-6 py-3 border border-tertiary/30 bg-tertiary/10 text-tertiary font-headline font-bold uppercase text-[11px] tracking-[0.12em] hover:bg-tertiary/15 transition-all rounded-lg flex items-center justify-center gap-2"
+                                    >
+                                        <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                                        View files in Google Drive
+                                    </a>
+                                )}
+                                <button
+                                    type="button"
+                                    disabled={!finished}
+                                    onClick={finishUploadRun}
+                                    className="px-8 py-3 bg-tertiary text-[#00452d] font-headline font-bold uppercase text-[11px] tracking-[0.2em] transition-all rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {!finished ? 'Uploading…' : uploadRun.andAnother ? 'Add Another File' : 'Done'}
+                                </button>
+                            </footer>
+                        </div>
+                        </div>
+                    );
+                })(), document.body)}
 
                 {/* Decals */}
                 <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[120px] -z-10 pointer-events-none" />

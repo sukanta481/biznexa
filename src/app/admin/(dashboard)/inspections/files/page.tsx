@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import CreateInspectionFileModal from '@/components/admin/CreateInspectionFileModal';
 import ViewInspectionFileModal from '@/components/admin/ViewInspectionFileModal';
+import { driveFolderUrl } from '@/lib/drive-links';
 
 interface InspectionFile {
     id: number;
@@ -24,6 +25,7 @@ interface InspectionFile {
     source_id: number | null;
     paid_to_office: string | null;
     payment_done_date: string | null;
+    drive_folder_id: string | null;
 }
 
 interface LookupOption {
@@ -673,6 +675,17 @@ function InspectionFilesInner() {
                                         </td>
                                         <td className="px-6 py-5 text-right">
                                             <div className="flex justify-end gap-2">
+                                                {file.drive_folder_id && (
+                                                    <a
+                                                        href={driveFolderUrl(file.drive_folder_id)}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="p-2 hover:bg-[#1e293b] rounded-lg text-slate-500 hover:text-tertiary transition-all"
+                                                        title="Open documents in Google Drive"
+                                                    >
+                                                        <span className="material-symbols-outlined text-xl">folder_open</span>
+                                                    </a>
+                                                )}
                                                 <button
                                                     onClick={() => setEditFileId(file.id)}
                                                     className="p-2 hover:bg-[#1e293b] rounded-lg text-slate-500 hover:text-primary transition-all"
