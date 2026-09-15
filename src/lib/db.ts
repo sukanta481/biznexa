@@ -42,6 +42,14 @@ function readConfig(target: DatabaseTarget): PoolOptions {
     queueLimit: 0,
     enableKeepAlive: true,
     connectTimeout,
+    // DATE columns come back as plain "YYYY-MM-DD" strings, not JS Dates. A
+    // Date is midnight in the server's timezone, so it serialises to JSON as
+    // e.g. "2026-08-30T18:30:00.000Z" for 31 Aug in IST. Edit forms send that
+    // string back: strict-mode MySQL (production) rejects it outright, and
+    // non-strict MariaDB (local) saves it a day early. A DATE has no time or
+    // timezone, so a string is its faithful form. DATETIME and TIMESTAMP are
+    // real instants and stay Dates.
+    dateStrings: ["DATE"],
   };
 }
 
