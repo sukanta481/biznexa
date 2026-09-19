@@ -43,6 +43,8 @@ interface InspectionFileStats {
     pendingAmount: number;
     paidToOffice: number;
     pendingToOffice: number;
+    paidCommission: number;
+    extraEarnings: number;
     totalGross: number;
     statusBreakdown: Record<string, number>;
 }
@@ -366,7 +368,7 @@ function InspectionFilesInner() {
 
             {/* Stats Cards */}
             {stats && (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-8 gap-3">
                     <div className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-br from-white/[0.04] to-transparent p-4 transition-all duration-300 hover:border-white/[0.12] hover:shadow-lg hover:shadow-black/20">
                         <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-blue-500 opacity-[0.07] blur-2xl" />
                         <div className="relative z-10">
@@ -437,6 +439,31 @@ function InspectionFilesInner() {
                                 <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Paid to Office</span>
                             </div>
                             <div className="text-xl font-bold text-secondary tracking-tight leading-none">₹{stats.paidToOffice.toLocaleString('en-IN')}</div>
+                        </div>
+                    </div>
+                    <div className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-br from-white/[0.04] to-transparent p-4 transition-all duration-300 hover:border-white/[0.12] hover:shadow-lg hover:shadow-black/20">
+                        <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-emerald-500 opacity-[0.07] blur-2xl" />
+                        <div className="relative z-10">
+                            <div className="flex items-center gap-2 mb-3">
+                                <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-base text-emerald-400">payments</span>
+                                </div>
+                                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Paid Earnings</span>
+                            </div>
+                            <div className="text-xl font-bold text-emerald-400 tracking-tight leading-none">₹{stats.paidCommission.toLocaleString('en-IN')}</div>
+                            <div className="mt-2 text-[10px] font-medium text-slate-500">Fees received: ₹{stats.paidAmount.toLocaleString('en-IN')}</div>
+                        </div>
+                    </div>
+                    <div className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-br from-white/[0.04] to-transparent p-4 transition-all duration-300 hover:border-white/[0.12] hover:shadow-lg hover:shadow-black/20">
+                        <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-amber-500 opacity-[0.07] blur-2xl" />
+                        <div className="relative z-10">
+                            <div className="flex items-center gap-2 mb-3">
+                                <div className="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-base text-amber-400">add_circle</span>
+                                </div>
+                                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Extra Earnings</span>
+                            </div>
+                            <div className="text-xl font-bold text-amber-400 tracking-tight leading-none">₹{stats.extraEarnings.toLocaleString('en-IN')}</div>
                         </div>
                     </div>
                 </div>

@@ -203,10 +203,28 @@ export async function getInspectionFileStats(filters: InspectionFileFilters) {
          COALESCE(SUM(CASE WHEN file_type = 'self' THEN fees ELSE 0 END), 0) as totalFees,
          COALESCE(SUM(commission), 0) as totalCommission,
          COALESCE(SUM(gross_amount), 0) as totalEarnings,
-         COALESCE(SUM(CASE WHEN file_type = 'self' AND payment_status = 'paid' THEN fees ELSE 0 END), 0) as paidAmount,
-         COALESCE(SUM(CASE WHEN file_type = 'self' AND payment_status IN ('due', 'partially') THEN COALESCE(fees, 0) - COALESCE(amount, 0) ELSE 0 END), 0) as pendingAmount,
-         COALESCE(SUM(CASE WHEN paid_to_office = 'paid' THEN commission ELSE 0 END), 0) as paidToOffice,
-         COALESCE(SUM(CASE WHEN paid_to_office != 'paid' OR paid_to_office IS NULL THEN commission ELSE 0 END), 0) as pendingToOffice,
+         COALESCE(SUM(CASE
+           WHEN file_type = 'self' AND payment_status = 'paid' THEN COALESCE(fees, 0) + COALESCE(addon_fees, 0)
+           WHEN file_type = 'self' AND payment_status = 'partially' THEN LEAST(COALESCE(amount, 0), COALESCE(fees, 0) + COALESCE(addon_fees, 0))
+           ELSE 0
+         END), 0) as paidAmount,
+         COALESCE(SUM(CASE
+           WHEN file_type = 'self' THEN (COALESCE(fees, 0) + COALESCE(addon_fees, 0)) -
+             CASE
+               WHEN payment_status = 'paid' THEN COALESCE(fees, 0) + COALESCE(addon_fees, 0)
+               WHEN payment_status = 'partially' THEN LEAST(COALESCE(amount, 0), COALESCE(fees, 0) + COALESCE(addon_fees, 0))
+               ELSE 0
+             END
+           ELSE 0
+         END), 0) as pendingAmount,
+         COALESCE(SUM(CASE WHEN file_type = 'self' AND paid_to_office = 'paid' THEN office_amount ELSE 0 END), 0) as paidToOffice,
+         COALESCE(SUM(CASE WHEN file_type = 'self' AND (paid_to_office != 'paid' OR paid_to_office IS NULL) THEN office_amount ELSE 0 END), 0) as pendingToOffice,
+         COALESCE(SUM(CASE
+           WHEN file_type = 'self' AND payment_status = 'paid' THEN commission
+           WHEN file_type = 'self' AND payment_status = 'partially' THEN LEAST(COALESCE(amount, 0), COALESCE(fees, 0) + COALESCE(addon_fees, 0)) * 0.30
+           ELSE 0
+         END), 0) as paidCommission,
+         COALESCE(SUM(extra_amount), 0) as extraEarnings,
          COUNT(*) as totalFiles,
          COALESCE(SUM(gross_amount), 0) as totalGross
        FROM inspection_files f
@@ -230,6 +248,8 @@ export async function getInspectionFileStats(filters: InspectionFileFilters) {
     pendingAmount: Number(fin.pendingAmount) ?? 0,
     paidToOffice: Number(fin.paidToOffice) ?? 0,
     pendingToOffice: Number(fin.pendingToOffice) ?? 0,
+    paidCommission: Number(fin.paidCommission) ?? 0,
+    extraEarnings: Number(fin.extraEarnings) ?? 0,
     totalGross: Number(fin.totalGross) ?? 0,
     statusBreakdown,
   };
